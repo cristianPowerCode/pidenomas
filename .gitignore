@@ -1,0 +1,60 @@
+# Carpeta de dependencias
+.dart_tool/
+.pub/
+
+# Directorio de construcción
+build/
+
+# Archivos de proyecto locales
+*.iml
+
+# Archivos de usuario de Android
+android/local.properties
+android/*.iml
+android/key.properties
+
+# Archivos de usuario de iOS
+ios/Runner.xcworkspace/contents.xcworkspacedata
+ios/Flutter/App.framework/App
+ios/Flutter/Flutter.framework/Flutter
+
+# Archivos de usuario de VSCode
+.vscode/
+
+# Archivos de usuario de Android Studio
+.idea/
+*.ipr
+*.iws
+
+# Archivos de usuario de Xcode
+*.pbxuser
+*.mode1v3
+*.mode2v3
+*.perspectivev3
+!default.pbxuser
+!default.mode1v3
+!default.mode2v3
+!default.perspectivev3
+*.xcworkspace/
+xcuserdata/
+
+# Archivos de usuario de Firebase
+*.firebase
+
+# Archivos de compilación de Flutter
+*.apk
+*.ap_
+*.dart_tool/
+*.flutter-plugins
+*.flutter-plugins-dependencies
+*.flutter-plugins-dependencies.json
+*.flutter-plugins-version
+*.packages
+*.pubspec.lock
+flutter_assets/
+
+# Archivos de configuración de Android Studio
+*.kotlin_module
+
+# Archivos de Firebase
+.firebase/
