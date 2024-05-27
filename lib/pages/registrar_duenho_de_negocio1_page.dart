@@ -5,8 +5,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:pidenomas/pages/login_negocio_page.dart';
+import 'package:pidenomas/pages/registrar_duenho_de_negocio2_page.dart';
 import 'package:pidenomas/ui/general/type_messages.dart';
 import 'package:pidenomas/ui/widgets/check_box1_widget.dart';
+import 'package:pidenomas/ui/widgets/icon_form_button_widget.dart';
 import 'package:pidenomas/ui/widgets/radio_button_widget.dart';
 import '../models/register_client_model.dart';
 import '../ui/widgets/check_box2_widget.dart';
@@ -22,12 +26,16 @@ import '../ui/widgets/input_textfield_password_widget.dart';
 import '../ui/widgets/input_textfield_email_widget.dart';
 import '../ui/widgets/input_textfield_widget.dart';
 
-class RegistrarCliente1Page extends StatefulWidget {
+class RegistrarDuenhoDeNegocioPage extends StatefulWidget {
+  const RegistrarDuenhoDeNegocioPage({super.key});
+
   @override
-  State<RegistrarCliente1Page> createState() => _RegistrarCliente1PageState();
+  State<RegistrarDuenhoDeNegocioPage> createState() =>
+      _RegistrarDuenhoDeNegocioPageState();
 }
 
-class _RegistrarCliente1PageState extends State<RegistrarCliente1Page> {
+class _RegistrarDuenhoDeNegocioPageState
+    extends State<RegistrarDuenhoDeNegocioPage> {
   final _formKey = GlobalKey<FormState>();
 
   final CollectionReference _clientsCollection =
@@ -170,7 +178,6 @@ class _RegistrarCliente1PageState extends State<RegistrarCliente1Page> {
     }
   }
 
-
   void _onCheckbox1Changed(bool value) {
     setState(() {
       agreeTerms = value;
@@ -187,7 +194,6 @@ class _RegistrarCliente1PageState extends State<RegistrarCliente1Page> {
       agreeNotifications = value;
     });
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -209,8 +215,8 @@ class _RegistrarCliente1PageState extends State<RegistrarCliente1Page> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          PrincipalText(string: "Regístrate"),
-                          PrincipalText(string: "como Cliente"),
+                          PrincipalText(string: "Completa tus datos"),
+                          PrincipalText(string: "como titular del negocio"),
                           divider20(),
                           const Text(
                             "Nombres",
@@ -388,24 +394,45 @@ class _RegistrarCliente1PageState extends State<RegistrarCliente1Page> {
                             onChanged: _onCheckbox2Changed,
                           ),
                           divider40(),
-                          ButtonWidget(
-                            onPressed: () async {
-                              final formState = _formKey.currentState;
-                              if (formState != null &&
-                                  formState.validate() &&
-                                  agreeTerms) {
-                                await _registroYGuardarDatos();
-                              } else {
-                                if (!agreeTerms) {
-                                  setState(() {
-                                    agreeError = 'Este campo es obligatorio';
-                                  });
-                                }
-                                snackBarMessage(
-                                    context, Typemessage.incomplete);
-                              }
-                            },
-                            text: "Registrar",
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              IconFormButtonWidget(
+                                icon: Icon(FontAwesomeIcons.arrowLeft),
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => LoginNegocioPage(),
+                                    ),
+                                  );
+                                },
+                              ),
+                              SizedBox(width: 20.0),
+                              IconFormButtonWidget(
+                                icon: Icon(FontAwesomeIcons.arrowRight),
+                                onPressed: () {
+                                  final formState = _formKey.currentState;
+                                  if (formState != null && formState.validate() && agreeTerms) {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => RegistrarDuenhoDeNegocio2Page(),
+                                      ),
+                                    );
+                                  } else {
+                                    if (!agreeTerms) {
+                                      setState(() {
+                                        agreeError = 'Este campo es obligatorio';
+                                      });
+                                    }
+                                    snackBarMessage(context, Typemessage.incomplete);
+                                  }
+                                },
+                                isFormComplete: _formKey.currentState != null && _formKey.currentState!.validate() && agreeTerms,
+                              ),
+
+                            ],
                           ),
                           divider40(),
                           divider40(),
