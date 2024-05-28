@@ -48,7 +48,7 @@ class BackGroundWidget extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 100.0, horizontal: 50),
+            padding: const EdgeInsets.symmetric(vertical: 90.0, horizontal: 50),
             child: Container(
                 width: double.infinity,
                 child: child),

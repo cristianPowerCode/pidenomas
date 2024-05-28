@@ -412,6 +412,11 @@ class _RegistrarDuenhoDeNegocioPageState
                               IconFormButtonWidget(
                                 icon: Icon(FontAwesomeIcons.arrowRight),
                                 onPressed: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => RegistrarDuenhoDeNegocio2Page(),
+                                      ));
                                   final formState = _formKey.currentState;
                                   if (formState != null && formState.validate() && agreeTerms) {
                                     Navigator.push(

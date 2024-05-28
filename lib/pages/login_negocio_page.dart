@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import '../ui/general/type_messages.dart';
 import 'principal_page.dart';
-import 'registrar_cliente1_page.dart';
 import '../ui/general/colors.dart';
 import '../ui/widgets/background_widget.dart';
 import '../ui/widgets/button_widget.dart';
