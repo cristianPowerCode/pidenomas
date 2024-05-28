@@ -415,28 +415,81 @@ class _RegistrarDuenhoDeNegocioPageState
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) => RegistrarDuenhoDeNegocio2Page(),
+                                        builder: (context) =>
+                                            RegistrarDuenhoDeNegocio2Page(
+                                              nombre: _nombreController.text,
+                                              apellidos: _apellidoController.text,
+                                              fechaDeNacimiento:
+                                              _fechaDeNacimientoController.text,
+                                              celular: _celularController.text,
+                                              tipoDocumento:
+                                              _tipoDocumentoController.text,
+                                              documentoIdentidad:
+                                              _documentoIdentidadController
+                                                  .text,
+                                              genero: _generoController.text,
+                                              email: _emailController.text,
+                                              password: _passwordController.text,
+                                              lat: _latController.text,
+                                              lng: _lngController.text,
+                                              direccion: _direccionController.text,
+                                              detalleDireccion:
+                                              _detalleUbicacionController.text,
+                                              referenciaDireccion:
+                                              _referenciaUbicacionController
+                                                  .text,
+                                              agreeNotifications: agreeNotifications.toString(),
+                                            ),
                                       ));
                                   final formState = _formKey.currentState;
-                                  if (formState != null && formState.validate() && agreeTerms) {
+                                  if (formState != null &&
+                                      formState.validate() &&
+                                      agreeTerms) {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) => RegistrarDuenhoDeNegocio2Page(),
+                                        builder: (context) =>
+                                            RegistrarDuenhoDeNegocio2Page(
+                                              nombre: _nombreController.text,
+                                              apellidos: _apellidoController.text,
+                                              fechaDeNacimiento:
+                                              _fechaDeNacimientoController.text,
+                                              celular: _celularController.text,
+                                              tipoDocumento:
+                                              _tipoDocumentoController.text,
+                                              documentoIdentidad:
+                                              _documentoIdentidadController
+                                                  .text,
+                                              genero: _generoController.text,
+                                              email: _emailController.text,
+                                              password: _passwordController.text,
+                                              lat: _latController.text,
+                                              lng: _lngController.text,
+                                              direccion: _direccionController.text,
+                                              detalleDireccion:
+                                              _detalleUbicacionController.text,
+                                              referenciaDireccion:
+                                              _referenciaUbicacionController
+                                                  .text,
+                                              agreeNotifications: agreeNotifications.toString(),
+                                            ),
                                       ),
                                     );
                                   } else {
                                     if (!agreeTerms) {
                                       setState(() {
-                                        agreeError = 'Este campo es obligatorio';
+                                        agreeError =
+                                            'Este campo es obligatorio';
                                       });
                                     }
-                                    snackBarMessage(context, Typemessage.incomplete);
+                                    snackBarMessage(
+                                        context, Typemessage.incomplete);
                                   }
                                 },
-                                isFormComplete: _formKey.currentState != null && _formKey.currentState!.validate() && agreeTerms,
+                                isFormComplete: _formKey.currentState != null &&
+                                    _formKey.currentState!.validate() &&
+                                    agreeTerms,
                               ),
-
                             ],
                           ),
                           divider40(),
