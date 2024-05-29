@@ -39,7 +39,7 @@ class _RegistrarDuenhoDeNegocioPageState
   final _formKey = GlobalKey<FormState>();
 
   final CollectionReference _clientsCollection =
-      FirebaseFirestore.instance.collection('clients');
+  FirebaseFirestore.instance.collection('clients');
 
   FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -64,140 +64,15 @@ class _RegistrarDuenhoDeNegocioPageState
   TextEditingController _direccionController = TextEditingController();
   TextEditingController _detalleUbicacionController = TextEditingController();
   TextEditingController _referenciaUbicacionController =
-      TextEditingController();
+  TextEditingController();
 
   String agreeError = "";
   bool agreeTerms = false;
   bool isChanged = false;
   bool agreeNotifications = false;
 
-  Future<void> _registroYGuardarDatos() async {
-    setState(() {
-      isLoading = true; // Establece isLoading en true al iniciar el proceso
-    });
-    try {
-      UserCredential userCredential =
-          await _auth.createUserWithEmailAndPassword(
-        email: _emailController.text,
-        password: _passwordController.text,
-      );
-
-      if (userCredential.user != null) {
-        User? user = userCredential.user;
-        uidForFirebase = user!.uid;
-        photoURLforFirebase = user.photoURL ?? '';
-        phoneNumberForFirebase = user.phoneNumber ?? '';
-
-        print('Usuario registrado con éxito.');
-        print(uidForFirebase);
-        print(photoURLforFirebase);
-        print(phoneNumberForFirebase);
-
-        // Enviar correo de verificación
-        await user.sendEmailVerification();
-
-        // Guardar datos en Firestore
-        await _guardarDatos();
-        print(_guardarDatos());
-
-        // Mostrar AlertDialog para informar al usuario que verifique su correo
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: Text("Registro Exitoso"),
-              content: Text(
-                  "Se ha enviado un correo de verificación a ${user.email}. Por favor verifica tu correo antes de iniciar sesión."),
-              actions: [
-                TextButton(
-                  child: Text("OK"),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                    // Redirigir a la pantalla de login
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => LoginClientePage()),
-                    );
-                  },
-                ),
-              ],
-            );
-          },
-        );
-      }
-      setState(() {
-        isLoading =
-            false; // Establece isLoading en false al completar con éxito el proceso
-      });
-    } catch (e) {
-      setState(() {
-        isLoading =
-            false; // Establece isLoading en false si ocurre un error durante el proceso
-      });
-      print('Error al registrar usuario: $e');
-      // Mostrar SnackBar de error
-      snackBarMessage(context, Typemessage.error);
-    }
-  }
-
-  Future<void> _guardarDatos() async {
-    print("!!!!!!!!!!!!!!");
-    print(
-        "{tipoDeGenero: ${int.parse(_generoController.text)}, ${int.parse(_generoController.text).runtimeType} }");
-
-    RegisterClientModel registerClientModel = RegisterClientModel(
-      uid: uidForFirebase,
-      nombre: _nombreController.text,
-      apellidos: _apellidoController.text,
-      email: _emailController.text,
-      isVerified: false,
-      celular: _celularController.text,
-      tipoDocumento: int.parse(_tipoDocumentoController.text),
-      fechaDeNacimiento: DateTime.parse(_fechaDeNacimientoController.text),
-      documentoIdentidad: _documentoIdentidadController.text,
-      genero: int.parse(_generoController.text),
-      password: _passwordController.text,
-      lat: double.parse(_latController.text),
-      lng: double.parse(_lngController.text),
-      direccion: _direccionController.text,
-      detalleDireccion: _detalleUbicacionController.text,
-      referenciaDireccion: _referenciaUbicacionController.text,
-      photoUrl: photoURLforFirebase,
-      fechaDeCreacion: DateTime.now(),
-    );
-
-    try {
-      await _clientsCollection
-          .doc(uidForFirebase)
-          .set(registerClientModel.toJson());
-      print("RESULTADO DE REGISTRO");
-      print(registerClientModel.toJson());
-    } catch (e) {
-      print("Error al guardar datos en cloud firestore: $e");
-    }
-  }
-
-  void _onCheckbox1Changed(bool value) {
-    setState(() {
-      agreeTerms = value;
-      if (agreeTerms) {
-        agreeError = '';
-      } else {
-        agreeError = 'Este campo es obligatorio';
-      }
-    });
-  }
-
-  void _onCheckbox2Changed(bool value) {
-    setState(() {
-      agreeNotifications = value;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
-    var checkboxValue;
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: SingleChildScrollView(
@@ -327,7 +202,7 @@ class _RegistrarDuenhoDeNegocioPageState
                           InputTextFieldWidget(
                             hintText: "Dirección",
                             icon: Icons.location_on,
-                            textInputType: TextInputType.number,
+                            textInputType: TextInputType.text,
                             controller: _direccionController,
                           ),
                           divider30(),
@@ -349,7 +224,7 @@ class _RegistrarDuenhoDeNegocioPageState
                           ),
                           InputTextFieldWidget(
                             hintText:
-                                "Ejm: Casa de 2 pisos color verde frente a bodega.",
+                            "Ejm: Casa de 2 pisos color verde frente a bodega.",
                             icon: Icons.maps_ugc,
                             controller: _referenciaUbicacionController,
                           ),
@@ -371,7 +246,7 @@ class _RegistrarDuenhoDeNegocioPageState
                                         context,
                                         MaterialPageRoute(
                                           builder: (context) =>
-                                              LoginClientePage(),
+                                              LoginNegocioPage(),
                                         ));
                                   },
                                   child: Text(
@@ -384,14 +259,6 @@ class _RegistrarDuenhoDeNegocioPageState
                                 ),
                               ],
                             ),
-                          ),
-                          divider20(),
-                          CheckBox1Widget(
-                            error: agreeError,
-                            onChanged: _onCheckbox1Changed,
-                          ),
-                          CheckBox2Widget(
-                            onChanged: _onCheckbox2Changed,
                           ),
                           divider40(),
                           Row(
@@ -411,40 +278,11 @@ class _RegistrarDuenhoDeNegocioPageState
                               SizedBox(width: 20.0),
                               IconFormButtonWidget(
                                 icon: Icon(FontAwesomeIcons.arrowRight),
+                                isFormComplete: true,
                                 onPressed: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            RegistrarDuenhoDeNegocio2Page(
-                                              nombre: _nombreController.text,
-                                              apellidos: _apellidoController.text,
-                                              fechaDeNacimiento:
-                                              _fechaDeNacimientoController.text,
-                                              celular: _celularController.text,
-                                              tipoDocumento:
-                                              _tipoDocumentoController.text,
-                                              documentoIdentidad:
-                                              _documentoIdentidadController
-                                                  .text,
-                                              genero: _generoController.text,
-                                              email: _emailController.text,
-                                              password: _passwordController.text,
-                                              lat: _latController.text,
-                                              lng: _lngController.text,
-                                              direccion: _direccionController.text,
-                                              detalleDireccion:
-                                              _detalleUbicacionController.text,
-                                              referenciaDireccion:
-                                              _referenciaUbicacionController
-                                                  .text,
-                                              agreeNotifications: agreeNotifications.toString(),
-                                            ),
-                                      ));
                                   final formState = _formKey.currentState;
                                   if (formState != null &&
-                                      formState.validate() &&
-                                      agreeTerms) {
+                                      formState.validate()) {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
@@ -471,24 +309,16 @@ class _RegistrarDuenhoDeNegocioPageState
                                               referenciaDireccion:
                                               _referenciaUbicacionController
                                                   .text,
-                                              agreeNotifications: agreeNotifications.toString(),
+                                              agreeNotifications:
+                                              agreeNotifications.toString(),
                                             ),
                                       ),
                                     );
                                   } else {
-                                    if (!agreeTerms) {
-                                      setState(() {
-                                        agreeError =
-                                            'Este campo es obligatorio';
-                                      });
-                                    }
                                     snackBarMessage(
                                         context, Typemessage.incomplete);
                                   }
                                 },
-                                isFormComplete: _formKey.currentState != null &&
-                                    _formKey.currentState!.validate() &&
-                                    agreeTerms,
                               ),
                             ],
                           ),
@@ -504,18 +334,18 @@ class _RegistrarDuenhoDeNegocioPageState
             ),
             isLoading
                 ? Container(
-                    color: kDefaultIconDarkColor.withOpacity(0.85),
-                    child: Center(
-                      child: SizedBox(
-                        width: 50,
-                        height: 50,
-                        child: CircularProgressIndicator(
-                          color: kBrandPrimaryColor1,
-                          strokeWidth: 5,
-                        ),
-                      ),
-                    ),
-                  )
+              color: kDefaultIconDarkColor.withOpacity(0.85),
+              child: Center(
+                child: SizedBox(
+                  width: 50,
+                  height: 50,
+                  child: CircularProgressIndicator(
+                    color: kBrandPrimaryColor1,
+                    strokeWidth: 5,
+                  ),
+                ),
+              ),
+            )
                 : SizedBox(),
           ],
         ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pidenomas/ui/general/colors.dart';
 import 'package:pidenomas/ui/widgets/general_widgets.dart';
 import 'package:pidenomas/utils/constants.dart';
 
@@ -31,6 +32,7 @@ class _RadioButtonWidgetState extends State<RadioButtonWidget> {
           children: [
             Radio(
               value: 1,
+              activeColor: kBrandPrimaryColor1,
               groupValue: selectedOption,
               onChanged: (value) {
                 setState(() {
@@ -43,6 +45,7 @@ class _RadioButtonWidgetState extends State<RadioButtonWidget> {
             SizedBox(width: 20),
             Radio(
               value: 2,
+              activeColor: kBrandPrimaryColor1,
               groupValue: selectedOption,
               onChanged: (value) {
                 setState(() {

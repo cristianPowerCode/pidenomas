@@ -59,6 +59,9 @@ class _RegistrarDuenhoDeNegocio2PageState
   void initState() {
     super.initState();
     _categoriesFuture = fetchCategories();
+    print("DATOS CAPTURADOS");
+    print(
+        "nombre: ${widget.nombre}, apellidos: ${widget.apellidos}, fechaDeNacimiento: ${widget.fechaDeNacimiento}, celular: ${widget.celular}, tipoDocumento: ${widget.tipoDocumento}, docIdentidad: ${widget.documentoIdentidad}, genero: ${widget.genero}, email: ${widget.email}, password: ${widget.password}, lat: ${widget.lat}, lng: ${widget.lng}, direccion: ${widget.direccion}, detalleDireccion: ${widget.detalleDireccion}, referencia: ${widget.referenciaDireccion}, agreeNotifications: ${widget.agreeNotifications}");
   }
 
   Future<List<Map<String, dynamic>>> fetchCategories() async {

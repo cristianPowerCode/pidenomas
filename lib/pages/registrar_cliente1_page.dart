@@ -191,7 +191,6 @@ class _RegistrarCliente1PageState extends State<RegistrarCliente1Page> {
 
   @override
   Widget build(BuildContext context) {
-    var checkboxValue;
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: SingleChildScrollView(
@@ -321,7 +320,7 @@ class _RegistrarCliente1PageState extends State<RegistrarCliente1Page> {
                           InputTextFieldWidget(
                             hintText: "Dirección",
                             icon: Icons.location_on,
-                            textInputType: TextInputType.number,
+                            textInputType: TextInputType.text,
                             controller: _direccionController,
                           ),
                           divider30(),

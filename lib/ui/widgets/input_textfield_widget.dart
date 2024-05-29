@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import '../general/colors.dart';
 
 class InputTextFieldWidget extends StatelessWidget {
-  String hintText;
+  String? hintText;
+  String? labelText;
   Function(String?)? validator;
   int? maxLength;
   TextInputType? textInputType;
@@ -14,7 +15,8 @@ class InputTextFieldWidget extends StatelessWidget {
   RegExp? nameRegex = RegExp(r'^[A-Za-zÑñ\s]+(?<!\s)$');
 
   InputTextFieldWidget({
-    required this.hintText,
+    this.hintText,
+    this.labelText,
     this.maxLength = 50,
     this.textInputType,
     required this.controller,
@@ -47,6 +49,10 @@ class InputTextFieldWidget extends StatelessWidget {
           fillColor: Colors.white,
           prefixIcon: Icon(icon, color: Color(0xffB1B1B1)),
           filled: true,
+          labelText: labelText,
+          labelStyle: TextStyle(
+            color: Color(0xffB1B1B1),
+          ),
           hintText: hintText,
           hintStyle: TextStyle(
             color: Color(0xffB1B1B1),

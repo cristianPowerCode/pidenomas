@@ -4,17 +4,17 @@ import 'package:pidenomas/ui/general/colors.dart';
 class IconFormButtonWidget extends StatelessWidget {
   Icon icon;
   VoidCallback onPressed;
-  final bool? isFormComplete;
+  final bool isFormComplete;
 
   IconFormButtonWidget({
     required this.icon,
     required this.onPressed,
-    this.isFormComplete,
+    this.isFormComplete = true,
   });
 
   @override
   Widget build(BuildContext context) {
-    Color iconColor = isFormComplete == false ? Colors.grey : kBrandPrimaryColor1;
+    Color iconColor = isFormComplete ? kBrandPrimaryColor1: Colors.grey;
     return IconButton(
       onPressed: onPressed,
       icon: icon,
