@@ -332,21 +332,6 @@ class _RegistrarDuenhoDeNegocioPageState
                 ),
               ),
             ),
-            isLoading
-                ? Container(
-              color: kDefaultIconDarkColor.withOpacity(0.85),
-              child: Center(
-                child: SizedBox(
-                  width: 50,
-                  height: 50,
-                  child: CircularProgressIndicator(
-                    color: kBrandPrimaryColor1,
-                    strokeWidth: 5,
-                  ),
-                ),
-              ),
-            )
-                : SizedBox(),
           ],
         ),
       ),

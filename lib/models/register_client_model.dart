@@ -17,6 +17,7 @@ class RegisterClientModel {
   String referenciaDireccion;
   String photoUrl;
   DateTime fechaDeCreacion;
+  bool agreeNotifications;
 
   RegisterClientModel({
     required this.uid,
@@ -37,6 +38,7 @@ class RegisterClientModel {
     required this.referenciaDireccion,
     required this.photoUrl,
     required this.fechaDeCreacion,
+    required this.agreeNotifications,
   });
 
   factory RegisterClientModel.fromJson(Map<String, dynamic> json) => RegisterClientModel(
@@ -58,6 +60,7 @@ class RegisterClientModel {
     referenciaDireccion: json["referenciaDireccion"],
     photoUrl: json["photoURL"],
     fechaDeCreacion: DateTime.parse(json["fechaDeCreacion"]),
+    agreeNotifications: json["agreeNotifications"],
   );
 
   Map<String, dynamic> toJson() => {
@@ -79,5 +82,6 @@ class RegisterClientModel {
     "referenciaDireccion": referenciaDireccion,
     "photoURL": photoUrl,
     "fechaDeCreacion": "${fechaDeCreacion.year.toString().padLeft(4, '0')}-${fechaDeCreacion.month.toString().padLeft(2, '0')}-${fechaDeCreacion.day.toString().padLeft(2, '0')}",
+    "isVerified": isVerified,
   };
 }

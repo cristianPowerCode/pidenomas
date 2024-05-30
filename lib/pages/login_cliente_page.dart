@@ -111,6 +111,7 @@ class _LoginClientePageState extends State<LoginClientePage> {
 
   @override
   Widget build(BuildContext context) {
+    double height = MediaQuery.of(context).size.height;
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Stack(
@@ -231,6 +232,7 @@ class _LoginClientePageState extends State<LoginClientePage> {
           ),
           isLoading
               ? Container(
+            height: height,
                   color: kDefaultIconDarkColor.withOpacity(0.85),
                   child: Center(
                     child: SizedBox(

@@ -41,6 +41,7 @@ class _GenderDropdownWidgetState extends State<GenderDropdownWidget> {
           prefixIcon: Icon(Icons.accessibility, color: Color(0xffB1B1B1)),
           filled: true,
           labelText: 'Seleccione su género', // HintText que se muestra inicialmente
+          labelStyle: TextStyle(color: Colors.grey),
           hintStyle: TextStyle(
             color: Color(0xffB1B1B1),
             fontSize: 14.0,

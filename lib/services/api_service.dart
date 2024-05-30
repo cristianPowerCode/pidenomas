@@ -1,109 +1,107 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:pidenomas/models/register_client_model.dart';
 import '../helps/sp.global.dart';
-import '../models/register_cliente_model.dart';
-import '../models/user_model.dart';
 import '../utils/constants.dart';
 
 class APIService {
   SPGlobal spGlobal = SPGlobal();
 
-  Future<UserModel?> login(String email, String password) async {
-    String _path = pathProduction + "/api/login";
-    Uri _uri = Uri.parse(_path);
-    http.Response response = await http.post(
-      _uri,
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: json.encode({
-        "email": email,
-        "password": password,
-      }),
-    );
-    print(_path);
-    print("STATUS: ${response.statusCode}");
-    if (response.statusCode == 200) {
-      Map<String, dynamic> userMap = json.decode(response.body);
-      print("===========");
-      print("Mapa user: $userMap");
-      UserModel userModel = UserModel.fromJson(userMap);
-      print("=========================");
-      print("Modelo user: ${userModel.token}");
-      //
-      spGlobal.token = userModel.token!;
-      spGlobal.isLogin = true; //bandera
-      return userModel;
-    }
-    return null;
-  }
-
-  Future<RegisterClienteModel?> registerCliente(
-    String fullname,
-    String email,
-    String password,
-    String telefono,
-    double lat,
-    double lng,
-    String detalleDireccion,
-    String referencia,
-  ) async {
+  Future<RegisterClientModel?> registerClienteToDB(
+      String uid,
+      String nombre,
+      String apellidos,
+      String email,
+      bool isVerified,
+      String celular,
+      int tipoDocumento,
+      DateTime fechaDeNacimiento,
+      String documentoIdentidad,
+      int genero,
+      String password,
+      double lat,
+      double lng,
+      String direccion,
+      String detalleDireccion,
+      String referenciaDireccion,
+      String photoUrl,
+      DateTime fechaDeCreacion,
+      bool agreeNotifications,
+      ) async {
     String _path = pathProduction + "/api/usuarios";
     Uri _uri = Uri.parse(_path);
-    http.Response response = await http.post(
-      _uri,
-      // headers: {
-      //   "Content-Type": "application/json",
-      // },
-      // body: json.encode({
-      //   "fullname": fullname,
-      //   "email": email,
-      //   "password": password,
-      //   "telefono": telefono,
-      //   "ubicacion": ubicacion,
-      //   "detalleDireccion": detalleDireccion,
-      //   "referencia": referencia,
-      // }),
-      body: json.encode({
-        "nombre": fullname,
-        "email": email,
-        "password": password,
-        "telefono": telefono,
-        "lat": lat,
-        "lng" : lng,
-        "detalleDireccion": detalleDireccion,
-        "referencia": referencia,
-      }),
-    );
-    print("JSON DATA: ${json.encode(
-        {
-          "nombre": fullname,
-          "fecha_creacion": "2024-05-09T18:41:00Z",
-          "uid_usuario": "abcdef123435001",
-          "telefono": telefono,
-          "lat": lat,
-          "lng": lat,
-          "direccion": "Av siempre Viva",
-          "detalle_direccion": detalleDireccion,
-          "referencia_direccion": referencia,
+    try {
+      http.Response response = await http.post(
+        _uri,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: json.encode({
+          "uid": uid,
+          "nombre": nombre,
+          "apellidos": apellidos,
           "email": email,
-          "password1": password,
-          "password2": "admin"
-        }
-    )}");
-    print("STATUS: ${response.statusCode}");
-    //aqui quiero imprimir los datos que se guardar en json.code
-    if (response.statusCode == 200) {
-      Map<String, dynamic> userMap = json.decode(response.body);
-      print("===========");
-      print("Mapa user: $userMap");
-      RegisterClienteModel registerClienteModel = RegisterClienteModel.fromJson(userMap);
-      print("=========================");
-      print("Modelo user: ${registerClienteModel.telefono}");
-      //
+          "isVerified": isVerified,
+          "celular": celular,
+          "tipoDocumento": tipoDocumento,
+          "fechaDeNacimiento": fechaDeNacimiento,
+          "documentoIdentidad": documentoIdentidad,
+          "genero": genero,
+          "password": password,
+          "lat": lat,
+          "lng": lng,
+          "direccion": direccion,
+          "detalleDireccion": detalleDireccion,
+          "referenciaDireccion": referenciaDireccion,
+          "photoURL": photoUrl,
+          "fechaDeCreacion": fechaDeCreacion,
+          "agreeNotifications": agreeNotifications
+        }),
+      );
 
-      return registerClienteModel;
+      print("JSON DATA: ${json.encode(
+          {
+            "uid": uid,
+            "nombre": nombre,
+            "apellidos": apellidos,
+            "email": email,
+            "isVerified": isVerified,
+            "celular": celular,
+            "tipoDocumento": tipoDocumento,
+            "fechaDeNacimiento": fechaDeNacimiento,
+            "documentoIdentidad": documentoIdentidad,
+            "genero": genero,
+            "password": password,
+            "lat": lat,
+            "lng": lng,
+            "direccion": direccion,
+            "detalleDireccion": detalleDireccion,
+            "referenciaDireccion": referenciaDireccion,
+            "photoURL": photoUrl,
+            "fechaDeCreacion": fechaDeCreacion,
+            "agreeNotifications": agreeNotifications
+          }
+      )}");
+
+      print("STATUS: ${response.statusCode}");
+
+      if (response.statusCode == 200) {
+        Map<String, dynamic> userMap = json.decode(response.body);
+        print("===========");
+        print("Mapa user: $userMap");
+        RegisterClientModel registerClienteToDB = RegisterClientModel.fromJson(userMap);
+        print("=========================");
+        print("UID registrado a DB: ${registerClienteToDB.uid}");
+
+        return registerClienteToDB;
+      } else {
+        // Manejar errores de otros códigos de estado HTTP aquí
+        throw Exception('Error en la solicitud: ${response.statusCode}');
+      }
+    } catch (e) {
+      // Manejar errores de red o excepciones aquí
+      throw Exception('Error de red: $e');
     }
-    return null;
   }
 }
+
