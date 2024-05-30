@@ -7,6 +7,7 @@ import 'package:pidenomas/ui/widgets/general_widgets.dart';
 import 'package:pidenomas/ui/widgets/input_textfield_widget.dart';
 
 import '../models/register_business_owner_model.dart';
+import '../services/api_service.dart';
 import '../ui/general/colors.dart';
 import '../ui/general/type_messages.dart';
 import '../ui/widgets/button_widget.dart';
@@ -68,13 +69,12 @@ class _RegistrarDuenhoDeNegocio3PageState
     print("categoria: ${widget.categoria}");
   }
 
+  FirebaseAuth _auth = FirebaseAuth.instance;
+  final APIService _apiService = APIService();
   final _formKey = GlobalKey<FormState>();
 
   final CollectionReference _clientsCollection =
       FirebaseFirestore.instance.collection('business_owner');
-
-  FirebaseAuth _auth = FirebaseAuth.instance;
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   bool isLoading = false;
 
@@ -89,6 +89,56 @@ class _RegistrarDuenhoDeNegocio3PageState
   bool agreeTerms = false;
   bool isChanged = false;
   bool agreeNotifications = false;
+
+  Future<void> _registerNegocioToDB() async {
+    if (_formKey.currentState!.validate()) {
+      setState(() {
+        isLoading = true;
+      });
+      try {
+        print("Calling registerClienteToDB...");
+        final value = await _apiService.registerNegocioToDB(
+          uidForFirebase,
+          widget.nombre,
+          widget.apellidos,
+          widget.email,
+          false,
+          widget.celular,
+          int.parse(widget.tipoDocumento),
+          DateTime.parse(widget.fechaDeNacimiento),
+          widget.documentoIdentidad,
+          int.parse(widget.genero),
+          widget.password,
+          double.parse(widget.lat),
+          double.parse(widget.lng),
+          widget.direccion,
+          widget.detalleDireccion,
+          widget.referenciaDireccion,
+          photoURLforFirebase,
+          DateTime.now(),
+          agreeNotifications,
+          int.parse(widget.categoria),
+          _rucController.text,
+          _razSocialNegocioController.text,
+          _nombreNegocioController.text
+        );
+        if (value != null) {
+          print("REGISTRADO A LA DB");
+          snackBarMessage(context, Typemessage.loginSuccess);
+        } else {
+          print("Error: Value is null");
+          snackBarMessage(context, Typemessage.error);
+        }
+      } catch (error) {
+        print("Catch Error: $error");
+        snackBarMessage(context, Typemessage.error);
+      } finally {
+        setState(() {
+          isLoading = false;
+        });
+      }
+    }
+  }
 
   Future<void> _registroYGuardarDatos() async {
     setState(() {
@@ -116,8 +166,12 @@ class _RegistrarDuenhoDeNegocio3PageState
         await user.sendEmailVerification();
 
         // Guardar datos en Firestore
+        print("GUARDAR DATOS");
         await _guardarDatos();
         print(_guardarDatos());
+        print("REGISTRADO A LA BASE DE DATOS");
+        await _registerNegocioToDB();
+        print(_registerNegocioToDB);
 
         // Mostrar AlertDialog para informar al usuario que verifique su correo
         showDialog(

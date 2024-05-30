@@ -29,19 +29,17 @@ class RegistrarCliente1Page extends StatefulWidget {
 }
 
 class _RegistrarCliente1PageState extends State<RegistrarCliente1Page> {
-  final _formKey = GlobalKey<FormState>();
-
   final CollectionReference _clientsCollection =
       FirebaseFirestore.instance.collection('clients');
 
   FirebaseAuth _auth = FirebaseAuth.instance;
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final APIService _apiService = APIService();
+  final _formKey = GlobalKey<FormState>();
 
   bool isLoading = false;
 
+  String photoURLforFirebase = 'https://images.pexels.com/photos/1878687/pexels-photo-1878687.jpeg';
   String uidForFirebase = '';
-  String photoURLforFirebase = '';
   String phoneNumberForFirebase = '';
 
   TextEditingController _nombreController = TextEditingController();
@@ -60,7 +58,7 @@ class _RegistrarCliente1PageState extends State<RegistrarCliente1Page> {
   TextEditingController _referenciaUbicacionController =
       TextEditingController();
 
-  String agreeError = "";
+  String agreeError = '';
   bool agreeTerms = false;
   bool isChanged = false;
   bool agreeNotifications = false;
@@ -71,6 +69,7 @@ class _RegistrarCliente1PageState extends State<RegistrarCliente1Page> {
         isLoading = true;
       });
       try {
+        print("Calling registerClienteToDB...");
         final value = await _apiService.registerClienteToDB(
           uidForFirebase,
           _nombreController.text,
@@ -96,9 +95,11 @@ class _RegistrarCliente1PageState extends State<RegistrarCliente1Page> {
           print("REGISTRADO A LA DB");
           snackBarMessage(context, Typemessage.loginSuccess);
         } else {
+          print("Error: Value is null");
           snackBarMessage(context, Typemessage.error);
         }
       } catch (error) {
+        print("Catch Error: $error");
         snackBarMessage(context, Typemessage.error);
       } finally {
         setState(() {
@@ -132,10 +133,12 @@ class _RegistrarCliente1PageState extends State<RegistrarCliente1Page> {
         await user.sendEmailVerification();
 
         // Guardar datos en Firestore
+        print("GUARDAR DATOS");
         await _guardarDatos();
         print(_guardarDatos());
-        // await _registerClienteToDB();
-        // print(_registerClienteToDB);
+        print("REGISTRADO A LA BASE DE DATOS");
+        await _registerClienteToDB();
+        print(_registerClienteToDB);
 
         // Mostrar AlertDialog para informar al usuario que verifique su correo
 
@@ -231,17 +234,15 @@ class _RegistrarCliente1PageState extends State<RegistrarCliente1Page> {
 
   @override
   Widget build(BuildContext context) {
-  double height = MediaQuery.of(context).size.height;
+    double height = MediaQuery.of(context).size.height;
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: SingleChildScrollView(
         child: Stack(
           children: [
-
             BackGroundWidget(
               child: Stack(
                 children: [
-
                   Form(
                     key: _formKey,
                     autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -254,8 +255,8 @@ class _RegistrarCliente1PageState extends State<RegistrarCliente1Page> {
                         divider20(),
                         const Text(
                           "Nombres",
-                          style: TextStyle(
-                              fontSize: 12, color: Color(0xffB1B1B1)),
+                          style:
+                              TextStyle(fontSize: 12, color: Color(0xffB1B1B1)),
                         ),
                         InputTextFieldNameWidget(
                           hintText: "Ingresa tu nombre",
@@ -265,8 +266,8 @@ class _RegistrarCliente1PageState extends State<RegistrarCliente1Page> {
                         divider20(),
                         const Text(
                           "Apellidos Completos",
-                          style: TextStyle(
-                              fontSize: 12, color: Color(0xffB1B1B1)),
+                          style:
+                              TextStyle(fontSize: 12, color: Color(0xffB1B1B1)),
                         ),
                         InputTextFieldNameWidget(
                           hintText: "Ingresa apellidos",
@@ -276,8 +277,8 @@ class _RegistrarCliente1PageState extends State<RegistrarCliente1Page> {
                         divider30(),
                         const Text(
                           "Fecha de Nacimiento",
-                          style: TextStyle(
-                              fontSize: 12, color: Color(0xffB1B1B1)),
+                          style:
+                              TextStyle(fontSize: 12, color: Color(0xffB1B1B1)),
                         ),
                         DataBirthWidget(
                           controller: _fechaDeNacimientoController,
@@ -285,8 +286,8 @@ class _RegistrarCliente1PageState extends State<RegistrarCliente1Page> {
                         divider30(),
                         const Text(
                           "Nro de Celular",
-                          style: TextStyle(
-                              fontSize: 12, color: Color(0xffB1B1B1)),
+                          style:
+                              TextStyle(fontSize: 12, color: Color(0xffB1B1B1)),
                         ),
                         InputTextFieldWidget(
                           icon: Icons.phone,
@@ -297,23 +298,22 @@ class _RegistrarCliente1PageState extends State<RegistrarCliente1Page> {
                         divider30(),
                         const Text(
                           "Seleccione su documento de identidad",
-                          style: TextStyle(
-                              fontSize: 12, color: Color(0xffB1B1B1)),
+                          style:
+                              TextStyle(fontSize: 12, color: Color(0xffB1B1B1)),
                         ),
                         RadioButtonWidget(
                           controller: _documentoIdentidadController,
                           onOptionChanged: (option) {
                             setState(() {
-                              _tipoDocumentoController.text =
-                                  option.toString();
+                              _tipoDocumentoController.text = option.toString();
                             });
                           },
                         ),
                         divider30(),
                         const Text(
                           "Género",
-                          style: TextStyle(
-                              fontSize: 12, color: Color(0xffB1B1B1)),
+                          style:
+                              TextStyle(fontSize: 12, color: Color(0xffB1B1B1)),
                         ),
                         GenderDropdownWidget(
                           controller: _generoController,
@@ -321,8 +321,8 @@ class _RegistrarCliente1PageState extends State<RegistrarCliente1Page> {
                         divider30(),
                         const Text(
                           "Correo electrónico",
-                          style: TextStyle(
-                              fontSize: 12, color: Color(0xffB1B1B1)),
+                          style:
+                              TextStyle(fontSize: 12, color: Color(0xffB1B1B1)),
                         ),
                         InputTextFieldEmailWidget(
                           hintText: "example@email.com",
@@ -332,8 +332,8 @@ class _RegistrarCliente1PageState extends State<RegistrarCliente1Page> {
                         divider30(),
                         const Text(
                           "Contraseña",
-                          style: TextStyle(
-                              fontSize: 12, color: Color(0xffB1B1B1)),
+                          style:
+                              TextStyle(fontSize: 12, color: Color(0xffB1B1B1)),
                         ),
                         InputTextFieldPasswordWidget(
                           controller: _passwordController,
@@ -341,8 +341,8 @@ class _RegistrarCliente1PageState extends State<RegistrarCliente1Page> {
                         divider30(),
                         const Text(
                           "Direccion",
-                          style: TextStyle(
-                              fontSize: 12, color: Color(0xffB1B1B1)),
+                          style:
+                              TextStyle(fontSize: 12, color: Color(0xffB1B1B1)),
                         ),
                         InputTextFieldWidget(
                           hintText: "Latitud",
@@ -367,8 +367,8 @@ class _RegistrarCliente1PageState extends State<RegistrarCliente1Page> {
                         divider30(),
                         const Text(
                           "Detalle su ubicacion",
-                          style: TextStyle(
-                              fontSize: 12, color: Color(0xffB1B1B1)),
+                          style:
+                              TextStyle(fontSize: 12, color: Color(0xffB1B1B1)),
                         ),
                         InputTextFieldWidget(
                           hintText: "1er piso / Ofic 201 / Dpto 301",
@@ -378,8 +378,8 @@ class _RegistrarCliente1PageState extends State<RegistrarCliente1Page> {
                         divider30(),
                         const Text(
                           "Referencia de su ubicacion",
-                          style: TextStyle(
-                              fontSize: 12, color: Color(0xffB1B1B1)),
+                          style:
+                              TextStyle(fontSize: 12, color: Color(0xffB1B1B1)),
                         ),
                         InputTextFieldWidget(
                           hintText:
@@ -435,14 +435,15 @@ class _RegistrarCliente1PageState extends State<RegistrarCliente1Page> {
                                 formState.validate() &&
                                 agreeTerms) {
                               await _registroYGuardarDatos();
+                              // await _registerClienteToDB();
+                              // print(_registerClienteToDB);
                             } else {
                               if (!agreeTerms) {
                                 setState(() {
                                   agreeError = 'Este campo es obligatorio';
                                 });
                               }
-                              snackBarMessage(
-                                  context, Typemessage.incomplete);
+                              snackBarMessage(context, Typemessage.incomplete);
                             }
                           },
                           text: "Registrar",
@@ -456,21 +457,21 @@ class _RegistrarCliente1PageState extends State<RegistrarCliente1Page> {
                 ],
               ),
             ),
-            isLoading ?
-                 Container(
-                   height: height,
-                     color: kDefaultIconDarkColor.withOpacity(0.85),
-                     child: Center(
-                       child: SizedBox(
-                         width: 50,
-                         height: 50,
-                         child: CircularProgressIndicator(
-                           color: kBrandPrimaryColor1,
-                           strokeWidth: 5,
-                         ),
-                       ),
-                     ),
-                   )
+            isLoading
+                ? Container(
+                    height: height,
+                    color: kDefaultIconDarkColor.withOpacity(0.85),
+                    child: Center(
+                      child: SizedBox(
+                        width: 50,
+                        height: 50,
+                        child: CircularProgressIndicator(
+                          color: kBrandPrimaryColor1,
+                          strokeWidth: 5,
+                        ),
+                      ),
+                    ),
+                  )
                 : SizedBox(),
           ],
         ),
