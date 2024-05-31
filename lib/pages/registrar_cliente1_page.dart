@@ -38,7 +38,8 @@ class _RegistrarCliente1PageState extends State<RegistrarCliente1Page> {
 
   bool isLoading = false;
 
-  String photoURLforFirebase = 'https://images.pexels.com/photos/1878687/pexels-photo-1878687.jpeg';
+  String photoURLforFirebase =
+      'https://images.pexels.com/photos/1878687/pexels-photo-1878687.jpeg';
   String uidForFirebase = '';
   String phoneNumberForFirebase = '';
 
@@ -257,39 +258,57 @@ class _RegistrarCliente1PageState extends State<RegistrarCliente1Page> {
                           divider20(),
                           const Text(
                             "Nombres",
-                            style:
-                                TextStyle(fontSize: 12, color: Color(0xffB1B1B1)),
+                            style: TextStyle(
+                                fontSize: 12, color: Color(0xffB1B1B1)),
                           ),
-                          InputTextFieldNameWidget(
-                            hintText: "Ingresa tu nombre",
-                            textInputType: TextInputType.name,
+                          InputTextFieldWidget(
                             controller: _nombreController,
+                            icon: Icons.person,
+                            optionRegex: [
+                              (
+                                RegExp(r'^[A-Za-zÑñáéíóúÁÉÍÓÚ\s]+(?<!\s)$'),
+                                "no ingrese numeros o simbolos",
+                              ),
+                              (
+                                RegExp(r'\s+$'),
+                                "no deje espacios al final",
+                              ),
+                            ],
                           ),
                           divider20(),
                           const Text(
                             "Apellidos Completos",
-                            style:
-                                TextStyle(fontSize: 12, color: Color(0xffB1B1B1)),
+                            style: TextStyle(
+                                fontSize: 12, color: Color(0xffB1B1B1)),
                           ),
-                          InputTextFieldNameWidget(
-                            hintText: "Ingresa apellidos",
-                            textInputType: TextInputType.name,
+                          InputTextFieldWidget(
                             controller: _apellidoController,
+                            icon: Icons.person,
+                            optionRegex: [
+                              (
+                                RegExp(r'^[A-Za-zÑñáéíóúÁÉÍÓÚ\s]+(?<!\s)$'),
+                                "no ingrese numeros o simbolos",
+                              ),
+                              (
+                                RegExp(r'\s+$'),
+                                "no deje espacios al final",
+                              ),
+                            ],
                           ),
-                          divider30(),
+                          divider20(),
                           const Text(
                             "Fecha de Nacimiento",
-                            style:
-                                TextStyle(fontSize: 12, color: Color(0xffB1B1B1)),
+                            style: TextStyle(
+                                fontSize: 12, color: Color(0xffB1B1B1)),
                           ),
                           DataBirthWidget(
                             controller: _fechaDeNacimientoController,
                           ),
-                          divider30(),
+                          divider20(),
                           const Text(
                             "Nro de Celular",
-                            style:
-                                TextStyle(fontSize: 12, color: Color(0xffB1B1B1)),
+                            style: TextStyle(
+                                fontSize: 12, color: Color(0xffB1B1B1)),
                           ),
                           InputTextFieldWidget(
                             icon: Icons.phone,
@@ -297,26 +316,36 @@ class _RegistrarCliente1PageState extends State<RegistrarCliente1Page> {
                             controller: _celularController,
                             textInputType: TextInputType.number,
                             maxLength: 9,
+                            optionRegex: [
+                              (
+                                RegExp(r'^9.*$'),
+                                ("El número debe empezar con 9")
+                              ),
+                              (RegExp(r'[0-9]'), ("Ingresar solo números")),
+                              (RegExp(r'^\S+$'), ("No deje espacios vacios")),
+                              (RegExp(r'^[^-_.,]+$'), ("Ingrese solo números")),
+                            ],
                           ),
                           divider30(),
                           const Text(
                             "Seleccione su documento de identidad",
-                            style:
-                                TextStyle(fontSize: 12, color: Color(0xffB1B1B1)),
+                            style: TextStyle(
+                                fontSize: 12, color: Color(0xffB1B1B1)),
                           ),
                           RadioButtonWidget(
                             controller: _documentoIdentidadController,
                             onOptionChanged: (option) {
                               setState(() {
-                                _tipoDocumentoController.text = option.toString();
+                                _tipoDocumentoController.text =
+                                    option.toString();
                               });
                             },
                           ),
                           divider30(),
                           const Text(
                             "Género",
-                            style:
-                                TextStyle(fontSize: 12, color: Color(0xffB1B1B1)),
+                            style: TextStyle(
+                                fontSize: 12, color: Color(0xffB1B1B1)),
                           ),
                           GenderDropdownWidget(
                             controller: _generoController,
@@ -324,19 +353,25 @@ class _RegistrarCliente1PageState extends State<RegistrarCliente1Page> {
                           divider30(),
                           const Text(
                             "Correo electrónico",
-                            style:
-                                TextStyle(fontSize: 12, color: Color(0xffB1B1B1)),
+                            style: TextStyle(
+                                fontSize: 12, color: Color(0xffB1B1B1)),
                           ),
-                          InputTextFieldEmailWidget(
-                            hintText: "example@email.com",
-                            textInputType: TextInputType.emailAddress,
+                          InputTextFieldWidget(
                             controller: _emailController,
+                            icon: Icons.person,
+                            optionRegex: [
+                              (
+                                (RegExp(
+                                    r'[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*@[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*[.][a-zA-Z]{2,5}')),
+                                "Debe ingresar un correo válido"
+                              ),
+                            ],
                           ),
                           divider30(),
                           const Text(
                             "Contraseña",
-                            style:
-                                TextStyle(fontSize: 12, color: Color(0xffB1B1B1)),
+                            style: TextStyle(
+                                fontSize: 12, color: Color(0xffB1B1B1)),
                           ),
                           InputTextFieldPasswordWidget(
                             controller: _passwordController,
@@ -344,14 +379,20 @@ class _RegistrarCliente1PageState extends State<RegistrarCliente1Page> {
                           divider30(),
                           const Text(
                             "Direccion",
-                            style:
-                                TextStyle(fontSize: 12, color: Color(0xffB1B1B1)),
+                            style: TextStyle(
+                                fontSize: 12, color: Color(0xffB1B1B1)),
                           ),
                           InputTextFieldWidget(
                             hintText: "Latitud",
                             icon: Icons.location_on,
                             textInputType: TextInputType.number,
                             controller: _latController,
+                            maxLength: 12,
+                            optionRegex: [
+                              (RegExp(r'^[0-9]+(\.[0-9]+)?$'), "Use solo un punto decimal"),
+                              (RegExp(r'^[0-9]*\.?[0-9]+$'),"Use el punto decimal"),
+                              (RegExp(r'[0-9]'), "Ingresar solo números"),
+                            ],
                           ),
                           divider12(),
                           InputTextFieldWidget(
@@ -359,6 +400,12 @@ class _RegistrarCliente1PageState extends State<RegistrarCliente1Page> {
                             icon: Icons.location_on,
                             textInputType: TextInputType.number,
                             controller: _lngController,
+                            maxLength: 12,
+                            optionRegex: [
+                              (RegExp(r'^[0-9]+(\.[0-9]+)?$'), "Use solo un punto decimal"),
+                              (RegExp(r'^[0-9]*\.?[0-9]+$'),"Use el punto decimal"),
+                              (RegExp(r'[0-9]'), "Ingresar solo números"),
+                            ],
                           ),
                           divider12(),
                           InputTextFieldWidget(
@@ -366,23 +413,25 @@ class _RegistrarCliente1PageState extends State<RegistrarCliente1Page> {
                             icon: Icons.location_on,
                             textInputType: TextInputType.text,
                             controller: _direccionController,
+                            maxLength: 50,
                           ),
                           divider30(),
                           const Text(
                             "Detalle su ubicacion",
-                            style:
-                                TextStyle(fontSize: 12, color: Color(0xffB1B1B1)),
+                            style: TextStyle(
+                                fontSize: 12, color: Color(0xffB1B1B1)),
                           ),
                           InputTextFieldWidget(
                             hintText: "1er piso / Ofic 201 / Dpto 301",
                             icon: (Icons.map_sharp),
                             controller: _detalleUbicacionController,
+
                           ),
                           divider30(),
                           const Text(
                             "Referencia de su ubicacion",
-                            style:
-                                TextStyle(fontSize: 12, color: Color(0xffB1B1B1)),
+                            style: TextStyle(
+                                fontSize: 12, color: Color(0xffB1B1B1)),
                           ),
                           InputTextFieldWidget(
                             hintText:
@@ -446,7 +495,8 @@ class _RegistrarCliente1PageState extends State<RegistrarCliente1Page> {
                                     agreeError = 'Este campo es obligatorio';
                                   });
                                 }
-                                snackBarMessage(context, Typemessage.incomplete);
+                                snackBarMessage(
+                                    context, Typemessage.incomplete);
                               }
                             },
                             text: "Registrar",
@@ -463,8 +513,8 @@ class _RegistrarCliente1PageState extends State<RegistrarCliente1Page> {
             ),
             isLoading
                 ? Align(
-              alignment: Alignment.bottomCenter,
-                  child: Container(
+                    alignment: Alignment.bottomCenter,
+                    child: Container(
                       height: height,
                       color: kDefaultIconDarkColor.withOpacity(0.85),
                       child: Center(
@@ -478,7 +528,7 @@ class _RegistrarCliente1PageState extends State<RegistrarCliente1Page> {
                         ),
                       ),
                     ),
-                )
+                  )
                 : SizedBox(),
           ],
         ),

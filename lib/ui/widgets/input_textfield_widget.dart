@@ -2,18 +2,17 @@ import 'package:flutter/material.dart';
 import '../general/colors.dart';
 
 class InputTextFieldWidget extends StatelessWidget {
-  String? hintText;
-  String? labelText;
-  Function(String?)? validator;
-  int? maxLength;
-  TextInputType? textInputType;
-  TextEditingController controller;
-  IconData icon;
-  Function()? onTap;
-  Function(String?)? onSaved;
-  bool? isEnabled;
-
-  RegExp? nameRegex = RegExp(r'^[A-Za-zÑñ\s]+(?<!\s)$');
+  final String? hintText;
+  final String? labelText;
+  final Function(String?)? validator;
+  final int? maxLength;
+  final TextInputType? textInputType;
+  final TextEditingController controller;
+  final IconData icon;
+  final Function()? onTap;
+  final Function(String?)? onSaved;
+  final bool? isEnabled;
+  final List<(RegExp, String)>? optionRegex;
 
   InputTextFieldWidget({
     this.hintText,
@@ -25,7 +24,8 @@ class InputTextFieldWidget extends StatelessWidget {
     this.onTap,
     this.onSaved,
     this.validator,
-    this. isEnabled = true,
+    this.isEnabled = true,
+    this.optionRegex,
   });
 
   @override
@@ -38,15 +38,8 @@ class InputTextFieldWidget extends StatelessWidget {
         controller: controller,
         onSaved: onSaved,
         keyboardType: textInputType,
-        style: TextStyle(
-          fontSize: 14,
-          color: Colors.black,
-        ),
-        // inputFormatters: maxLength != null
-        //     ? [
-        //         FilteringTextInputFormatter(nameRegex, allow: true),
-        //       ]
-        //     : [],
+        maxLength: maxLength,
+        style: TextStyle(fontSize: 14, color: Colors.black),
         decoration: InputDecoration(
           fillColor: Colors.white,
           prefixIcon: Icon(icon, color: Color(0xffB1B1B1)),
@@ -88,11 +81,17 @@ class InputTextFieldWidget extends StatelessWidget {
           if (validator != null) {
             // Validación adicional si se proporciona una función de validación personalizada
             return validator!(value);
-          }else if (value == null || value.isEmpty) {
+          } else if (value == null || value.isEmpty) {
             // Validación si el campo está vacío
             return "El campo es obligatorio";
+          } else if (optionRegex != null) {
+            for (var option in optionRegex!) {
+              if (!option.$1.hasMatch(value)) {
+                return option.$2;
+              }
+            }
           }
-          return null;
+          return null; // Indica que no hay errores de validación
         },
       ),
     );

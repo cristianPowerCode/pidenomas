@@ -67,16 +67,16 @@ class _RadioButtonWidgetState extends State<RadioButtonWidget> {
           isEnabled: selectedOption == null ? false : true,
           hintText: selectedOption == null ? 'Seleccione su tipo de documento' : (selectedOption == 1 ? 'DNI' : 'Carnet de Extranjería'),
           controller: widget.controller,
-          textInputType: TextInputType.number,
+          textInputType: TextInputType.numberWithOptions(decimal: false, signed: false),
           maxLength: selectedOption == 1 ? 8 : 9,
+          optionRegex: [(RegExp(r'[0-9]'),"ingrese sólo números")],
           validator: (value) {
             if (selectedOption == null) {
               return 'Por favor seleccione el tipo de su documento';
             }
             if (selectedOption == 1 && (value == null || value.length != 8)) {
               return 'El DNI debe tener 8 dígitos';
-            } else if (selectedOption == 2 &&
-                (value == null || value.length != 9)) {
+            } else if (selectedOption == 2 && (value == null || value.length != 9)) {
               return 'El Carnet de Extranjería debe tener 9 dígitos';
             }
             return null;
