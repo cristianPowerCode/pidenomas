@@ -1,6 +1,7 @@
 # Carpeta de dependencias
 .dart_tool/
 .pub/
+pubspec.lock
 
 # Directorio de construcción
 build/

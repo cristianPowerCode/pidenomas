@@ -1,6 +1,3 @@
-import 'package:bottom_picker/bottom_picker.dart';
-import 'package:bottom_picker/resources/arrays.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:pidenomas/ui/general/colors.dart';
@@ -28,66 +25,44 @@ class _DataBirthWidgetState extends State<DataBirthWidget> {
     _selectedDate = DateTime(now.year - 18, now.month, now.day);
   }
 
-  void _openDatePicker(BuildContext context) {
+  Future<void> _openDatePicker(BuildContext context) async {
     DateTime now = DateTime.now();
     DateTime maxAllowedDate = DateTime(now.year - 18, now.month, now.day);
     DateTime minAllowedDate = DateTime(now.year - 120, now.month, now.day);
 
-    // Asegurarse de que la fecha inicial no sea después de la fecha máxima permitida
-    if (_selectedDate.isAfter(maxAllowedDate)) {
-      _selectedDate = maxAllowedDate;
-    }
-
-    BottomPicker.date(
-      pickerTitle: const Text("Selecciona tu fecha de nacimiento"),
-      dateOrder: DatePickerDateOrder.ymd,
-      initialDateTime: _selectedDate,
-      pickerTextStyle: const TextStyle(
-        color: kBrandPrimaryColor1,
-        fontWeight: FontWeight.bold,
-        fontSize: 18,
-      ),
-      onChange: (date) {
-        // Actualizar _selectedDate en tiempo real cuando cambia la fecha
-        setState(() {
-          _selectedDate = date!;
-        });
-      },
-      onSubmit: (date) {
-        // Usar la fecha seleccionada o la fecha por defecto
-        setState(() {
-          _selectedDate = date!;
-        });
-        String formattedDate = DateFormat('yyyy-MM-dd').format(date);
-        widget.controller.text = formattedDate;
-      },
-      bottomPickerTheme: BottomPickerTheme.heavyRain,
-      buttonStyle: BoxDecoration(
-        color: kBrandSecundaryColor1,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: kBrandSecundaryColor2,
-        ),
-      ),
-      buttonWidth: 200,
-      buttonContent: const Padding(
-        padding: EdgeInsets.symmetric(
-          horizontal: 10,
-        ),
-        child: Align(
-          alignment: Alignment.center,
-          child: Text(
-            'SELECCIONAR',
-            style: TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
+    final DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: _selectedDate,
+      firstDate: minAllowedDate,
+      lastDate: maxAllowedDate,
+      locale: const Locale('es', 'ES'), // Configurar la localización a español
+      builder: (BuildContext context, Widget? child) {
+        return Theme(
+          data: ThemeData.light().copyWith(
+            colorScheme: ColorScheme.light(
+              primary: kBrandPrimaryColor1, // Color del encabezado
+              onPrimary: Colors.white, // Color del texto del encabezado
+              surface: Colors.white, // Color de fondo de la selección
+              onSurface: Colors.black, // Color del texto del contenido
             ),
+            dialogBackgroundColor: Colors.white, // Color de fondo del cuadro de diálogo
+          textButtonTheme: TextButtonThemeData(
+            style: TextButton.styleFrom(
+              foregroundColor: Colors.black, // Color de los botones de aceptar y cancelar
+            ),),
           ),
-        ),
-      ),
-      minDateTime: minAllowedDate,
-      maxDateTime: maxAllowedDate,
-    ).show(context);
+          child: child!,
+        );
+      },
+    );
+
+    if (pickedDate != null && pickedDate != _selectedDate) {
+      setState(() {
+        _selectedDate = pickedDate;
+      });
+      String formattedDate = DateFormat('yyyy-MM-dd', 'es').format(pickedDate);
+      widget.controller.text = formattedDate;
+    }
   }
 
   @override
