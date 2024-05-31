@@ -98,10 +98,19 @@ class _RegistrarDuenhoDeNegocioPageState
                             style: TextStyle(
                                 fontSize: 12, color: Color(0xffB1B1B1)),
                           ),
-                          InputTextFieldNameWidget(
-                            hintText: "Ingresa tu nombre",
-                            textInputType: TextInputType.name,
+                          InputTextFieldWidget(
                             controller: _nombreController,
+                            icon: Icons.person,
+                            optionRegex: [
+                              (
+                              RegExp(r'^[A-Za-zÑñáéíóúÁÉÍÓÚ\s]+(?<!\s)$'),
+                              "no ingrese numeros o simbolos",
+                              ),
+                              (
+                              RegExp(r'\s+$'),
+                              "no deje espacios al final",
+                              ),
+                            ],
                           ),
                           divider20(),
                           const Text(
@@ -109,12 +118,21 @@ class _RegistrarDuenhoDeNegocioPageState
                             style: TextStyle(
                                 fontSize: 12, color: Color(0xffB1B1B1)),
                           ),
-                          InputTextFieldNameWidget(
-                            hintText: "Ingresa apellidos",
-                            textInputType: TextInputType.name,
+                          InputTextFieldWidget(
                             controller: _apellidoController,
+                            icon: Icons.person,
+                            optionRegex: [
+                              (
+                              RegExp(r'^[A-Za-zÑñáéíóúÁÉÍÓÚ\s]+(?<!\s)$'),
+                              "no ingrese numeros o simbolos",
+                              ),
+                              (
+                              RegExp(r'\s+$'),
+                              "no deje espacios al final",
+                              ),
+                            ],
                           ),
-                          divider30(),
+                          divider20(),
                           const Text(
                             "Fecha de Nacimiento",
                             style: TextStyle(
@@ -123,7 +141,7 @@ class _RegistrarDuenhoDeNegocioPageState
                           DataBirthWidget(
                             controller: _fechaDeNacimientoController,
                           ),
-                          divider30(),
+                          divider20(),
                           const Text(
                             "Nro de Celular",
                             style: TextStyle(
@@ -134,6 +152,16 @@ class _RegistrarDuenhoDeNegocioPageState
                             hintText: "Telefono",
                             controller: _celularController,
                             textInputType: TextInputType.number,
+                            maxLength: 9,
+                            optionRegex: [
+                              (
+                              RegExp(r'^9.*$'),
+                              ("El número debe empezar con 9")
+                              ),
+                              (RegExp(r'[0-9]'), ("Ingresar solo números")),
+                              (RegExp(r'^\S+$'), ("No deje espacios vacios")),
+                              (RegExp(r'^[^-_.,]+$'), ("Ingrese solo números")),
+                            ],
                           ),
                           divider30(),
                           const Text(
@@ -165,10 +193,16 @@ class _RegistrarDuenhoDeNegocioPageState
                             style: TextStyle(
                                 fontSize: 12, color: Color(0xffB1B1B1)),
                           ),
-                          InputTextFieldEmailWidget(
-                            hintText: "example@email.com",
-                            textInputType: TextInputType.emailAddress,
+                          InputTextFieldWidget(
                             controller: _emailController,
+                            icon: Icons.person,
+                            optionRegex: [
+                              (
+                              (RegExp(
+                                  r'[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*@[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*[.][a-zA-Z]{2,5}')),
+                              "Debe ingresar un correo válido"
+                              ),
+                            ],
                           ),
                           divider30(),
                           const Text(
@@ -190,6 +224,12 @@ class _RegistrarDuenhoDeNegocioPageState
                             icon: Icons.location_on,
                             textInputType: TextInputType.number,
                             controller: _latController,
+                            maxLength: 12,
+                            optionRegex: [
+                              (RegExp(r'^[0-9]+(\.[0-9]+)?$'), "Use solo un punto decimal"),
+                              (RegExp(r'^[0-9]*\.?[0-9]+$'),"Use el punto decimal"),
+                              (RegExp(r'[0-9]'), "Ingresar solo números"),
+                            ],
                           ),
                           divider12(),
                           InputTextFieldWidget(
@@ -197,6 +237,12 @@ class _RegistrarDuenhoDeNegocioPageState
                             icon: Icons.location_on,
                             textInputType: TextInputType.number,
                             controller: _lngController,
+                            maxLength: 12,
+                            optionRegex: [
+                              (RegExp(r'^[0-9]+(\.[0-9]+)?$'), "Use solo un punto decimal"),
+                              (RegExp(r'^[0-9]*\.?[0-9]+$'),"Use el punto decimal"),
+                              (RegExp(r'[0-9]'), "Ingresar solo números"),
+                            ],
                           ),
                           divider12(),
                           InputTextFieldWidget(
