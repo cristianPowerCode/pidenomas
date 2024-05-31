@@ -96,11 +96,11 @@ class _RegistrarCliente1PageState extends State<RegistrarCliente1Page> {
           snackBarMessage(context, Typemessage.loginSuccess);
         } else {
           print("Error: Value is null");
-          snackBarMessage(context, Typemessage.error);
+          // snackBarMessage(context, Typemessage.error);
         }
       } catch (error) {
         print("Catch Error: $error");
-        snackBarMessage(context, Typemessage.error);
+        // snackBarMessage(context, Typemessage.error);
       } finally {
         setState(() {
           isLoading = false;
@@ -243,235 +243,242 @@ class _RegistrarCliente1PageState extends State<RegistrarCliente1Page> {
             BackGroundWidget(
               child: Stack(
                 children: [
-                  Form(
-                    key: _formKey,
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        PrincipalText(string: "Regístrate"),
-                        PrincipalText(string: "como Cliente"),
-                        divider20(),
-                        const Text(
-                          "Nombres",
-                          style:
-                              TextStyle(fontSize: 12, color: Color(0xffB1B1B1)),
-                        ),
-                        InputTextFieldNameWidget(
-                          hintText: "Ingresa tu nombre",
-                          textInputType: TextInputType.name,
-                          controller: _nombreController,
-                        ),
-                        divider20(),
-                        const Text(
-                          "Apellidos Completos",
-                          style:
-                              TextStyle(fontSize: 12, color: Color(0xffB1B1B1)),
-                        ),
-                        InputTextFieldNameWidget(
-                          hintText: "Ingresa apellidos",
-                          textInputType: TextInputType.name,
-                          controller: _apellidoController,
-                        ),
-                        divider30(),
-                        const Text(
-                          "Fecha de Nacimiento",
-                          style:
-                              TextStyle(fontSize: 12, color: Color(0xffB1B1B1)),
-                        ),
-                        DataBirthWidget(
-                          controller: _fechaDeNacimientoController,
-                        ),
-                        divider30(),
-                        const Text(
-                          "Nro de Celular",
-                          style:
-                              TextStyle(fontSize: 12, color: Color(0xffB1B1B1)),
-                        ),
-                        InputTextFieldWidget(
-                          icon: Icons.phone,
-                          hintText: "Telefono",
-                          controller: _celularController,
-                          textInputType: TextInputType.number,
-                        ),
-                        divider30(),
-                        const Text(
-                          "Seleccione su documento de identidad",
-                          style:
-                              TextStyle(fontSize: 12, color: Color(0xffB1B1B1)),
-                        ),
-                        RadioButtonWidget(
-                          controller: _documentoIdentidadController,
-                          onOptionChanged: (option) {
-                            setState(() {
-                              _tipoDocumentoController.text = option.toString();
-                            });
-                          },
-                        ),
-                        divider30(),
-                        const Text(
-                          "Género",
-                          style:
-                              TextStyle(fontSize: 12, color: Color(0xffB1B1B1)),
-                        ),
-                        GenderDropdownWidget(
-                          controller: _generoController,
-                        ),
-                        divider30(),
-                        const Text(
-                          "Correo electrónico",
-                          style:
-                              TextStyle(fontSize: 12, color: Color(0xffB1B1B1)),
-                        ),
-                        InputTextFieldEmailWidget(
-                          hintText: "example@email.com",
-                          textInputType: TextInputType.emailAddress,
-                          controller: _emailController,
-                        ),
-                        divider30(),
-                        const Text(
-                          "Contraseña",
-                          style:
-                              TextStyle(fontSize: 12, color: Color(0xffB1B1B1)),
-                        ),
-                        InputTextFieldPasswordWidget(
-                          controller: _passwordController,
-                        ),
-                        divider30(),
-                        const Text(
-                          "Direccion",
-                          style:
-                              TextStyle(fontSize: 12, color: Color(0xffB1B1B1)),
-                        ),
-                        InputTextFieldWidget(
-                          hintText: "Latitud",
-                          icon: Icons.location_on,
-                          textInputType: TextInputType.number,
-                          controller: _latController,
-                        ),
-                        divider12(),
-                        InputTextFieldWidget(
-                          hintText: "Longitud",
-                          icon: Icons.location_on,
-                          textInputType: TextInputType.number,
-                          controller: _lngController,
-                        ),
-                        divider12(),
-                        InputTextFieldWidget(
-                          hintText: "Dirección",
-                          icon: Icons.location_on,
-                          textInputType: TextInputType.text,
-                          controller: _direccionController,
-                        ),
-                        divider30(),
-                        const Text(
-                          "Detalle su ubicacion",
-                          style:
-                              TextStyle(fontSize: 12, color: Color(0xffB1B1B1)),
-                        ),
-                        InputTextFieldWidget(
-                          hintText: "1er piso / Ofic 201 / Dpto 301",
-                          icon: (Icons.map_sharp),
-                          controller: _detalleUbicacionController,
-                        ),
-                        divider30(),
-                        const Text(
-                          "Referencia de su ubicacion",
-                          style:
-                              TextStyle(fontSize: 12, color: Color(0xffB1B1B1)),
-                        ),
-                        InputTextFieldWidget(
-                          hintText:
-                              "Ejm: Casa de 2 pisos color verde frente a bodega.",
-                          icon: Icons.maps_ugc,
-                          controller: _referenciaUbicacionController,
-                        ),
-                        divider40(),
-                        Center(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                "¿Ya tienes una cuenta?",
-                                style: TextStyle(
-                                  color: kBrandPrimaryColor1,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            LoginClientePage(),
-                                      ));
-                                },
-                                child: Text(
-                                  "Inicia sesión aquí",
+                  AbsorbPointer(
+                    absorbing: isLoading,
+                    child: Form(
+                      key: _formKey,
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          PrincipalText(string: "Regístrate"),
+                          PrincipalText(string: "como Cliente"),
+                          divider20(),
+                          const Text(
+                            "Nombres",
+                            style:
+                                TextStyle(fontSize: 12, color: Color(0xffB1B1B1)),
+                          ),
+                          InputTextFieldNameWidget(
+                            hintText: "Ingresa tu nombre",
+                            textInputType: TextInputType.name,
+                            controller: _nombreController,
+                          ),
+                          divider20(),
+                          const Text(
+                            "Apellidos Completos",
+                            style:
+                                TextStyle(fontSize: 12, color: Color(0xffB1B1B1)),
+                          ),
+                          InputTextFieldNameWidget(
+                            hintText: "Ingresa apellidos",
+                            textInputType: TextInputType.name,
+                            controller: _apellidoController,
+                          ),
+                          divider30(),
+                          const Text(
+                            "Fecha de Nacimiento",
+                            style:
+                                TextStyle(fontSize: 12, color: Color(0xffB1B1B1)),
+                          ),
+                          DataBirthWidget(
+                            controller: _fechaDeNacimientoController,
+                          ),
+                          divider30(),
+                          const Text(
+                            "Nro de Celular",
+                            style:
+                                TextStyle(fontSize: 12, color: Color(0xffB1B1B1)),
+                          ),
+                          InputTextFieldWidget(
+                            icon: Icons.phone,
+                            hintText: "Telefono",
+                            controller: _celularController,
+                            textInputType: TextInputType.number,
+                            maxLength: 9,
+                          ),
+                          divider30(),
+                          const Text(
+                            "Seleccione su documento de identidad",
+                            style:
+                                TextStyle(fontSize: 12, color: Color(0xffB1B1B1)),
+                          ),
+                          RadioButtonWidget(
+                            controller: _documentoIdentidadController,
+                            onOptionChanged: (option) {
+                              setState(() {
+                                _tipoDocumentoController.text = option.toString();
+                              });
+                            },
+                          ),
+                          divider30(),
+                          const Text(
+                            "Género",
+                            style:
+                                TextStyle(fontSize: 12, color: Color(0xffB1B1B1)),
+                          ),
+                          GenderDropdownWidget(
+                            controller: _generoController,
+                          ),
+                          divider30(),
+                          const Text(
+                            "Correo electrónico",
+                            style:
+                                TextStyle(fontSize: 12, color: Color(0xffB1B1B1)),
+                          ),
+                          InputTextFieldEmailWidget(
+                            hintText: "example@email.com",
+                            textInputType: TextInputType.emailAddress,
+                            controller: _emailController,
+                          ),
+                          divider30(),
+                          const Text(
+                            "Contraseña",
+                            style:
+                                TextStyle(fontSize: 12, color: Color(0xffB1B1B1)),
+                          ),
+                          InputTextFieldPasswordWidget(
+                            controller: _passwordController,
+                          ),
+                          divider30(),
+                          const Text(
+                            "Direccion",
+                            style:
+                                TextStyle(fontSize: 12, color: Color(0xffB1B1B1)),
+                          ),
+                          InputTextFieldWidget(
+                            hintText: "Latitud",
+                            icon: Icons.location_on,
+                            textInputType: TextInputType.number,
+                            controller: _latController,
+                          ),
+                          divider12(),
+                          InputTextFieldWidget(
+                            hintText: "Longitud",
+                            icon: Icons.location_on,
+                            textInputType: TextInputType.number,
+                            controller: _lngController,
+                          ),
+                          divider12(),
+                          InputTextFieldWidget(
+                            hintText: "Dirección",
+                            icon: Icons.location_on,
+                            textInputType: TextInputType.text,
+                            controller: _direccionController,
+                          ),
+                          divider30(),
+                          const Text(
+                            "Detalle su ubicacion",
+                            style:
+                                TextStyle(fontSize: 12, color: Color(0xffB1B1B1)),
+                          ),
+                          InputTextFieldWidget(
+                            hintText: "1er piso / Ofic 201 / Dpto 301",
+                            icon: (Icons.map_sharp),
+                            controller: _detalleUbicacionController,
+                          ),
+                          divider30(),
+                          const Text(
+                            "Referencia de su ubicacion",
+                            style:
+                                TextStyle(fontSize: 12, color: Color(0xffB1B1B1)),
+                          ),
+                          InputTextFieldWidget(
+                            hintText:
+                                "Ejm: Casa de 2 pisos color verde frente a bodega.",
+                            icon: Icons.maps_ugc,
+                            controller: _referenciaUbicacionController,
+                          ),
+                          divider40(),
+                          Center(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  "¿Ya tienes una cuenta?",
                                   style: TextStyle(
-                                    color: Colors.black,
+                                    color: kBrandPrimaryColor1,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
-                              ),
-                            ],
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              LoginClientePage(),
+                                        ));
+                                  },
+                                  child: Text(
+                                    "Inicia sesión aquí",
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                        divider20(),
-                        CheckBox1Widget(
-                          error: agreeError,
-                          onChanged: _onCheckbox1Changed,
-                        ),
-                        CheckBox2Widget(
-                          onChanged: _onCheckbox2Changed,
-                        ),
-                        divider40(),
-                        ButtonWidget(
-                          onPressed: () async {
-                            final formState = _formKey.currentState;
-                            if (formState != null &&
-                                formState.validate() &&
-                                agreeTerms) {
-                              await _registroYGuardarDatos();
-                              // await _registerClienteToDB();
-                              // print(_registerClienteToDB);
-                            } else {
-                              if (!agreeTerms) {
-                                setState(() {
-                                  agreeError = 'Este campo es obligatorio';
-                                });
+                          divider20(),
+                          CheckBox1Widget(
+                            error: agreeError,
+                            onChanged: _onCheckbox1Changed,
+                          ),
+                          CheckBox2Widget(
+                            onChanged: _onCheckbox2Changed,
+                          ),
+                          divider40(),
+                          ButtonWidget(
+                            onPressed: () async {
+                              final formState = _formKey.currentState;
+                              if (formState != null &&
+                                  formState.validate() &&
+                                  agreeTerms) {
+                                await _registroYGuardarDatos();
+                                // await _registerClienteToDB();
+                                // print(_registerClienteToDB);
+                              } else {
+                                if (!agreeTerms) {
+                                  setState(() {
+                                    agreeError = 'Este campo es obligatorio';
+                                  });
+                                }
+                                snackBarMessage(context, Typemessage.incomplete);
                               }
-                              snackBarMessage(context, Typemessage.incomplete);
-                            }
-                          },
-                          text: "Registrar",
-                        ),
-                        divider40(),
-                        divider40(),
-                        divider40(),
-                      ],
+                            },
+                            text: "Registrar",
+                          ),
+                          divider40(),
+                          divider40(),
+                          divider40(),
+                        ],
+                      ),
                     ),
                   ),
                 ],
               ),
             ),
             isLoading
-                ? Container(
-                    height: height,
-                    color: kDefaultIconDarkColor.withOpacity(0.85),
-                    child: Center(
-                      child: SizedBox(
-                        width: 50,
-                        height: 50,
-                        child: CircularProgressIndicator(
-                          color: kBrandPrimaryColor1,
-                          strokeWidth: 5,
+                ? Align(
+              alignment: Alignment.bottomCenter,
+                  child: Container(
+                      height: height,
+                      color: kDefaultIconDarkColor.withOpacity(0.85),
+                      child: Center(
+                        child: SizedBox(
+                          width: 50,
+                          height: 50,
+                          child: CircularProgressIndicator(
+                            color: kBrandPrimaryColor1,
+                            strokeWidth: 5,
+                          ),
                         ),
                       ),
                     ),
-                  )
+                )
                 : SizedBox(),
           ],
         ),

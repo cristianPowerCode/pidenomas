@@ -13,7 +13,7 @@ class SplashPage extends StatefulWidget {
 class _SplashPageState extends State<SplashPage> {
   startTimer() {
     Timer(const Duration(seconds: 3), () {
-      Navigator.push(context, MaterialPageRoute(builder: (context) => PreInit()));
+      Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => PreInit(),), (route) => false,);
     });
   }
 

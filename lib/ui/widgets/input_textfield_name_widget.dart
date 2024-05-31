@@ -9,7 +9,10 @@ class InputTextFieldNameWidget extends StatelessWidget {
   TextEditingController controller;
   Function(String?)? onSaved;
 
-  RegExp nameRegex = RegExp(r'^[A-Za-zÑñ\s]+(?<!\s)$');
+  RegExp nameRegex = RegExp(r'^[A-Za-zÑñáéíóúÁÉÍÓÚ\s]+(?<!\s)$');
+  RegExp emptySpaceRegex = RegExp(r'\s+$');
+
+
 
   InputTextFieldNameWidget({
     required this.hintText,
@@ -70,7 +73,10 @@ class InputTextFieldNameWidget extends StatelessWidget {
         ),
         validator: (String? value) {
           if (value!.isEmpty) return "El campo es obligatorio"; //isEmpty = esVacio
-          if (!nameRegex.hasMatch(value)) {
+          if (emptySpaceRegex.hasMatch(value)) {
+            if(!nameRegex.hasMatch(value)){
+              return 'hay un espacio en blanco al final';
+            }
             return 'no se admiten números';
           }
           return null;

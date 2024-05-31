@@ -114,139 +114,141 @@ class _LoginNegocioPageState extends State<LoginNegocioPage> {
     double height = MediaQuery.of(context).size.height;
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      body: Stack(
-        children: [
-          AbsorbPointer(
-            absorbing: isLoading,
-            child: BackGroundWidget(
-              child: Stack(
-                children: [
-                  Form(
-                    key: _formKey,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        PrincipalText(string: "Iniciar sesión"),
-                        PrincipalText(string: "como Dueño de Negocio"),
-                        divider20(),
-                        const Text(
-                          "Correo electrónico",
-                          style:
-                          TextStyle(fontSize: 12, color: Color(0xffB1B1B1)),
-                        ),
-                        InputTextFieldEmailWidget(
-                          hintText: "Correo electrónico",
-                          controller: _emailBusinessOwnerController,
-                          textInputType: TextInputType.text,
-                        ),
-                        divider30(),
-                        const Text(
-                          "Contraseña",
-                          style:
-                          TextStyle(fontSize: 12, color: Color(0xffB1B1B1)),
-                        ),
-                        InputTextFieldPasswordWidget(
-                          controller: _passwordBusinessOwnerController,
-                        ),
-                        divider20(),
-                        const Align(
-                          alignment: Alignment.topRight,
-                          child: Text(
-                            "¿Olvidaste tu contraseña?",
-                            style: TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.bold,
-                              color: kBrandPrimaryColor1,
+      body: SingleChildScrollView(
+        child: Stack(
+          children: [
+            AbsorbPointer(
+              absorbing: isLoading,
+              child: BackGroundWidget(
+                child: Stack(
+                  children: [
+                    Form(
+                      key: _formKey,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          PrincipalText(string: "Iniciar sesión"),
+                          PrincipalText(string: "como Dueño de Negocio"),
+                          divider20(),
+                          const Text(
+                            "Correo electrónico",
+                            style:
+                            TextStyle(fontSize: 12, color: Color(0xffB1B1B1)),
+                          ),
+                          InputTextFieldEmailWidget(
+                            hintText: "Correo electrónico",
+                            controller: _emailBusinessOwnerController,
+                            textInputType: TextInputType.text,
+                          ),
+                          divider30(),
+                          const Text(
+                            "Contraseña",
+                            style:
+                            TextStyle(fontSize: 12, color: Color(0xffB1B1B1)),
+                          ),
+                          InputTextFieldPasswordWidget(
+                            controller: _passwordBusinessOwnerController,
+                          ),
+                          divider20(),
+                          const Align(
+                            alignment: Alignment.topRight,
+                            child: Text(
+                              "¿Olvidaste tu contraseña?",
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                                color: kBrandPrimaryColor1,
+                              ),
                             ),
                           ),
-                        ),
-                        divider20(),
-                        ButtonWidget(
-                          onPressed: () {
-                            print("INICIANDO SESION");
-                            _iniciarSesionCliente();
-                            FocusScope.of(context).unfocus(); // esto minimiza el teclado
-                          },
-                          text: "Iniciar Sesión",
-                          width: double.infinity,
-                        ),
-                        divider20(),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: new Container(
-                                  margin: const EdgeInsets.only(
-                                      left: 10.0, right: 20.0),
-                                  child: Divider(color: Color(0xffB1B1B1))),
-                            ),
-                            Text(
-                              "O",
-                              style: TextStyle(color: Color(0xffB1B1B1)),
-                            ),
-                            Expanded(
-                              child: new Container(
-                                  margin: const EdgeInsets.only(
-                                      left: 20.0, right: 10.0),
-                                  child: Divider(color: Color(0xffB1B1B1))),
-                            ),
-                          ],
-                        ),
-                        divider40(),
-                        Center(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                          divider20(),
+                          ButtonWidget(
+                            onPressed: () {
+                              print("INICIANDO SESION");
+                              _iniciarSesionCliente();
+                              FocusScope.of(context).unfocus(); // esto minimiza el teclado
+                            },
+                            text: "Iniciar Sesión",
+                            width: double.infinity,
+                          ),
+                          divider20(),
+                          Row(
                             children: [
-                              Text(
-                                "¿No tienes una cuenta?",
-                                style: TextStyle(
-                                  color: kBrandPrimaryColor1,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                              Expanded(
+                                child: new Container(
+                                    margin: const EdgeInsets.only(
+                                        left: 10.0, right: 20.0),
+                                    child: Divider(color: Color(0xffB1B1B1))),
                               ),
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            RegistrarDuenhoDeNegocioPage(),
-                                      ));
-                                },
-                                child: Text(
-                                  "Registrate",
+                              Text(
+                                "O",
+                                style: TextStyle(color: Color(0xffB1B1B1)),
+                              ),
+                              Expanded(
+                                child: new Container(
+                                    margin: const EdgeInsets.only(
+                                        left: 20.0, right: 10.0),
+                                    child: Divider(color: Color(0xffB1B1B1))),
+                              ),
+                            ],
+                          ),
+                          divider40(),
+                          Center(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  "¿No tienes una cuenta?",
                                   style: TextStyle(
-                                    color: Colors.black,
+                                    color: kBrandPrimaryColor1,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
-                              )
-                            ],
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              RegistrarDuenhoDeNegocioPage(),
+                                        ));
+                                  },
+                                  child: Text(
+                                    "Registrate",
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          isLoading
-              ? Container(
-            height: height,
-            color: kDefaultIconDarkColor.withOpacity(0.85),
-            child: Center(
-              child: SizedBox(
-                width: 50,
-                height: 50,
-                child: CircularProgressIndicator(
-                  color: kBrandPrimaryColor1,
-                  strokeWidth: 5,
+                  ],
                 ),
               ),
             ),
-          )
-              : SizedBox(),
-        ],
+            isLoading
+                ? Container(
+              height: height,
+              color: kDefaultIconDarkColor.withOpacity(0.85),
+              child: Center(
+                child: SizedBox(
+                  width: 50,
+                  height: 50,
+                  child: CircularProgressIndicator(
+                    color: kBrandPrimaryColor1,
+                    strokeWidth: 5,
+                  ),
+                ),
+              ),
+            )
+                : SizedBox(),
+          ],
+        ),
       ),
     );
   }

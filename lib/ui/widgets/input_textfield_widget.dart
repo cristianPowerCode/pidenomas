@@ -11,19 +11,21 @@ class InputTextFieldWidget extends StatelessWidget {
   IconData icon;
   Function()? onTap;
   Function(String?)? onSaved;
+  bool? isEnabled;
 
   RegExp? nameRegex = RegExp(r'^[A-Za-zÑñ\s]+(?<!\s)$');
 
   InputTextFieldWidget({
     this.hintText,
     this.labelText,
-    this.maxLength = 50,
+    this.maxLength,
     this.textInputType,
     required this.controller,
     required this.icon,
     this.onTap,
     this.onSaved,
     this.validator,
+    this. isEnabled = true,
   });
 
   @override
@@ -32,7 +34,7 @@ class InputTextFieldWidget extends StatelessWidget {
       margin: const EdgeInsets.symmetric(vertical: 7.0),
       child: TextFormField(
         cursorColor: kBrandPrimaryColor1,
-
+        enabled: isEnabled,
         controller: controller,
         onSaved: onSaved,
         keyboardType: textInputType,
@@ -83,13 +85,12 @@ class InputTextFieldWidget extends StatelessWidget {
         ),
         onTap: onTap,
         validator: (String? value) {
-          if (value == null || value.isEmpty) {
-            // Validación si el campo está vacío
-            return "El campo es obligatorio";
-          }
           if (validator != null) {
             // Validación adicional si se proporciona una función de validación personalizada
             return validator!(value);
+          }else if (value == null || value.isEmpty) {
+            // Validación si el campo está vacío
+            return "El campo es obligatorio";
           }
           return null;
         },

@@ -64,13 +64,14 @@ class _RadioButtonWidgetState extends State<RadioButtonWidget> {
         ),
         InputTextFieldWidget(
           icon: Icons.credit_card_sharp,
+          isEnabled: selectedOption == null ? false : true,
           hintText: selectedOption == null ? 'Seleccione su tipo de documento' : (selectedOption == 1 ? 'DNI' : 'Carnet de Extranjería'),
           controller: widget.controller,
           textInputType: TextInputType.number,
           maxLength: selectedOption == 1 ? 8 : 9,
           validator: (value) {
             if (selectedOption == null) {
-              return {'Por favor seleccione una opción'};
+              return 'Por favor seleccione el tipo de su documento';
             }
             if (selectedOption == 1 && (value == null || value.length != 8)) {
               return 'El DNI debe tener 8 dígitos';

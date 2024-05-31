@@ -127,11 +127,11 @@ class _RegistrarDuenhoDeNegocio3PageState
           snackBarMessage(context, Typemessage.loginSuccess);
         } else {
           print("Error: Value is null");
-          snackBarMessage(context, Typemessage.error);
+          // snackBarMessage(context, Typemessage.error);
         }
       } catch (error) {
         print("Catch Error: $error");
-        snackBarMessage(context, Typemessage.error);
+        // snackBarMessage(context, Typemessage.error);
       } finally {
         setState(() {
           isLoading = false;
@@ -210,7 +210,7 @@ class _RegistrarDuenhoDeNegocio3PageState
       });
       print('Error al registrar el negocio: $e');
       // Mostrar SnackBar de error
-      snackBarMessage(context, Typemessage.error);
+      // snackBarMessage(context, Typemessage.error);
     }
   }
 
@@ -276,11 +276,10 @@ class _RegistrarDuenhoDeNegocio3PageState
     double height = MediaQuery.of(context).size.height;
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      body: Stack(
-        children: [
-          AbsorbPointer(
-            absorbing: isLoading,
-            child: BackGroundWidget(
+      body: SingleChildScrollView(
+        child: Stack(
+          children: [
+            BackGroundWidget(
               child: Stack(
                 children: [
                   Form(
@@ -296,6 +295,7 @@ class _RegistrarDuenhoDeNegocio3PageState
                           hintText: "RUC",
                           controller: _rucController,
                           icon: Icons.check_circle_outline,
+                          textInputType: TextInputType.number,
                         ),
                         divider20(),
                         InputTextFieldWidget(
@@ -371,24 +371,26 @@ class _RegistrarDuenhoDeNegocio3PageState
                 ],
               ),
             ),
-          ),
-          isLoading ?
-          Container(
-            height: height,
-            color: kDefaultIconDarkColor.withOpacity(0.85),
-            child: Center(
-              child: SizedBox(
-                width: 50,
-                height: 50,
-                child: CircularProgressIndicator(
-                  color: kBrandPrimaryColor1,
-                  strokeWidth: 5,
-                ),
-              ),
-            ),
-          )
-              : SizedBox(),
-        ],
+            // isLoading ?
+            // Align(
+            //   alignment: Alignment.bottomCenter,
+            //   child: Container(
+            //     color: kDefaultIconDarkColor.withOpacity(0.85),
+            //     child: Center(
+            //       child: SizedBox(
+            //         width: 50,
+            //         height: 50,
+            //         child: CircularProgressIndicator(
+            //           color: kBrandPrimaryColor1,
+            //           strokeWidth: 5,
+            //         ),
+            //       ),
+            //     ),
+            //   ),
+            // )
+            //     : SizedBox(),
+          ],
+        ),
       ),
     );
   }
