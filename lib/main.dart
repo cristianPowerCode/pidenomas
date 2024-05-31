@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:intl/date_symbol_data_local.dart';
+// import 'package:intl/date_symbol_data_local.dart';
 import 'package:pidenomas/ui/general/colors.dart';
 import 'package:pidenomas/pages/splash_page.dart';
 import 'helps/sp.global.dart';
@@ -12,9 +12,8 @@ void main() async {
   await Firebase.initializeApp(); // Inicializa Firebase
   SPGlobal spglobal = SPGlobal();
   await spglobal.initSharedPreferences(); // Inicializa SharedPreferences
-  initializeDateFormatting().then((_){
   runApp(MyApp());
-  });
+
 }
 
 class MyApp extends StatelessWidget {
@@ -22,15 +21,6 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
 
     return MaterialApp(
-      localizationsDelegates: [
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
-      supportedLocales: [
-        const Locale('en', 'US'), // Inglés
-        const Locale('es', 'ES'), // Español
-      ],
       theme: ThemeData(
         textSelectionTheme: TextSelectionThemeData(
           selectionHandleColor: kBrandPrimaryColor1,
