@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:pidenomas/ui/general/type_messages.dart';
 import 'package:pidenomas/ui/widgets/check_box1_widget.dart';
@@ -266,12 +267,12 @@ class _RegistrarCliente1PageState extends State<RegistrarCliente1Page> {
                             icon: Icons.person,
                             optionRegex: [
                               (
-                                RegExp(r'^[A-Za-zÑñáéíóúÁÉÍÓÚ\s]+(?<!\s)$'),
-                                "no ingrese numeros o simbolos",
+                              RegExp(r'^[A-Za-zÑñáéíóúÁÉÍÓÚ\s]+$'),
+                              "No ingrese números o símbolos",
                               ),
                               (
-                                RegExp(r'\s+$'),
-                                "no deje espacios al final",
+                              RegExp(r'(?<!\s)$'),
+                              "No deje espacios al final",
                               ),
                             ],
                           ),
@@ -286,12 +287,12 @@ class _RegistrarCliente1PageState extends State<RegistrarCliente1Page> {
                             icon: Icons.person,
                             optionRegex: [
                               (
-                                RegExp(r'^[A-Za-zÑñáéíóúÁÉÍÓÚ\s]+(?<!\s)$'),
-                                "no ingrese numeros o simbolos",
+                              RegExp(r'^[A-Za-zÑñáéíóúÁÉÍÓÚ\s]+$'),
+                              "No ingrese números o símbolos",
                               ),
                               (
-                                RegExp(r'\s+$'),
-                                "no deje espacios al final",
+                              RegExp(r'(?<!\s)$'),
+                              "No deje espacios al final",
                               ),
                             ],
                           ),
@@ -315,16 +316,22 @@ class _RegistrarCliente1PageState extends State<RegistrarCliente1Page> {
                             hintText: "Telefono",
                             controller: _celularController,
                             textInputType: TextInputType.number,
-                            maxLength: 9,
-                            optionRegex: [
-                              (
-                                RegExp(r'^9.*$'),
-                                ("El número debe empezar con 9")
-                              ),
-                              (RegExp(r'[0-9]'), ("Ingresar solo números")),
-                              (RegExp(r'^\S+$'), ("No deje espacios vacios")),
-                              (RegExp(r'^[^-_.,]+$'), ("Ingrese solo números")),
+                            inputFormatters: [
+                              FilteringTextInputFormatter.digitsOnly,
                             ],
+                            maxLength: 9,
+                            validator: (value) {
+                              if (value!.length < 9) {
+                                if (value[0] != '9') {
+                                  return 'El primer dígito debe ser 9';
+                                } else {
+                                  return 'Ingrese 9 dígitos';
+                                }
+                              } else if (value.length == 9 && value[0] != '9') {
+                                return 'El primer dígito debe ser 9';
+                              }
+                              return null;
+                            },
                           ),
                           divider30(),
                           const Text(
@@ -359,11 +366,16 @@ class _RegistrarCliente1PageState extends State<RegistrarCliente1Page> {
                           InputTextFieldWidget(
                             controller: _emailController,
                             icon: Icons.person,
+                            textInputType: TextInputType.emailAddress,
                             optionRegex: [
                               (
-                                (RegExp(
-                                    r'[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*@[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*[.][a-zA-Z]{2,5}')),
-                                "Debe ingresar un correo válido"
+                              (RegExp(
+                                  r'[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*@[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*[.][a-zA-Z]{2,5}')),
+                              "Debe ingresar un correo válido"
+                              ),
+                              (
+                              RegExp(r'(?<!\s)$'),
+                              "No deje espacios al final",
                               ),
                             ],
                           ),
@@ -383,14 +395,21 @@ class _RegistrarCliente1PageState extends State<RegistrarCliente1Page> {
                                 fontSize: 12, color: Color(0xffB1B1B1)),
                           ),
                           InputTextFieldWidget(
+                            controller: _latController,
                             hintText: "Latitud",
                             icon: Icons.location_on,
-                            textInputType: TextInputType.number,
-                            controller: _latController,
+                            textInputType: TextInputType.numberWithOptions(
+                                decimal: true, signed: false),
+                            inputFormatters: [
+                              FilteringTextInputFormatter.allow(
+                                  RegExp(r'^\d*\.?\d*')),
+                            ],
                             maxLength: 12,
                             optionRegex: [
-                              (RegExp(r'^[0-9]+(\.[0-9]+)?$'), "Use solo un punto decimal"),
-                              (RegExp(r'^[0-9]*\.?[0-9]+$'),"Use el punto decimal"),
+                              (
+                              RegExp(r'^[0-9]*\.?[0-9]+$'),
+                              "Use el punto decimal"
+                              ),
                               (RegExp(r'[0-9]'), "Ingresar solo números"),
                             ],
                           ),
@@ -398,34 +417,53 @@ class _RegistrarCliente1PageState extends State<RegistrarCliente1Page> {
                           InputTextFieldWidget(
                             hintText: "Longitud",
                             icon: Icons.location_on,
-                            textInputType: TextInputType.number,
+                            textInputType: TextInputType.numberWithOptions(
+                                decimal: true, signed: false),
+                            inputFormatters: [
+                              FilteringTextInputFormatter.allow(
+                                  RegExp(r'^\d*\.?\d*')),
+                            ],
                             controller: _lngController,
                             maxLength: 12,
                             optionRegex: [
-                              (RegExp(r'^[0-9]+(\.[0-9]+)?$'), "Use solo un punto decimal"),
-                              (RegExp(r'^[0-9]*\.?[0-9]+$'),"Use el punto decimal"),
+                              (
+                              RegExp(r'^[0-9]*\.?[0-9]+$'),
+                              "Use el punto decimal"
+                              ),
                               (RegExp(r'[0-9]'), "Ingresar solo números"),
                             ],
                           ),
                           divider12(),
-                          InputTextFieldWidget(
-                            hintText: "Dirección",
-                            icon: Icons.location_on,
-                            textInputType: TextInputType.text,
-                            controller: _direccionController,
-                            maxLength: 50,
+                          ConstrainedBox(
+                            constraints: BoxConstraints(
+                              maxHeight: 500.0,
+                            ),
+                            child: InputTextFieldWidget(
+                              hintText: "Dirección del Negocio o Punto de Venta",
+                              icon: Icons.location_on,
+                              textInputType: TextInputType.text,
+                              controller: _direccionController,
+                              maxLength: 250,
+                              minLines: 2,
+                              maxLines: null,
+                              count: 250,
+                            ),
                           ),
                           divider30(),
                           const Text(
-                            "Detalle su ubicacion",
+                            "Detalle si es puerta calle o Interior",
                             style: TextStyle(
                                 fontSize: 12, color: Color(0xffB1B1B1)),
                           ),
                           InputTextFieldWidget(
-                            hintText: "1er piso / Ofic 201 / Dpto 301",
+                            hintText:
+                            "Puerta Calle/ Block B - Dpto 405/ Interior A",
                             icon: (Icons.map_sharp),
                             controller: _detalleUbicacionController,
-
+                            maxLength: 250,
+                            minLines: 2,
+                            maxLines: null,
+                            count: 250,
                           ),
                           divider30(),
                           const Text(
@@ -435,9 +473,13 @@ class _RegistrarCliente1PageState extends State<RegistrarCliente1Page> {
                           ),
                           InputTextFieldWidget(
                             hintText:
-                                "Ejm: Casa de 2 pisos color verde frente a bodega.",
+                            "Ejm: A una cuadra de la Municipalidad de Lince",
                             icon: Icons.maps_ugc,
                             controller: _referenciaUbicacionController,
+                            maxLength: 250,
+                            minLines: 2,
+                            maxLines: null,
+                            count: 250,
                           ),
                           divider40(),
                           Center(

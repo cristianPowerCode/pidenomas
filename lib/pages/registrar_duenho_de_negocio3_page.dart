@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:pidenomas/pages/login_negocio_page.dart';
 import 'package:pidenomas/ui/widgets/background_widget.dart';
 import 'package:pidenomas/ui/widgets/general_widgets.dart';
@@ -295,19 +296,43 @@ class _RegistrarDuenhoDeNegocio3PageState
                           hintText: "RUC",
                           controller: _rucController,
                           icon: Icons.check_circle_outline,
-                          textInputType: TextInputType.number,
+                          textInputType: TextInputType.numberWithOptions(
+                              decimal: true, signed: false),
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly,
+                          ],
+                          maxLength: 11,
+                          count: 11,
+                          optionRegex: [
+                            (RegExp(r'[0-9]'), ("Ingresar solo números")),
+                            (RegExp(r'^\S+$'), ("No deje espacios vacios")),
+                            (RegExp(r'^[^-_.,]+$'), ("Ingrese solo números")),
+                          ],
+                          validator: (value) {
+                            if (value!.length != 11) {
+                              return 'Ingrese 11 dígitos';
+                            } else{
+                            return null;
+                            }
+                          },
                         ),
                         divider20(),
                         InputTextFieldWidget(
                           labelText: "Razon Social del Negocio",
                           controller: _razSocialNegocioController,
                           icon: Icons.check_circle_outline,
+                          maxLines: null,
+                          maxLength: 250,
+                          count: 250,
                         ),
                         divider20(),
                         InputTextFieldWidget(
                           labelText: "Nombre del negocio o emprendimiento",
                           controller: _nombreNegocioController,
                           icon: Icons.check_circle_outline,
+                          maxLines: null,
+                          maxLength: 250,
+                          count: 250,
                         ),
                         divider40(),
                         Center(

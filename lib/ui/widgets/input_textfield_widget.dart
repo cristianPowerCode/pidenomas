@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../general/colors.dart';
 
-class InputTextFieldWidget extends StatelessWidget {
+class InputTextFieldWidget extends StatefulWidget {
+  final TextEditingController controller;
+  final IconData icon;
   final String? hintText;
   final String? labelText;
   final Function(String?)? validator;
   final int? maxLength;
+  final int? minLines;
+  final int? maxLines;
+  final int? count;
   final TextInputType? textInputType;
-  final TextEditingController controller;
-  final IconData icon;
+  final List<TextInputFormatter>? inputFormatters;
   final Function()? onTap;
   final Function(String?)? onSaved;
   final bool? isEnabled;
@@ -18,7 +23,11 @@ class InputTextFieldWidget extends StatelessWidget {
     this.hintText,
     this.labelText,
     this.maxLength,
+    this.minLines,
+    this.maxLines,
+    this.count,
     this.textInputType,
+    this.inputFormatters,
     required this.controller,
     required this.icon,
     this.onTap,
@@ -29,31 +38,44 @@ class InputTextFieldWidget extends StatelessWidget {
   });
 
   @override
+  State<InputTextFieldWidget> createState() => _InputTextFieldWidgetState();
+}
+
+class _InputTextFieldWidgetState extends State<InputTextFieldWidget> {
+  @override
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 7.0),
       child: TextFormField(
-        cursorColor: kBrandPrimaryColor1,
-        enabled: isEnabled,
-        controller: controller,
-        onSaved: onSaved,
-        keyboardType: textInputType,
-        maxLength: maxLength,
+        enabled: widget.isEnabled,
+        // activa/desactiva el ingreso de texto
+        controller: widget.controller,
+        keyboardType: widget.textInputType,
+        //tipo de teclado
+        inputFormatters: widget.inputFormatters,
+        maxLength: widget.maxLength,
+        //tamaño maximo del input
+        minLines: widget.minLines,
+        maxLines: widget.maxLines,
         style: TextStyle(fontSize: 14, color: Colors.black),
         decoration: InputDecoration(
           fillColor: Colors.white,
-          prefixIcon: Icon(icon, color: Color(0xffB1B1B1)),
+          prefixIcon: Icon(widget.icon, color: Color(0xffB1B1B1)),
           filled: true,
-          labelText: labelText,
+          labelText: widget.labelText,
           labelStyle: TextStyle(
             color: Color(0xffB1B1B1),
           ),
-          hintText: hintText,
+          hintText: widget.hintText,
+          hintMaxLines: widget.minLines ?? 1,
+          //Texto de entrada color gris
           hintStyle: TextStyle(
             color: Color(0xffB1B1B1),
             fontSize: 14.0,
           ),
-          counterText: "",
+          counterText: widget.count == null
+              ? ""
+              : "${widget.controller.text.length}/${widget.count!}",
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(18.0),
             borderSide: BorderSide(
@@ -72,20 +94,35 @@ class InputTextFieldWidget extends StatelessWidget {
           ),
           focusedErrorBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(18.0),
-            borderSide: BorderSide.none,
+            borderSide: BorderSide(
+              color: kErrorColor,
+            ),
           ),
           errorStyle: TextStyle(color: kErrorColor),
         ),
-        onTap: onTap,
+        onTap: widget.onTap,
+        onChanged: (text) {
+          setState(() {
+            widget.controller.value = TextEditingValue(
+              text: text,
+              selection: TextSelection.collapsed(offset: text.length),
+            );
+          });
+        },
         validator: (String? value) {
-          if (validator != null) {
-            // Validación adicional si se proporciona una función de validación personalizada
-            return validator!(value);
-          } else if (value == null || value.isEmpty) {
-            // Validación si el campo está vacío
+          // Validación si el campo está vacío
+          if (value == null || value.isEmpty) {
             return "El campo es obligatorio";
-          } else if (optionRegex != null) {
-            for (var option in optionRegex!) {
+          }
+
+          // Validación personalizada
+          if (widget.validator != null) {
+            return widget.validator!(value);
+          }
+
+          // Validación con expresiones regulares
+          if (widget.optionRegex != null) {
+            for (var option in widget.optionRegex!) {
               if (!option.$1.hasMatch(value)) {
                 return option.$2;
               }
