@@ -11,21 +11,21 @@ import '../models/categories_model.dart';
 import '../ui/general/type_messages.dart';
 
 class RegistrarDuenhoDeNegocio2Page extends StatefulWidget {
-  String nombre;
-  String apellidos;
-  String fechaDeNacimiento;
-  String celular;
-  String tipoDocumento;
-  String documentoIdentidad;
-  String genero;
-  String email;
-  String password;
-  String lat;
-  String lng;
-  String direccion;
-  String detalleDireccion;
-  String referenciaDireccion;
-  String agreeNotifications;
+  final String nombre;
+  final String apellidos;
+  final String fechaDeNacimiento;
+  final String celular;
+  final String tipoDocumento;
+  final String documentoIdentidad;
+  final String genero;
+  final String email;
+  final String password;
+  final String lat;
+  final String lng;
+  final String direccion;
+  final String detalleDireccion;
+  final String referenciaDireccion;
+  final String agreeNotifications;
 
   RegistrarDuenhoDeNegocio2Page({
     required this.nombre,
@@ -66,7 +66,7 @@ class _RegistrarDuenhoDeNegocio2PageState
 
   Future<List<Map<String, dynamic>>> fetchCategories() async {
     final QuerySnapshot categoriesSnapshot =
-        await FirebaseFirestore.instance.collection('categories').get();
+    await FirebaseFirestore.instance.collection('categories').get();
     return categoriesSnapshot.docs.map((doc) {
       String id = doc.id;
       Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
@@ -77,13 +77,13 @@ class _RegistrarDuenhoDeNegocio2PageState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: BackGroundWidget(
-        child: Column(
-          children: [
-            PrincipalText(string: "Cual categoria se adapta mejor a tu tienda"),
-            divider12(),
-            Expanded(
-              child: FutureBuilder<List<Map<String, dynamic>>>(
+      body: SingleChildScrollView(
+        child: BackGroundWidget(
+          child: Column(
+            children: [
+              PrincipalText(string: "Cual categoria se adapta mejor a tu tienda"),
+              divider12(),
+              FutureBuilder<List<Map<String, dynamic>>>(
                 future: _categoriesFuture,
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
@@ -98,10 +98,19 @@ class _RegistrarDuenhoDeNegocio2PageState
                     );
                   } else {
                     final List<Map<String, dynamic>> categories =
-                        snapshot.data!;
-                    return GridView.count(
-                      crossAxisCount: 2,
-                      children: categories.map((category) {
+                    snapshot.data!;
+                    return GridView.builder(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        childAspectRatio: 1,
+                        crossAxisSpacing: 8.0,
+                        mainAxisSpacing: 8.0,
+                      ),
+                      itemCount: categories.length,
+                      itemBuilder: (context, index) {
+                        final category = categories[index];
                         final String id = category['id'];
                         final Map<String, dynamic> data = category['data'];
                         bool isSelected = selectedCategoryId == id;
@@ -136,6 +145,7 @@ class _RegistrarDuenhoDeNegocio2PageState
                                 const SizedBox(height: 8),
                                 Text(
                                   data['name'],
+                                  textAlign: TextAlign.center,
                                   style: TextStyle(
                                     color: isSelected
                                         ? kBrandPrimaryColor1
@@ -146,64 +156,65 @@ class _RegistrarDuenhoDeNegocio2PageState
                             ),
                           ),
                         );
-                      }).toList(),
+                      },
                     );
                   }
                 },
               ),
-            ),
-            divider30(),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                IconFormButtonWidget(
-                  icon: Icon(FontAwesomeIcons.arrowLeft),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => RegistrarDuenhoDeNegocioPage(),
-                      ),
-                    );
-                  },
-                ),
-                SizedBox(width: 20.0),
-                IconFormButtonWidget(
-                  isFormComplete: selectedCategoryId != null,
-                  icon: Icon(FontAwesomeIcons.arrowRight),
-                  onPressed: () {
-                    if (selectedCategoryId != null) {
+              divider30(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  IconFormButtonWidget(
+                    icon: Icon(FontAwesomeIcons.arrowLeft),
+                    onPressed: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => RegistrarDuenhoDeNegocio3Page(
-                            nombre: widget.nombre,
-                            apellidos: widget.apellidos,
-                            fechaDeNacimiento: widget.fechaDeNacimiento,
-                            celular: widget.celular,
-                            tipoDocumento: widget.tipoDocumento,
-                            documentoIdentidad: widget.documentoIdentidad,
-                            genero: widget.genero,
-                            email: widget.email,
-                            password: widget.password,
-                            lat: widget.lat,
-                            lng: widget.lng,
-                            direccion: widget.direccion,
-                            detalleDireccion: widget.detalleDireccion,
-                            referenciaDireccion: widget.referenciaDireccion,
-                            agreeNotifications: widget.agreeNotifications,
-                            categoria: selectedCategoryId!,
-                          ),
+                          builder: (context) => RegistrarDuenhoDeNegocioPage(),
                         ),
                       );
-                    } else {
-                      snackBarMessage(context, Typemessage.incomplete);
-                    }
-                  },
-                ),
-              ],
-            ),
-          ],
+                    },
+                  ),
+                  SizedBox(width: 20.0),
+                  IconFormButtonWidget(
+                    isFormComplete: selectedCategoryId != null,
+                    icon: Icon(FontAwesomeIcons.arrowRight),
+                    onPressed: () {
+                      if (selectedCategoryId != null) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => RegistrarDuenhoDeNegocio3Page(
+                              nombre: widget.nombre,
+                              apellidos: widget.apellidos,
+                              fechaDeNacimiento: widget.fechaDeNacimiento,
+                              celular: widget.celular,
+                              tipoDocumento: widget.tipoDocumento,
+                              documentoIdentidad: widget.documentoIdentidad,
+                              genero: widget.genero,
+                              email: widget.email,
+                              password: widget.password,
+                              lat: widget.lat,
+                              lng: widget.lng,
+                              direccion: widget.direccion,
+                              detalleDireccion: widget.detalleDireccion,
+                              referenciaDireccion: widget.referenciaDireccion,
+                              agreeNotifications: widget.agreeNotifications,
+                              categoria: selectedCategoryId!,
+                            ),
+                          ),
+                        );
+                      } else {
+                        snackBarMessage(context, Typemessage.incomplete);
+                      }
+                    },
+                  ),
+                ],
+              ),
+              divider40(),
+            ],
+          ),
         ),
       ),
     );

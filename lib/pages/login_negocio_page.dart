@@ -22,8 +22,10 @@ class LoginNegocioPage extends StatefulWidget {
 }
 
 class _LoginNegocioPageState extends State<LoginNegocioPage> {
-  final TextEditingController _emailBusinessOwnerController = TextEditingController();
-  final TextEditingController _passwordBusinessOwnerController = TextEditingController();
+  final TextEditingController _emailBusinessOwnerController =
+      TextEditingController();
+  final TextEditingController _passwordBusinessOwnerController =
+      TextEditingController();
 
   FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -39,14 +41,15 @@ class _LoginNegocioPageState extends State<LoginNegocioPage> {
 
       try {
         final UserCredential userCredential =
-        await _auth.signInWithEmailAndPassword(
+            await _auth.signInWithEmailAndPassword(
           email: _emailBusinessOwnerController.text.trim(),
           password: _passwordBusinessOwnerController.text.trim(),
         );
 
         // Verificar si el correo electrónico está verificado
         if (!userCredential.user!.emailVerified) {
-          mostrarSnackBar("Por favor, verifica si tiene el correo de confirmacion del registro de su negocio");
+          mostrarSnackBar(
+              "Por favor, verifica si tiene el correo de confirmacion del registro de su negocio");
           await _auth.signOut(); // Cerrar sesión del usuario no verificado
           setState(() {
             isLoading = false;
@@ -59,7 +62,7 @@ class _LoginNegocioPageState extends State<LoginNegocioPage> {
         Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(builder: (context) => PrincipalPage()),
-              (route) => false,
+          (route) => false,
         );
       } on FirebaseAuthException catch (e) {
         String errorMessage;
@@ -68,7 +71,8 @@ class _LoginNegocioPageState extends State<LoginNegocioPage> {
             errorMessage = "La contraseña es incorrecta.";
             break;
           case 'user-not-found':
-            errorMessage = "No se encontró un usuario con ese correo electrónico.";
+            errorMessage =
+                "No se encontró un usuario con ese correo electrónico.";
             break;
           case 'user-disabled':
             errorMessage = "El usuario con este correo ha sido deshabilitado.";
@@ -77,7 +81,8 @@ class _LoginNegocioPageState extends State<LoginNegocioPage> {
             errorMessage = "Demasiados intentos. Inténtalo más tarde.";
             break;
           case 'operation-not-allowed':
-            errorMessage = "El inicio de sesión con contraseña está deshabilitado.";
+            errorMessage =
+                "El inicio de sesión con contraseña está deshabilitado.";
             break;
           default:
             errorMessage = "Error de autenticación: ${e.message}";
@@ -114,10 +119,10 @@ class _LoginNegocioPageState extends State<LoginNegocioPage> {
     double height = MediaQuery.of(context).size.height;
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      body: SingleChildScrollView(
-        child: Stack(
-          children: [
-            AbsorbPointer(
+      body: Stack(
+        children: [
+          SingleChildScrollView(
+            child: AbsorbPointer(
               absorbing: isLoading,
               child: BackGroundWidget(
                 child: Stack(
@@ -132,8 +137,8 @@ class _LoginNegocioPageState extends State<LoginNegocioPage> {
                           divider20(),
                           const Text(
                             "Correo electrónico",
-                            style:
-                            TextStyle(fontSize: 12, color: Color(0xffB1B1B1)),
+                            style: TextStyle(
+                                fontSize: 12, color: Color(0xffB1B1B1)),
                           ),
                           InputTextFieldEmailWidget(
                             hintText: "Correo electrónico",
@@ -143,8 +148,8 @@ class _LoginNegocioPageState extends State<LoginNegocioPage> {
                           divider30(),
                           const Text(
                             "Contraseña",
-                            style:
-                            TextStyle(fontSize: 12, color: Color(0xffB1B1B1)),
+                            style: TextStyle(
+                                fontSize: 12, color: Color(0xffB1B1B1)),
                           ),
                           InputTextFieldPasswordWidget(
                             controller: _passwordBusinessOwnerController,
@@ -166,7 +171,8 @@ class _LoginNegocioPageState extends State<LoginNegocioPage> {
                             onPressed: () {
                               print("INICIANDO SESION");
                               _iniciarSesionCliente();
-                              FocusScope.of(context).unfocus(); // esto minimiza el teclado
+                              FocusScope.of(context)
+                                  .unfocus(); // esto minimiza el teclado
                             },
                             text: "Iniciar Sesión",
                             width: double.infinity,
@@ -231,24 +237,24 @@ class _LoginNegocioPageState extends State<LoginNegocioPage> {
                 ),
               ),
             ),
-            isLoading
-                ? Container(
-              height: height,
-              color: kDefaultIconDarkColor.withOpacity(0.85),
-              child: Center(
-                child: SizedBox(
-                  width: 50,
-                  height: 50,
-                  child: CircularProgressIndicator(
-                    color: kBrandPrimaryColor1,
-                    strokeWidth: 5,
+          ),
+          isLoading
+              ? Container(
+                  height: height,
+                  color: kDefaultIconDarkColor.withOpacity(0.85),
+                  child: Center(
+                    child: SizedBox(
+                      width: 50,
+                      height: 50,
+                      child: CircularProgressIndicator(
+                        color: kBrandPrimaryColor1,
+                        strokeWidth: 5,
+                      ),
+                    ),
                   ),
-                ),
-              ),
-            )
-                : SizedBox(),
-          ],
-        ),
+                )
+              : SizedBox(),
+        ],
       ),
     );
   }

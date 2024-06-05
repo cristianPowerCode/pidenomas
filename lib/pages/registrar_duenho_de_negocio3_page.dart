@@ -10,6 +10,7 @@ import 'package:pidenomas/ui/widgets/input_textfield_widget.dart';
 import '../models/register_business_owner_model.dart';
 import '../services/api_service.dart';
 import '../ui/general/colors.dart';
+import '../ui/general/constant_responsive.dart';
 import '../ui/general/type_messages.dart';
 import '../ui/widgets/button_widget.dart';
 import '../ui/widgets/check_box1_widget.dart';
@@ -274,149 +275,187 @@ class _RegistrarDuenhoDeNegocio3PageState
 
   @override
   Widget build(BuildContext context) {
-    double height = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      body: SingleChildScrollView(
-        child: Stack(
-          children: [
-            BackGroundWidget(
-              child: Stack(
-                children: [
-                  Form(
-                    key: _formKey,
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        PrincipalText(string: "Completa"),
-                        PrincipalText(string: "tus datos del negocio"),
-                        divider30(),
-                        InputTextFieldWidget(
-                          hintText: "RUC",
-                          controller: _rucController,
-                          icon: Icons.check_circle_outline,
-                          textInputType: TextInputType.numberWithOptions(
-                              decimal: true, signed: false),
-                          inputFormatters: [
-                            FilteringTextInputFormatter.digitsOnly,
+      body: Stack(
+        children: [
+          SingleChildScrollView(
+            child: Stack(
+              children: [
+                BackGroundWidget(
+                  child: Stack(
+                    children: [
+                      Form(
+                        key: _formKey,
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            PrincipalText(string: "Completa"),
+                            PrincipalText(string: "tus datos del negocio"),
+                            divider30(),
+                            InputTextFieldWidget(
+                              hintText: "RUC",
+                              controller: _rucController,
+                              icon: Icons.check_circle_outline,
+                              textInputType: TextInputType.numberWithOptions(
+                                  decimal: true, signed: false),
+                              inputFormatters: [
+                                FilteringTextInputFormatter.digitsOnly,
+                              ],
+                              maxLength: 11,
+                              count: 11,
+                              optionRegex: [
+                                (RegExp(r'[0-9]'), ("Ingresar solo números")),
+                                (RegExp(r'^\S+$'), ("No deje espacios vacios")),
+                                (RegExp(r'^[^-_.,]+$'), ("Ingrese solo números")),
+                              ],
+                              validator: (value) {
+                                if (value!.length != 11) {
+                                  return 'Ingrese 11 dígitos';
+                                } else{
+                                return null;
+                                }
+                              },
+                            ),
+                            divider20(),
+                            InputTextFieldWidget(
+                              labelText: "Razon Social del Negocio",
+                              controller: _razSocialNegocioController,
+                              icon: Icons.check_circle_outline,
+                              maxLines: null,
+                              maxLength: 250,
+                              count: 250,
+                            ),
+                            divider20(),
+                            InputTextFieldWidget(
+                              labelText: "Nombre del negocio o emprendimiento",
+                              controller: _nombreNegocioController,
+                              icon: Icons.check_circle_outline,
+                              maxLines: null,
+                              maxLength: 250,
+                              count: 250,
+                            ),
+                            divider40(),
+                            Center(
+                              child: screenWidth > ResponsiveConfig.widthResponsive ? buildRowLoginAgain(context) : buildColumnLoginAgain(context),
+                            ),
+                            divider40(),
+                            CheckBox1Widget(
+                              error: agreeError,
+                              onChanged: _onCheckbox1Changed,
+                            ),
+                            CheckBox2Widget(
+                              onChanged: _onCheckbox2Changed,
+                            ),
+                            divider40(),
+                            ButtonWidget(
+                              onPressed: () async {
+                                final formState = _formKey.currentState;
+                                if (formState != null && formState.validate() && agreeTerms) {
+                                  await _registroYGuardarDatos();
+                                } else {
+                                  if (!agreeTerms) {
+                                    setState(() {
+                                      agreeError = 'Este campo es obligatorio';
+                                    });
+                                  }
+                                  snackBarMessage(context, Typemessage.incomplete);
+                                }
+                              },
+                              text: "Registrar",
+                            ),
+                            divider40(),
+                            divider20(),
                           ],
-                          maxLength: 11,
-                          count: 11,
-                          optionRegex: [
-                            (RegExp(r'[0-9]'), ("Ingresar solo números")),
-                            (RegExp(r'^\S+$'), ("No deje espacios vacios")),
-                            (RegExp(r'^[^-_.,]+$'), ("Ingrese solo números")),
-                          ],
-                          validator: (value) {
-                            if (value!.length != 11) {
-                              return 'Ingrese 11 dígitos';
-                            } else{
-                            return null;
-                            }
-                          },
                         ),
-                        divider20(),
-                        InputTextFieldWidget(
-                          labelText: "Razon Social del Negocio",
-                          controller: _razSocialNegocioController,
-                          icon: Icons.check_circle_outline,
-                          maxLines: null,
-                          maxLength: 250,
-                          count: 250,
-                        ),
-                        divider20(),
-                        InputTextFieldWidget(
-                          labelText: "Nombre del negocio o emprendimiento",
-                          controller: _nombreNegocioController,
-                          icon: Icons.check_circle_outline,
-                          maxLines: null,
-                          maxLength: 250,
-                          count: 250,
-                        ),
-                        divider40(),
-                        Center(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                "¿Ya tienes una cuenta?",
-                                style: TextStyle(
-                                  color: kBrandPrimaryColor1,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => LoginNegocioPage(),
-                                      ));
-                                },
-                                child: Text(
-                                  "Inicia sesión aquí",
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        divider20(),
-                        CheckBox1Widget(
-                          error: agreeError,
-                          onChanged: _onCheckbox1Changed,
-                        ),
-                        CheckBox2Widget(
-                          onChanged: _onCheckbox2Changed,
-                        ),
-                        divider40(),
-                        ButtonWidget(
-                          onPressed: () async {
-                            final formState = _formKey.currentState;
-                            if (formState != null && formState.validate() && agreeTerms) {
-                              await _registroYGuardarDatos();
-                            } else {
-                              if (!agreeTerms) {
-                                setState(() {
-                                  agreeError = 'Este campo es obligatorio';
-                                });
-                              }
-                              snackBarMessage(context, Typemessage.incomplete);
-                            }
-                          },
-                          text: "Registrar",
-                        ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                ],
+                ),
+              ],
+            ),
+          ),
+          isLoading ?
+          Container(
+            color: kDefaultIconDarkColor.withOpacity(0.85),
+            child: Center(
+              child: SizedBox(
+                width: 50,
+                height: 50,
+                child: CircularProgressIndicator(
+                  color: kBrandPrimaryColor1,
+                  strokeWidth: 5,
+                ),
               ),
             ),
-            // isLoading ?
-            // Align(
-            //   alignment: Alignment.bottomCenter,
-            //   child: Container(
-            //     color: kDefaultIconDarkColor.withOpacity(0.85),
-            //     child: Center(
-            //       child: SizedBox(
-            //         width: 50,
-            //         height: 50,
-            //         child: CircularProgressIndicator(
-            //           color: kBrandPrimaryColor1,
-            //           strokeWidth: 5,
-            //         ),
-            //       ),
-            //     ),
-            //   ),
-            // )
-            //     : SizedBox(),
-          ],
-        ),
+          )
+              : SizedBox(),
+        ],
       ),
+    );
+  }
+  Widget buildRowLoginAgain(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          "¿Ya tienes una cuenta?",
+          style: TextStyle(
+            color: kBrandPrimaryColor1,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        TextButton(
+          onPressed: () {
+            Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      LoginNegocioPage(),
+                ));
+          },
+          child: Text(
+            "Inicia sesión aquí",
+            style: TextStyle(
+              color: Colors.black,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+  Widget buildColumnLoginAgain(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          "¿Ya tienes una cuenta?",
+          style: TextStyle(
+            color: kBrandPrimaryColor1,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        TextButton(
+          onPressed: () {
+            Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      LoginNegocioPage(),
+                ));
+          },
+          child: Text(
+            "Inicia sesión aquí",
+            style: TextStyle(
+              color: Colors.black,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

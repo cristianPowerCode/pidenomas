@@ -11,10 +11,10 @@ class BackGroundWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return SafeArea(
       child: Stack(
         children: [
-
           const Positioned(
             top: -80,
             left: -140,
@@ -48,9 +48,13 @@ class BackGroundWidget extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 90.0, horizontal: 50),
+            padding: const EdgeInsets.only(top: 90.0, right: 50.0, bottom: 40.0, left: 50.0),
             child: Container(
                 width: double.infinity,
+                constraints: BoxConstraints(
+                  minHeight: size.height-140,
+                  maxHeight: double.infinity,
+                ),
                 child: child),
           ),
         ],
