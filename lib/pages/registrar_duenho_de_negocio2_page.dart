@@ -26,6 +26,7 @@ class RegistrarDuenhoDeNegocio2Page extends StatefulWidget {
   final String detalleDireccion;
   final String referenciaDireccion;
   final String agreeNotifications;
+  final String typeOfHousing;
 
   RegistrarDuenhoDeNegocio2Page({
     required this.nombre,
@@ -43,6 +44,7 @@ class RegistrarDuenhoDeNegocio2Page extends StatefulWidget {
     required this.detalleDireccion,
     required this.referenciaDireccion,
     required this.agreeNotifications,
+    required this.typeOfHousing,
   });
 
   @override
@@ -61,7 +63,7 @@ class _RegistrarDuenhoDeNegocio2PageState
     _categoriesFuture = fetchCategories();
     print("DATOS CAPTURADOS");
     print(
-        "nombre: ${widget.nombre}, apellidos: ${widget.apellidos}, fechaDeNacimiento: ${widget.fechaDeNacimiento}, celular: ${widget.celular}, tipoDocumento: ${widget.tipoDocumento}, docIdentidad: ${widget.documentoIdentidad}, genero: ${widget.genero}, email: ${widget.email}, password: ${widget.password}, lat: ${widget.lat}, lng: ${widget.lng}, direccion: ${widget.direccion}, detalleDireccion: ${widget.detalleDireccion}, referencia: ${widget.referenciaDireccion}, agreeNotifications: ${widget.agreeNotifications}");
+        "nombre: ${widget.nombre}, apellidos: ${widget.apellidos}, fechaDeNacimiento: ${widget.fechaDeNacimiento}, celular: ${widget.celular}, tipoDocumento: ${widget.tipoDocumento}, docIdentidad: ${widget.documentoIdentidad}, genero: ${widget.genero}, email: ${widget.email}, password: ${widget.password}, lat: ${widget.lat}, lng: ${widget.lng}, direccion: ${widget.direccion}, detalleDireccion: ${widget.detalleDireccion}, referencia: ${widget.referenciaDireccion}, agreeNotifications: ${widget.agreeNotifications}, typeOfHousing: ${widget.typeOfHousing}");
   }
 
   Future<List<Map<String, dynamic>>> fetchCategories() async {
