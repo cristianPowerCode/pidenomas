@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:pidenomas/ui/widgets/general_widgets.dart';
 
 import '../ui/widgets/button_widget.dart';
-import 'registrar_duenho_de_negocio5_page.dart';
+import 'registrar_negocio5_page.dart';
 
-class RegistrarDuenhoDeNegocio4Page extends StatefulWidget {
+class RegistrarNegocio4Page extends StatefulWidget {
   String nombre;
   String apellidos;
   String email;
@@ -18,11 +18,11 @@ class RegistrarDuenhoDeNegocio4Page extends StatefulWidget {
   String lng;
   String direccion;
   String detalleDireccion;
-  String referenciaDireccion;
+  String referenciaUbicacion;
   String typeOfHousing;
   String categoria;
 
-  RegistrarDuenhoDeNegocio4Page({
+  RegistrarNegocio4Page({
     required this.nombre,
     required this.apellidos,
     required this.fechaDeNacimiento,
@@ -36,18 +36,18 @@ class RegistrarDuenhoDeNegocio4Page extends StatefulWidget {
     required this.lng,
     required this.direccion,
     required this.detalleDireccion,
-    required this.referenciaDireccion,
+    required this.referenciaUbicacion,
     required this.typeOfHousing,
     required this.categoria,
   });
 
   @override
-  State<RegistrarDuenhoDeNegocio4Page> createState() =>
-      _RegistrarDuenhoDeNegocio4PageState();
+  State<RegistrarNegocio4Page> createState() =>
+      _RegistrarNegocio4PageState();
 }
 
-class _RegistrarDuenhoDeNegocio4PageState
-    extends State<RegistrarDuenhoDeNegocio4Page> {
+class _RegistrarNegocio4PageState
+    extends State<RegistrarNegocio4Page> {
 
   @override
   void initState() {
@@ -59,7 +59,7 @@ fechaDeNacimiento: ${widget.fechaDeNacimiento}, celular: ${widget.celular},
 tipoDocumento: ${widget.tipoDocumento}, docIdentidad: ${widget.documentoIdentidad},
 genero: ${widget.genero}, email: ${widget.email}, password: ${widget.password},
 lat: ${widget.lat}, lng: ${widget.lng}, direccion: ${widget.direccion},
-detalleDireccion: ${widget.detalleDireccion}, referencia: ${widget.referenciaDireccion},
+detalleDireccion: ${widget.detalleDireccion}, referencia: ${widget.referenciaUbicacion},
 tipo de inmueble: ${widget.typeOfHousing}, category: ${widget.categoria}''');
   }
   @override
@@ -76,7 +76,7 @@ tipo de inmueble: ${widget.typeOfHousing}, category: ${widget.categoria}''');
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => RegistrarDuenhoDeNegocio5Page(
+                      builder: (context) => RegistrarNegocio5Page(
                         nombre: widget.nombre,
                         apellidos: widget.apellidos,
                         fechaDeNacimiento: widget.fechaDeNacimiento,
@@ -90,7 +90,7 @@ tipo de inmueble: ${widget.typeOfHousing}, category: ${widget.categoria}''');
                         lng: widget.lng,
                         direccion: widget.direccion,
                         detalleDireccion: widget.detalleDireccion,
-                        referenciaDireccion: widget.referenciaDireccion,
+                        referenciaUbicacion: widget.referenciaUbicacion,
                         typeOfHousing: widget.typeOfHousing,
                         categoria: widget.categoria,
                       ),

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:pidenomas/pages/registrar_duenho_de_negocio3_page.dart';
+import 'package:pidenomas/pages/registrar_negocio3_page.dart';
 import 'package:pidenomas/ui/widgets/button_widget.dart';
 import 'package:pidenomas/ui/widgets/general_widgets.dart';
 
 import '../ui/widgets/grid_type_of_house_widget.dart';
 import '../ui/widgets/input_textfield_widget.dart';
 
-class RegistrarDuenhoDeNegocio2Page extends StatefulWidget {
+class RegistrarNegocio2Page extends StatefulWidget {
   final String nombre;
   final String apellidos;
   final String fechaDeNacimiento;
@@ -18,7 +18,7 @@ class RegistrarDuenhoDeNegocio2Page extends StatefulWidget {
   final String email;
   final String password;
 
-  RegistrarDuenhoDeNegocio2Page({
+  RegistrarNegocio2Page({
     required this.nombre,
     required this.apellidos,
     required this.fechaDeNacimiento,
@@ -31,16 +31,16 @@ class RegistrarDuenhoDeNegocio2Page extends StatefulWidget {
   });
 
   @override
-  State<RegistrarDuenhoDeNegocio2Page> createState() =>
-      _RegistrarDuenhoDeNegocio2PageState();
+  State<RegistrarNegocio2Page> createState() =>
+      _RegistrarNegocio2PageState();
 }
 
-class _RegistrarDuenhoDeNegocio2PageState
-    extends State<RegistrarDuenhoDeNegocio2Page> {
+class _RegistrarNegocio2PageState
+    extends State<RegistrarNegocio2Page> {
   TextEditingController _latController = TextEditingController();
   TextEditingController _lngController = TextEditingController();
   TextEditingController _direccionController = TextEditingController();
-  TextEditingController _detalleUbicacionController = TextEditingController();
+  TextEditingController _detalleDireccionController = TextEditingController();
   TextEditingController _referenciaUbicacionController =
       TextEditingController();
 
@@ -49,7 +49,6 @@ class _RegistrarDuenhoDeNegocio2PageState
   void _handleSelectedIndex(int index) {
     setState(() {
       typeOfHousing = index;
-      print(typeOfHousing.runtimeType);
     });
   }
   @override
@@ -134,7 +133,7 @@ genero: ${widget.genero}, email: ${widget.email}, password: ${widget.password}''
               InputTextFieldWidget(
                 hintText: "Puerta Calle/ Block B - Dpto 405/ Interior A",
                 icon: (Icons.map_sharp),
-                controller: _detalleUbicacionController,
+                controller: _detalleDireccionController,
                 maxLength: 250,
                 minLines: 2,
                 maxLines: null,
@@ -175,7 +174,7 @@ genero: ${widget.genero}, email: ${widget.email}, password: ${widget.password}''
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => RegistrarDuenhoDeNegocio3Page(
+                          builder: (context) => RegistrarNegocio3Page(
                             nombre: widget.nombre,
                             apellidos: widget.apellidos,
                             fechaDeNacimiento: widget.fechaDeNacimiento,
@@ -189,8 +188,8 @@ genero: ${widget.genero}, email: ${widget.email}, password: ${widget.password}''
                             lng: _lngController.text,
                             direccion: _direccionController.text,
                             detalleDireccion:
-                            _detalleUbicacionController.text,
-                            referenciaDireccion:
+                            _detalleDireccionController.text,
+                            referenciaUbicacion:
                             _referenciaUbicacionController.text,
                             typeOfHousing: typeOfHousing.toString(),
                           ),

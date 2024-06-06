@@ -6,10 +6,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:pidenomas/pages/login_negocio_page.dart';
-import 'package:pidenomas/pages/registrar_duenho_de_negocio2_page.dart';
-import 'package:pidenomas/pages/registrar_duenho_de_negocio3_page.dart';
+import 'package:pidenomas/pages/registrar_negocio2_page.dart';
 import 'package:pidenomas/ui/general/type_messages.dart';
-import 'package:pidenomas/ui/widgets/grid_type_of_house_widget.dart';
 import 'package:pidenomas/ui/widgets/icon_form_button_widget.dart';
 import 'package:pidenomas/ui/widgets/radio_button_widget.dart';
 import '../ui/general/constant_responsive.dart';
@@ -22,16 +20,16 @@ import '../ui/widgets/general_widgets.dart';
 import '../ui/widgets/input_textfield_password_widget.dart';
 import '../ui/widgets/input_textfield_widget.dart';
 
-class RegistrarDuenhoDeNegocioPage extends StatefulWidget {
-  const RegistrarDuenhoDeNegocioPage({super.key});
+class RegistrarNegocio1Page extends StatefulWidget {
+  const RegistrarNegocio1Page({super.key});
 
   @override
-  State<RegistrarDuenhoDeNegocioPage> createState() =>
-      _RegistrarDuenhoDeNegocioPageState();
+  State<RegistrarNegocio1Page> createState() =>
+      _RegistrarNegocio1PageState();
 }
 
-class _RegistrarDuenhoDeNegocioPageState
-    extends State<RegistrarDuenhoDeNegocioPage> {
+class _RegistrarNegocio1PageState
+    extends State<RegistrarNegocio1Page> {
   final _formKey = GlobalKey<FormState>();
 
   final CollectionReference _clientsCollection =
@@ -258,7 +256,7 @@ class _RegistrarDuenhoDeNegocioPageState
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) =>
-                                        RegistrarDuenhoDeNegocio2Page(
+                                        RegistrarNegocio2Page(
                                       nombre: _nombreController.text,
                                       apellidos: _apellidoController.text,
                                       fechaDeNacimiento:

@@ -1,17 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:pidenomas/pages/registrar_duenho_de_negocio1_page.dart';
-import 'package:pidenomas/pages/registrar_duenho_de_negocio5_page.dart';
+import 'package:pidenomas/pages/registrar_negocio1_page.dart';
+import 'package:pidenomas/pages/registrar_negocio5_page.dart';
 import 'package:pidenomas/ui/general/colors.dart';
 import 'package:pidenomas/ui/widgets/background_widget.dart';
 import 'package:pidenomas/ui/widgets/general_widgets.dart';
 import 'package:pidenomas/ui/widgets/icon_form_button_widget.dart';
 import '../models/categories_model.dart';
 import '../ui/general/type_messages.dart';
-import 'registrar_duenho_de_negocio4_page.dart';
+import 'registrar_negocio4_page.dart';
 
-class RegistrarDuenhoDeNegocio3Page extends StatefulWidget {
+class RegistrarNegocio3Page extends StatefulWidget {
   final String nombre;
   final String apellidos;
   final String fechaDeNacimiento;
@@ -25,10 +25,10 @@ class RegistrarDuenhoDeNegocio3Page extends StatefulWidget {
   final String lng;
   final String direccion;
   final String detalleDireccion;
-  final String referenciaDireccion;
+  final String referenciaUbicacion;
   final String typeOfHousing;
 
-  RegistrarDuenhoDeNegocio3Page({
+  RegistrarNegocio3Page({
     required this.nombre,
     required this.apellidos,
     required this.fechaDeNacimiento,
@@ -42,18 +42,18 @@ class RegistrarDuenhoDeNegocio3Page extends StatefulWidget {
     required this.lng,
     required this.direccion,
     required this.detalleDireccion,
-    required this.referenciaDireccion,
+    required this.referenciaUbicacion,
     required this.typeOfHousing,
 
   });
 
   @override
-  _RegistrarDuenhoDeNegocio3PageState createState() =>
-      _RegistrarDuenhoDeNegocio3PageState();
+  _RegistrarNegocio3PageState createState() =>
+      _RegistrarNegocio3PageState();
 }
 
-class _RegistrarDuenhoDeNegocio3PageState
-    extends State<RegistrarDuenhoDeNegocio3Page> {
+class _RegistrarNegocio3PageState
+    extends State<RegistrarNegocio3Page> {
   String? selectedCategoryId;
   late Future<List<Map<String, dynamic>>> _categoriesFuture;
 
@@ -68,7 +68,7 @@ fechaDeNacimiento: ${widget.fechaDeNacimiento}, celular: ${widget.celular},
 tipoDocumento: ${widget.tipoDocumento}, docIdentidad: ${widget.documentoIdentidad},
 genero: ${widget.genero}, email: ${widget.email}, password: ${widget.password},
 lat: ${widget.lat}, lng: ${widget.lng}, direccion: ${widget.direccion},
-detalleDireccion: ${widget.detalleDireccion}, referencia: ${widget.referenciaDireccion},
+detalleDireccion: ${widget.detalleDireccion}, referencia: ${widget.referenciaUbicacion},
 tipo de inmueble: ${widget.typeOfHousing}''');
   }
 
@@ -179,7 +179,7 @@ tipo de inmueble: ${widget.typeOfHousing}''');
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => RegistrarDuenhoDeNegocioPage(),
+                          builder: (context) => RegistrarNegocio1Page(),
                         ),
                       );
                     },
@@ -193,7 +193,7 @@ tipo de inmueble: ${widget.typeOfHousing}''');
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => RegistrarDuenhoDeNegocio4Page(
+                            builder: (context) => RegistrarNegocio4Page(
                               nombre: widget.nombre,
                               apellidos: widget.apellidos,
                               fechaDeNacimiento: widget.fechaDeNacimiento,
@@ -207,7 +207,7 @@ tipo de inmueble: ${widget.typeOfHousing}''');
                               lng: widget.lng,
                               direccion: widget.direccion,
                               detalleDireccion: widget.detalleDireccion,
-                              referenciaDireccion: widget.referenciaDireccion,
+                              referenciaUbicacion: widget.referenciaUbicacion,
                               typeOfHousing: widget.typeOfHousing,
                               categoria: selectedCategoryId!,
                             ),

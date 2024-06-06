@@ -18,7 +18,7 @@ import '../ui/widgets/button_widget.dart';
 import '../ui/widgets/check_box1_widget.dart';
 import '../ui/widgets/check_box2_widget.dart';
 
-class RegistrarDuenhoDeNegocio5Page extends StatefulWidget {
+class RegistrarNegocio5Page extends StatefulWidget {
   String nombre;
   String apellidos;
   String email;
@@ -32,11 +32,11 @@ class RegistrarDuenhoDeNegocio5Page extends StatefulWidget {
   String lng;
   String direccion;
   String detalleDireccion;
-  String referenciaDireccion;
+  String referenciaUbicacion;
   String typeOfHousing;
   String categoria;
 
-  RegistrarDuenhoDeNegocio5Page({
+  RegistrarNegocio5Page({
     required this.nombre,
     required this.apellidos,
     required this.fechaDeNacimiento,
@@ -50,18 +50,18 @@ class RegistrarDuenhoDeNegocio5Page extends StatefulWidget {
     required this.lng,
     required this.direccion,
     required this.detalleDireccion,
-    required this.referenciaDireccion,
+    required this.referenciaUbicacion,
     required this.typeOfHousing,
     required this.categoria,
   });
 
   @override
-  State<RegistrarDuenhoDeNegocio5Page> createState() =>
-      _RegistrarDuenhoDeNegocio5PageState();
+  State<RegistrarNegocio5Page> createState() =>
+      _RegistrarNegocio5PageState();
 }
 
-class _RegistrarDuenhoDeNegocio5PageState
-    extends State<RegistrarDuenhoDeNegocio5Page> {
+class _RegistrarNegocio5PageState
+    extends State<RegistrarNegocio5Page> {
 
   @override
   void initState() {
@@ -73,7 +73,7 @@ fechaDeNacimiento: ${widget.fechaDeNacimiento}, celular: ${widget.celular},
 tipoDocumento: ${widget.tipoDocumento}, docIdentidad: ${widget.documentoIdentidad},
 genero: ${widget.genero}, email: ${widget.email}, password: ${widget.password},
 lat: ${widget.lat}, lng: ${widget.lng}, direccion: ${widget.direccion},
-detalleDireccion: ${widget.detalleDireccion}, referencia: ${widget.referenciaDireccion},
+detalleDireccion: ${widget.detalleDireccion}, referencia: ${widget.referenciaUbicacion},
 tipo de inmueble: ${widget.typeOfHousing}, category: ${widget.categoria}''');
   }
 
@@ -121,7 +121,7 @@ tipo de inmueble: ${widget.typeOfHousing}, category: ${widget.categoria}''');
           double.parse(widget.lng),
           widget.direccion,
           widget.detalleDireccion,
-          widget.referenciaDireccion,
+          widget.referenciaUbicacion,
           photoURLforFirebase,
           DateTime.now(),
           agreeNotifications,
@@ -242,7 +242,7 @@ tipo de inmueble: ${widget.typeOfHousing}, category: ${widget.categoria}''');
       lng: double.parse(widget.lng),
       direccion: widget.direccion,
       detalleDireccion: widget.detalleDireccion,
-      referenciaDireccion: widget.referenciaDireccion,
+      referenciaDireccion: widget.referenciaUbicacion,
       photoUrl: photoURLforFirebase,
       fechaDeCreacion: DateTime.now(),
       categoria: int.parse(widget.categoria),

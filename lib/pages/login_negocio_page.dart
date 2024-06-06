@@ -12,7 +12,7 @@ import '../ui/widgets/button_widget.dart';
 import '../ui/widgets/general_widgets.dart';
 import '../ui/widgets/input_textfield_password_widget.dart';
 import '../ui/widgets/input_textfield_email_widget.dart';
-import 'registrar_duenho_de_negocio1_page.dart';
+import 'registrar_negocio1_page.dart';
 
 class LoginNegocioPage extends StatefulWidget {
   const LoginNegocioPage({Key? key}) : super(key: key);
@@ -216,7 +216,7 @@ class _LoginNegocioPageState extends State<LoginNegocioPage> {
                                         context,
                                         MaterialPageRoute(
                                           builder: (context) =>
-                                              RegistrarDuenhoDeNegocioPage(),
+                                              RegistrarNegocio1Page(),
                                         ));
                                   },
                                   child: Text(
