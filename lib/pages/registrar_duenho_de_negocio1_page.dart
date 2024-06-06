@@ -83,12 +83,19 @@ class _RegistrarDuenhoDeNegocioPageState
     });
   }
 
-  // void _handleSelectedHousing(String selectedHousing) {
-  //   setState(() {
-  //     typeOfHousing = selectedHousing;
-  //   });
-  // }
-
+  void mostrarSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        duration: Duration(seconds: 3),
+        backgroundColor: kErrorColor,
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12.0),
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -387,6 +394,9 @@ class _RegistrarDuenhoDeNegocioPageState
                             onPressed: () {
                               final formState = _formKey.currentState;
                               if (formState != null && formState.validate()) {
+                                if(typeOfHousing == 0){
+                                  mostrarSnackBar("Selecciona el tipo de inmueble de tu negocio por favor");
+                                } else
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
@@ -419,7 +429,7 @@ class _RegistrarDuenhoDeNegocioPageState
                                 );
                               } else {
                                 snackBarMessage(
-                                    context, Typemessage.incomplete);
+                                    context, Typemessage.error);
                               }
                             },
                           ),
