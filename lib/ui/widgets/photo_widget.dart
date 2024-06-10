@@ -65,7 +65,7 @@ class _PhotoWidgetState extends State<PhotoWidget> {
                     borderRadius: BorderRadius.circular(containerSize / 2),
                     child: Image.network(
                       widget.imageUrl!,
-                      fit: BoxFit.cover,
+                      fit: BoxFit.contain,
                       width: containerSize,
                       height: containerSize,
                     ),
@@ -163,11 +163,11 @@ class _PhotoWidgetState extends State<PhotoWidget> {
       )
           : Row(
         children: [
-          widget.imageUrl == null ?
           Container(
             height: containerSize,
             width: containerSize,
-            child: Stack(
+            child: widget.imageUrl == null ?
+            Stack(
               children: [
                 Positioned(
                   bottom: containerSize * 0.1,
@@ -209,12 +209,8 @@ class _PhotoWidgetState extends State<PhotoWidget> {
                   ),
                 ),
               ],
-            ),
-          ) :
-          Container(
-            height: containerSize,
-            width: containerSize,
-            child: Stack(
+            ):
+            Stack(
               children: [
                 Positioned(
                   bottom: containerSize * 0.1,
@@ -232,7 +228,7 @@ class _PhotoWidgetState extends State<PhotoWidget> {
                     ),
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(18),
-                      child: Image.asset(
+                      child: Image.network(
                         widget.imageUrl!,
                       ),
                     ),
