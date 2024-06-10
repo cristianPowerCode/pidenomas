@@ -6,7 +6,6 @@ class PhotoWidget extends StatefulWidget {
   final int tipo;
   final IconData? icon;
   final String? imageUrl;
-  final String docIdentidad;
   final String? assetDefault;
   void Function() onPressedUploadPhoto;
   void Function() onPressedTakePhoto;
@@ -15,7 +14,6 @@ class PhotoWidget extends StatefulWidget {
     required this.tipo,
     this.icon,
     this.imageUrl,
-    required this.docIdentidad,
     this.assetDefault = "assets/images/perfil.jpg",
     required this.onPressedUploadPhoto,
     required this.onPressedTakePhoto,
