@@ -110,6 +110,8 @@ class _PhotoWidgetState extends State<PhotoWidget> {
                 ),
                 child: ElevatedButton(
                   onPressed: () {
+                    print("SUBIR FOTO");
+                    widget.onPressedUploadPhoto();
                     // Lógica para subir una foto
                   },
                   style: ElevatedButton.styleFrom(
@@ -140,6 +142,7 @@ class _PhotoWidgetState extends State<PhotoWidget> {
                 ),
                 child: ElevatedButton(
                   onPressed: () {
+                    widget.onPressedTakePhoto();
                     // Lógica para tomar una foto
                   },
                   style: ElevatedButton.styleFrom(
