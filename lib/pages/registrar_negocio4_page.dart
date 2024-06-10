@@ -173,6 +173,20 @@ tipo de inmueble: ${widget.typeOfHousing}, category: ${widget.categoria}''');
       return ""; // Retorna una cadena vacía en caso de error
     }
   }
+  // Ajustamos la función mostrarSnackBar para aceptar la duración como parámetro
+  void mostrarSnackBar(String message, int duration) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        duration: Duration(seconds: duration),
+        backgroundColor: kErrorColor,
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12.0),
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -242,29 +256,57 @@ tipo de inmueble: ${widget.typeOfHousing}, category: ${widget.categoria}''');
               Center(
                 child: ButtonWidget(
                   onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => RegistrarNegocio5Page(
-                          nombre: widget.nombre,
-                          apellidos: widget.apellidos,
-                          fechaDeNacimiento: widget.fechaDeNacimiento,
-                          celular: widget.celular,
-                          tipoDocumento: widget.tipoDocumento,
-                          documentoIdentidad: widget.documentoIdentidad,
-                          genero: widget.genero,
-                          email: widget.email,
-                          password: widget.password,
-                          lat: widget.lat,
-                          lng: widget.lng,
-                          direccion: widget.direccion,
-                          detalleDireccion: widget.detalleDireccion,
-                          referenciaUbicacion: widget.referenciaUbicacion,
-                          typeOfHousing: widget.typeOfHousing,
-                          categoria: widget.categoria,
+                    List<String> mensajes = [];
+
+                    if (fachadaUrl == null) {
+                      mensajes.add("X Debe subir una foto de la fachada del negocio.");
+                    }
+                    if (docAnversoUrl == null) {
+                      mensajes.add("X Debe subir una foto de la parte frontal de su documento de identidad.");
+                    }
+                    if (docReversoUrl == null) {
+                      mensajes.add("X Debe subir una foto de la parte de atrás de su documento de identidad.");
+                    }
+
+                    if (mensajes.isNotEmpty) {
+                      int duracion = 2;  // Duración base
+                      if (mensajes.length == 1) {
+                        duracion = 3;
+                      } else if (mensajes.length == 2) {
+                        duracion = 5;
+                      } else if (mensajes.length == 3) {
+                        duracion = 6;
+                      }
+
+                      mostrarSnackBar(mensajes.join("\n"), duracion);
+                      print("Fachada $fachadaUrl");
+                      print("Documento Frontal $docAnversoUrl");
+                      print("Reverso del documento $docReversoUrl");
+                    } else {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => RegistrarNegocio5Page(
+                            nombre: widget.nombre,
+                            apellidos: widget.apellidos,
+                            fechaDeNacimiento: widget.fechaDeNacimiento,
+                            celular: widget.celular,
+                            tipoDocumento: widget.tipoDocumento,
+                            documentoIdentidad: widget.documentoIdentidad,
+                            genero: widget.genero,
+                            email: widget.email,
+                            password: widget.password,
+                            lat: widget.lat,
+                            lng: widget.lng,
+                            direccion: widget.direccion,
+                            detalleDireccion: widget.detalleDireccion,
+                            referenciaUbicacion: widget.referenciaUbicacion,
+                            typeOfHousing: widget.typeOfHousing,
+                            categoria: widget.categoria,
+                          ),
                         ),
-                      ),
-                    );
+                      );
+                    }
                   },
                   text: "Ir a Registro 5",
                 ),
