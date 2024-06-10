@@ -1,4 +1,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Permisos necesarios -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.CAMERA"/>
+
+    <!-- Declarar que la cámara no es un requisito obligatorio -->
+    <uses-feature android:name="android.hardware.camera" android:required="false"/>
+
     <application
         android:label="pidenomas"
         android:name="${applicationName}"
