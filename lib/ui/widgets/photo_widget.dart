@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pidenomas/ui/general/colors.dart';
 import 'package:pidenomas/ui/widgets/general_widgets.dart';
+import 'package:pidenomas/ui/widgets/shimmer_loading_widget.dart';
 
 class PhotoWidget extends StatefulWidget {
   final int tipo;
@@ -9,6 +10,7 @@ class PhotoWidget extends StatefulWidget {
   final String? assetDefault;
   void Function() onPressedUploadPhoto;
   void Function() onPressedTakePhoto;
+  final bool loading;
 
   PhotoWidget({
     required this.tipo,
@@ -17,6 +19,7 @@ class PhotoWidget extends StatefulWidget {
     this.assetDefault = "assets/images/perfil.jpg",
     required this.onPressedUploadPhoto,
     required this.onPressedTakePhoto,
+    required this.loading,
   });
 
   @override
@@ -53,7 +56,8 @@ class _PhotoWidgetState extends State<PhotoWidget> {
                       width: 2.0,
                     ),
                   ),
-                  child: widget.imageUrl == null
+                  child: widget.loading == false
+                      ? (widget.imageUrl == null
                       ? Icon(
                     widget.icon,
                     color: kBrandPrimaryColor1,
@@ -67,97 +71,111 @@ class _PhotoWidgetState extends State<PhotoWidget> {
                       width: containerSize,
                       height: containerSize,
                     ),
-                  ),
+                  )
+                  )
+                      : Center(child: CircularProgressIndicator(
+                    color: kBrandPrimaryColor1,
+                  )),
+
+
                 ),
                 // Si hay una imagen subida desaparece el circulo con (+)
-                if (widget.imageUrl == null)
-                  Positioned(
-                    bottom: 0,
-                    right: 0,
-                    child: Container(
-                      width: containerSize * 0.3,
-                      height: containerSize * 0.3,
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: kBrandPrimaryColor1,
-                      ),
-                      child: Icon(
-                        Icons.add,
-                        color: Colors.white,
-                        size: containerSize * 0.2,
+                if(widget.loading == false)
+                  if (widget.imageUrl == null)
+                    Positioned(
+                      bottom: 0,
+                      right: 0,
+                      child: Container(
+                        width: containerSize * 0.3,
+                        height: containerSize * 0.3,
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: kBrandPrimaryColor1,
+                        ),
+                        child: Icon(
+                          Icons.add,
+                          color: Colors.white,
+                          size: containerSize * 0.2,
+                        ),
                       ),
                     ),
-                  ),
               ],
             ),
           ),
           const SizedBox(width: 10.0),
           // Botones SUBIR FOTO Y TOMAR FOTO
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
+          widget.loading == false ? (
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Container(
+                    width: screenWidth * 0.4,
+                    decoration: BoxDecoration(
+                      gradient: const LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [kBrandPrimaryColor1, kBrandPrimaryColor2],
+                      ),
+                      borderRadius: BorderRadius.circular(18.0),
+                    ),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        print("SUBIR FOTO");
+                        widget.onPressedUploadPhoto();
+                        // Lógica para subir una foto
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.transparent,
+                        shadowColor: Colors.transparent,
+                      ),
+                      child: const Text(
+                        "Subir foto",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(color: Colors.white, fontSize: 18.0),
+                      ),
+                    ),
+                  ),
+                  const Text(
+                    'desde la galería',
+                    style: TextStyle(fontSize: 16.0),
+                  ),
+                  divider20(),
+                  Container(
+                    width: screenWidth * 0.4,
+                    decoration: BoxDecoration(
+                      gradient: const LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [kBrandPrimaryColor1, kBrandPrimaryColor2],
+                      ),
+                      borderRadius: BorderRadius.circular(18.0),
+                    ),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        widget.onPressedTakePhoto();
+                        // Lógica para tomar una foto
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.transparent,
+                        shadowColor: Colors.transparent,
+                      ),
+                      child: const Text(
+                        "Tomar foto",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(color: Colors.white, fontSize: 18.0),
+                      ),
+                    ),
+                  ),
+                  const Text(
+                    "con la cámara",
+                    style: TextStyle(fontSize: 16.0),
+                  ),
+                ],
+              )
+          ): Row(
             children: [
-              Container(
-                width: screenWidth * 0.4,
-                decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [kBrandPrimaryColor1, kBrandPrimaryColor2],
-                  ),
-                  borderRadius: BorderRadius.circular(18.0),
-                ),
-                child: ElevatedButton(
-                  onPressed: () {
-                    print("SUBIR FOTO");
-                    widget.onPressedUploadPhoto();
-                    // Lógica para subir una foto
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.transparent,
-                    shadowColor: Colors.transparent,
-                  ),
-                  child: const Text(
-                    "Subir foto",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(color: Colors.white, fontSize: 18.0),
-                  ),
-                ),
-              ),
-              const Text(
-                'desde la galería',
-                style: TextStyle(fontSize: 16.0),
-              ),
-              divider20(),
-              Container(
-                width: screenWidth * 0.4,
-                decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [kBrandPrimaryColor1, kBrandPrimaryColor2],
-                  ),
-                  borderRadius: BorderRadius.circular(18.0),
-                ),
-                child: ElevatedButton(
-                  onPressed: () {
-                    widget.onPressedTakePhoto();
-                    // Lógica para tomar una foto
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.transparent,
-                    shadowColor: Colors.transparent,
-                  ),
-                  child: const Text(
-                    "Tomar foto",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(color: Colors.white, fontSize: 18.0),
-                  ),
-                ),
-              ),
-              const Text(
-                "con la cámara",
-                style: TextStyle(fontSize: 16.0),
-              ),
+              SizedBox(width: 16),
+              ShimmerLoadingWidget(),
             ],
           ),
         ],
@@ -184,12 +202,14 @@ class _PhotoWidgetState extends State<PhotoWidget> {
                       ),
                       borderRadius: BorderRadius.circular(18.0),
                     ),
-                    child: ClipRRect(
+                    child: widget.loading == false ? ClipRRect(
                       borderRadius: BorderRadius.circular(18),
                       child: Image.asset(
                         widget.assetDefault!,
                       ),
-                    ),
+                    ) : Center(child: CircularProgressIndicator(
+                      color: kBrandPrimaryColor1,
+                    )),
                   ),
                 ),
                 Positioned(
@@ -241,7 +261,7 @@ class _PhotoWidgetState extends State<PhotoWidget> {
           ),
           SizedBox(width: 16.0),
           // BOTONES SUBIR FOTO Y TOMAR FOTO
-          Column(
+          widget.loading == false ? Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Container(
@@ -299,6 +319,11 @@ class _PhotoWidgetState extends State<PhotoWidget> {
                 "con la cámara",
                 style: TextStyle(fontSize: 16.0),
               ),
+            ],
+          ) : Row(
+            children: [
+              SizedBox(width: 16),
+              ShimmerLoadingWidget(),
             ],
           ),
         ],

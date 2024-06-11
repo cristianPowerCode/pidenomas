@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pidenomas/ui/widgets/background_widget.dart';
 import 'package:pidenomas/ui/widgets/general_widgets.dart';
 import 'package:pidenomas/ui/widgets/photo_widget.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../ui/general/colors.dart';
 import '../ui/widgets/button_widget.dart';
@@ -82,20 +83,16 @@ tipo de inmueble: ${widget.typeOfHousing}, category: ${widget.categoria}''');
   String? docReversoUrl;
   final ImagePicker _picker = ImagePicker();
   bool _isImagePickerActive = false;
+  bool loading = true;
+
 
   // Función _uploadPhoto
   void _uploadPhoto(Function(String) setUrl, String path) async {
-    if (_isImagePickerActive) {
-      print("El selector de imágenes ya está activo.");
-      return;
-    }
-
-    setState(() {
-      _isImagePickerActive = true;
-    });
-
     try {
-      print("funcion _uploadPhoto");
+      setState(() {
+        loading = true; // Mostrar indicador de progreso
+      });
+
       final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
 
       if (pickedFile != null) {
@@ -105,6 +102,7 @@ tipo de inmueble: ${widget.typeOfHousing}, category: ${widget.categoria}''');
           print("URL de imagen obtenida: $url");
           setState(() {
             setUrl(url);
+            loading = false; // Ocultar indicador de progreso
           });
           print("URL asignada correctamente");
         } else {
@@ -115,44 +113,41 @@ tipo de inmueble: ${widget.typeOfHousing}, category: ${widget.categoria}''');
       }
     } catch (e) {
       print("Error en la carga de la imagen: $e");
-    } finally {
       setState(() {
-        _isImagePickerActive = false;
+        loading = false; // Ocultar indicador de progreso en caso de error
       });
     }
   }
 
   // Función para tomar la foto con la cámara
   void takePhoto(Function(String) setUrl, String path) async {
+    final ImagePicker _picker = ImagePicker();
+
     if (_isImagePickerActive) {
       print("El selector de imágenes ya está activo.");
       return;
     }
 
     setState(() {
+      loading = true; // Mostrar indicador de progreso
       _isImagePickerActive = true;
     });
 
     try {
-      final XFile? pickedFile =
-          await _picker.pickImage(source: ImageSource.camera);
+      final XFile? pickedFile = await _picker.pickImage(source: ImageSource.camera);
 
       if (pickedFile != null) {
         final url = await uploadImageToFirebase(File(pickedFile.path), path);
-        if (url.isNotEmpty) {
-          print("URL de imagen obtenida: $url");
-          setState(() {
-            setUrl(url);
-          });
-          print("URL asignada correctamente");
-        } else {
-          print("La URL de la imagen está vacía");
-        }
-      } else {
-        print("No se tomó ninguna foto");
+        setState(() {
+          setUrl(url);
+          loading = false; // Ocultar indicador de progreso
+        });
       }
     } catch (e) {
       print("Error al tomar la foto: $e");
+      setState(() {
+        loading = false; // Ocultar indicador de progreso en caso de error
+      });
     } finally {
       setState(() {
         _isImagePickerActive = false;
@@ -202,6 +197,7 @@ tipo de inmueble: ${widget.typeOfHousing}, category: ${widget.categoria}''');
               PhotoWidget(
                 tipo: 1,
                 icon: Icons.storefront,
+                loading: loading,
                 onPressedUploadPhoto: () => _uploadPhoto(
                     (url) => fachadaUrl = url,
                     "negocio/${widget.documentoIdentidad}/negocio-${widget.documentoIdentidad}-fachada.jpg"),
@@ -222,6 +218,7 @@ tipo de inmueble: ${widget.typeOfHousing}, category: ${widget.categoria}''');
               PhotoWidget(
                 tipo: 2,
                 assetDefault: "assets/images/docIdentidadAnverso.jpg",
+                loading: loading,
                 onPressedUploadPhoto: () => _uploadPhoto(
                     (url) => docAnversoUrl = url,
                     "negocio/${widget.documentoIdentidad}/negocio-${widget.documentoIdentidad}-docIdentidadAnverso.jpg"),
@@ -244,6 +241,7 @@ tipo de inmueble: ${widget.typeOfHousing}, category: ${widget.categoria}''');
               PhotoWidget(
                 tipo: 2,
                 assetDefault: "assets/images/docIdentidadReverso.jpg",
+                loading: loading,
                 onPressedUploadPhoto: () => _uploadPhoto(
                     (url) => docReversoUrl = url,
                     "negocio/${widget.documentoIdentidad}/negocio-${widget.documentoIdentidad}-docIdentidadReverso.jpg"),
@@ -283,29 +281,30 @@ tipo de inmueble: ${widget.typeOfHousing}, category: ${widget.categoria}''');
                       print("Documento Frontal $docAnversoUrl");
                       print("Reverso del documento $docReversoUrl");
                     } else {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => RegistrarNegocio5Page(
-                            nombre: widget.nombre,
-                            apellidos: widget.apellidos,
-                            fechaDeNacimiento: widget.fechaDeNacimiento,
-                            celular: widget.celular,
-                            tipoDocumento: widget.tipoDocumento,
-                            documentoIdentidad: widget.documentoIdentidad,
-                            genero: widget.genero,
-                            email: widget.email,
-                            password: widget.password,
-                            lat: widget.lat,
-                            lng: widget.lng,
-                            direccion: widget.direccion,
-                            detalleDireccion: widget.detalleDireccion,
-                            referenciaUbicacion: widget.referenciaUbicacion,
-                            typeOfHousing: widget.typeOfHousing,
-                            categoria: widget.categoria,
-                          ),
-                        ),
-                      );
+                      print("HOLA MUNDO");
+                      // Navigator.push(
+                      //   context,
+                      //   MaterialPageRoute(
+                      //     builder: (context) => RegistrarNegocio5Page(
+                      //       nombre: widget.nombre,
+                      //       apellidos: widget.apellidos,
+                      //       fechaDeNacimiento: widget.fechaDeNacimiento,
+                      //       celular: widget.celular,
+                      //       tipoDocumento: widget.tipoDocumento,
+                      //       documentoIdentidad: widget.documentoIdentidad,
+                      //       genero: widget.genero,
+                      //       email: widget.email,
+                      //       password: widget.password,
+                      //       lat: widget.lat,
+                      //       lng: widget.lng,
+                      //       direccion: widget.direccion,
+                      //       detalleDireccion: widget.detalleDireccion,
+                      //       referenciaUbicacion: widget.referenciaUbicacion,
+                      //       typeOfHousing: widget.typeOfHousing,
+                      //       categoria: widget.categoria,
+                      //     ),
+                      //   ),
+                      // );
                     }
                   },
                   text: "Ir a Registro 5",
