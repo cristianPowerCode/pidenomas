@@ -32,9 +32,32 @@ class _LoginNegocioPageState extends State<LoginNegocioPage> {
   final _formKey = GlobalKey<FormState>();
 
   bool isLoading = false;
+  bool isRegistered = false;
 
   _iniciarSesionCliente() async {
     if (_formKey.currentState!.validate()) {
+      if (!isRegistered) {
+        // Mostrar AlertDialog si isRegistered es false
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Center(
+                  child: PrincipalText(
+                string: "Bienvenido a Pide Nomás",
+              )),
+              content: Text(
+                  textAlign: TextAlign.center,
+                  "Espere la validacion del administrador para hacer uso del aplicativo"),
+              actions: [
+                ButtonWidget(
+                    onPressed: Navigator.of(context).pop, text: "Aceptar")
+              ],
+            );
+          },
+        );
+        return; // Salir de la función
+      }
       setState(() {
         isLoading = true;
       });
