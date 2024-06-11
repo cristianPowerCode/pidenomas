@@ -3,7 +3,7 @@
 .pub/
 pubspec.lock
 android/app/src/main/AndroidManifest.xml
-
+#
 # Directorio de construcción
 build/
 
