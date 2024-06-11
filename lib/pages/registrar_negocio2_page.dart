@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:pidenomas/pages/registrar_negocio3_page.dart';
 import 'package:pidenomas/ui/general/colors.dart';
 import 'package:pidenomas/ui/widgets/button_widget.dart';
@@ -61,9 +64,24 @@ tipoDocumento: ${widget.tipoDocumento}, docIdentidad: ${widget.documentoIdentida
 genero: ${widget.genero}, email: ${widget.email}, password: ${widget.password}''');
   }
 
+  late GoogleMapController mapController;
+
+  final LatLng _center = const LatLng(-12.0422754,-77.057543); // Coordenadas de San Francisco
+
+  void _onMapCreated(GoogleMapController controller) {
+    mapController = controller;
+  }
+  bool isLoading = true;
+
+
   @override
   Widget build(BuildContext context) {
+    CameraPosition _kGooglePlex = CameraPosition(
+      target: _center,
+      zoom: 14.4746,
+    );
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -101,13 +119,19 @@ genero: ${widget.genero}, email: ${widget.email}, password: ${widget.password}''
                   Container(
                     width: double.infinity,
                     height: double.infinity,
-                    color: Colors.grey,
-                    child: Center(
-                      child: Icon(
-                        Icons.location_on,
-                        color: Colors.blueGrey,
-                        size: 100,
-                      ),
+                    // color: Colors.grey,
+                    child: GoogleMap(
+                      mapType: MapType.terrain,
+                      zoomControlsEnabled: false,
+                      onMapCreated: _onMapCreated,
+                      initialCameraPosition: _kGooglePlex,
+                      markers: {
+                        Marker(
+                          markerId: MarkerId("_currentLocation"),
+                          icon: BitmapDescriptor.defaultMarker,
+                          position: _center,
+                        ),
+                      },
                     ),
                   ),
                   Column(

@@ -11,7 +11,6 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <!-- Declarar que la cámara no es un requisito obligatorio -->
-    <!-- 7mo intento Comentario para probar el .gitignore -->
     <uses-feature android:name="android.hardware.camera" android:required="false"/>
 
     <application
@@ -27,7 +26,9 @@
         <!-- Permiso necesario para utilizar Google Maps -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="TU_CLAVE_DE_API_DE_GOOGLE_MAPS" />
+            android:value="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+            />
+
         <activity
             android:name=".MainActivity"
             android:exported="true"
