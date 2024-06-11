@@ -11,7 +11,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <!-- Declarar que la cámara no es un requisito obligatorio -->
-    <!-- 3er intento Comentario para probar el .gitignore -->
+    <!-- 4to intento Comentario para probar el .gitignore -->
     <uses-feature android:name="android.hardware.camera" android:required="false"/>
 
     <application
