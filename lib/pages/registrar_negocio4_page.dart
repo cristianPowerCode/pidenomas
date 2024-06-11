@@ -83,7 +83,7 @@ tipo de inmueble: ${widget.typeOfHousing}, category: ${widget.categoria}''');
   String? docReversoUrl;
   final ImagePicker _picker = ImagePicker();
   bool _isImagePickerActive = false;
-  bool loading = true;
+  bool loading = false;
 
 
   // Función _uploadPhoto
@@ -107,9 +107,11 @@ tipo de inmueble: ${widget.typeOfHousing}, category: ${widget.categoria}''');
           print("URL asignada correctamente");
         } else {
           print("La URL de la imagen está vacía");
+          loading = false;
         }
       } else {
         print("No se seleccionó ninguna imagen");
+        loading = false;
       }
     } catch (e) {
       print("Error en la carga de la imagen: $e");
