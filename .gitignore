@@ -2,6 +2,7 @@
 .dart_tool/
 .pub/
 pubspec.lock
+AndroidManifest.xml
 
 # Directorio de construcción
 build/
