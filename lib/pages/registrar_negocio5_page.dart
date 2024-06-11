@@ -283,7 +283,7 @@ tipo de inmueble: ${widget.typeOfHousing}, category: ${widget.categoria}''');
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
-      resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomInset: true,
       body: Stack(
         children: [
           SingleChildScrollView(

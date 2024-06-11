@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:pidenomas/pages/registrar_cliente3_page.dart';
 import 'package:pidenomas/ui/widgets/background_widget.dart';
 import 'package:pidenomas/ui/widgets/general_widgets.dart';
 import 'package:pidenomas/ui/widgets/photo_widget.dart';
@@ -6,6 +8,7 @@ import 'package:shimmer/shimmer.dart';
 
 import '../ui/general/colors.dart';
 import '../ui/widgets/button_widget.dart';
+import '../ui/widgets/icon_form_button_widget.dart';
 import 'registrar_negocio5_page.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
@@ -188,6 +191,7 @@ tipo de inmueble: ${widget.typeOfHousing}, category: ${widget.categoria}''');
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       body: SingleChildScrollView(
         child: BackGroundWidget(
           child: Column(
@@ -253,64 +257,79 @@ tipo de inmueble: ${widget.typeOfHousing}, category: ${widget.categoria}''');
                 imageUrl: docReversoUrl,
               ),
               divider30(),
-              Center(
-                child: ButtonWidget(
-                  onPressed: () {
-                    List<String> mensajes = [];
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  IconFormButtonWidget(
+                    icon: Icon(FontAwesomeIcons.arrowLeft),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => RegistrarCliente3Page(),
+                        ),
+                      );
+                    },
+                  ),
+                  SizedBox(width: 20.0),
+                  IconFormButtonWidget(
+                    icon: Icon(FontAwesomeIcons.arrowRight),
+                    onPressed: () {
+                      List<String> mensajes = [];
 
-                    if (fachadaUrl == null) {
-                      mensajes.add("X Debe subir una foto de la fachada del negocio.");
-                    }
-                    if (docAnversoUrl == null) {
-                      mensajes.add("X Debe subir una foto de la parte frontal de su documento de identidad.");
-                    }
-                    if (docReversoUrl == null) {
-                      mensajes.add("X Debe subir una foto de la parte de atrás de su documento de identidad.");
-                    }
-
-                    if (mensajes.isNotEmpty) {
-                      int duracion = 2;  // Duración base
-                      if (mensajes.length == 1) {
-                        duracion = 3;
-                      } else if (mensajes.length == 2) {
-                        duracion = 5;
-                      } else if (mensajes.length == 3) {
-                        duracion = 6;
+                      if (fachadaUrl == null) {
+                        mensajes.add("X Debe subir una foto de la fachada del negocio.");
+                      }
+                      if (docAnversoUrl == null) {
+                        mensajes.add("X Debe subir una foto de la parte frontal de su documento de identidad.");
+                      }
+                      if (docReversoUrl == null) {
+                        mensajes.add("X Debe subir una foto de la parte de atrás de su documento de identidad.");
                       }
 
-                      mostrarSnackBar(mensajes.join("\n"), duracion);
-                      print("Fachada $fachadaUrl");
-                      print("Documento Frontal $docAnversoUrl");
-                      print("Reverso del documento $docReversoUrl");
-                    } else {
-                      print("HOLA MUNDO");
-                      // Navigator.push(
-                      //   context,
-                      //   MaterialPageRoute(
-                      //     builder: (context) => RegistrarNegocio5Page(
-                      //       nombre: widget.nombre,
-                      //       apellidos: widget.apellidos,
-                      //       fechaDeNacimiento: widget.fechaDeNacimiento,
-                      //       celular: widget.celular,
-                      //       tipoDocumento: widget.tipoDocumento,
-                      //       documentoIdentidad: widget.documentoIdentidad,
-                      //       genero: widget.genero,
-                      //       email: widget.email,
-                      //       password: widget.password,
-                      //       lat: widget.lat,
-                      //       lng: widget.lng,
-                      //       direccion: widget.direccion,
-                      //       detalleDireccion: widget.detalleDireccion,
-                      //       referenciaUbicacion: widget.referenciaUbicacion,
-                      //       typeOfHousing: widget.typeOfHousing,
-                      //       categoria: widget.categoria,
-                      //     ),
-                      //   ),
-                      // );
-                    }
-                  },
-                  text: "Ir a Registro 5",
-                ),
+                      if (mensajes.isNotEmpty) {
+                        int duracion = 2;  // Duración base
+                        if (mensajes.length == 1) {
+                          duracion = 3;
+                        } else if (mensajes.length == 2) {
+                          duracion = 5;
+                        } else if (mensajes.length == 3) {
+                          duracion = 6;
+                        }
+
+                        mostrarSnackBar(mensajes.join("\n"), duracion);
+                        print("Fachada $fachadaUrl");
+                        print("Documento Frontal $docAnversoUrl");
+                        print("Reverso del documento $docReversoUrl");
+                      } else {
+                        print("HOLA MUNDO");
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => RegistrarNegocio5Page(
+                              nombre: widget.nombre,
+                              apellidos: widget.apellidos,
+                              fechaDeNacimiento: widget.fechaDeNacimiento,
+                              celular: widget.celular,
+                              tipoDocumento: widget.tipoDocumento,
+                              documentoIdentidad: widget.documentoIdentidad,
+                              genero: widget.genero,
+                              email: widget.email,
+                              password: widget.password,
+                              lat: widget.lat,
+                              lng: widget.lng,
+                              direccion: widget.direccion,
+                              detalleDireccion: widget.detalleDireccion,
+                              referenciaUbicacion: widget.referenciaUbicacion,
+                              typeOfHousing: widget.typeOfHousing,
+                              categoria: widget.categoria,
+                            ),
+                          ),
+                        );
+                      }
+                    },
+                  ),
+                ],
               ),
               divider40(),
               divider30(),

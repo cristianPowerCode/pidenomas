@@ -2,13 +2,16 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:pidenomas/pages/registrar_negocio1_page.dart';
 import 'package:pidenomas/pages/registrar_negocio3_page.dart';
 import 'package:pidenomas/ui/general/colors.dart';
 import 'package:pidenomas/ui/widgets/button_widget.dart';
 import 'package:pidenomas/ui/widgets/general_widgets.dart';
 
 import '../ui/widgets/grid_type_of_house_widget.dart';
+import '../ui/widgets/icon_form_button_widget.dart';
 import '../ui/widgets/input_textfield_widget.dart';
 
 class RegistrarNegocio2Page extends StatefulWidget {
@@ -103,10 +106,9 @@ genero: ${widget.genero}, email: ${widget.email}, password: ${widget.password}''
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(22.0, 26.0, 16.0, 16.0),
                     // Añade padding para respetar el espacio del leading
-                    child: Icon(
-                      Icons.keyboard_arrow_left,
-                      size: 40,
-                      color: Colors.white,
+                    child: IconButton(
+                      icon: Icon(Icons.keyboard_arrow_left, size: 40, color: Colors.white,),
+                      onPressed: (){Navigator.push(context, MaterialPageRoute(builder: (context) => RegistrarNegocio1Page(),));},
                     ),
                   )),
             ),
@@ -296,35 +298,50 @@ genero: ${widget.genero}, email: ${widget.email}, password: ${widget.password}''
                     onSelected: _handleSelectedIndex,
                   ),
                   divider30(),
-                  Center(
-                    child: ButtonWidget(
-                      onPressed: () {
-                        Navigator.push(
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      IconFormButtonWidget(
+                        icon: Icon(FontAwesomeIcons.arrowLeft),
+                        onPressed: () {
+                          Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => RegistrarNegocio3Page(
-                                nombre: widget.nombre,
-                                apellidos: widget.apellidos,
-                                fechaDeNacimiento: widget.fechaDeNacimiento,
-                                celular: widget.celular,
-                                tipoDocumento: widget.tipoDocumento,
-                                documentoIdentidad: widget.documentoIdentidad,
-                                genero: widget.genero,
-                                email: widget.email,
-                                password: widget.password,
-                                lat: _latController.text,
-                                lng: _lngController.text,
-                                direccion: _direccionController.text,
-                                detalleDireccion:
-                                    _detalleDireccionController.text,
-                                referenciaUbicacion:
-                                    _referenciaUbicacionController.text,
-                                typeOfHousing: typeOfHousing.toString(),
-                              ),
-                            ));
-                      },
-                      text: "Ir a Registro 3",
-                    ),
+                              builder: (context) => RegistrarNegocio1Page(),
+                            ),
+                          );
+                        },
+                      ),
+                      SizedBox(width: 20.0),
+                      IconFormButtonWidget(
+                        icon: Icon(FontAwesomeIcons.arrowRight),
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => RegistrarNegocio3Page(
+                                  nombre: widget.nombre,
+                                  apellidos: widget.apellidos,
+                                  fechaDeNacimiento: widget.fechaDeNacimiento,
+                                  celular: widget.celular,
+                                  tipoDocumento: widget.tipoDocumento,
+                                  documentoIdentidad: widget.documentoIdentidad,
+                                  genero: widget.genero,
+                                  email: widget.email,
+                                  password: widget.password,
+                                  lat: _latController.text,
+                                  lng: _lngController.text,
+                                  direccion: _direccionController.text,
+                                  detalleDireccion:
+                                  _detalleDireccionController.text,
+                                  referenciaUbicacion:
+                                  _referenciaUbicacionController.text,
+                                  typeOfHousing: typeOfHousing.toString(),
+                                ),
+                              ));
+                        },
+                      ),
+                    ],
                   ),
                 ],
               ),

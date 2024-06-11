@@ -85,6 +85,7 @@ tipo de inmueble: ${widget.typeOfHousing}''');
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       body: SingleChildScrollView(
         child: BackGroundWidget(
           child: Column(
@@ -230,7 +231,7 @@ tipo de inmueble: ${widget.typeOfHousing}''');
 
   IconData getIconData(String iconName) {
     switch (iconName) {
-      case "shoppingBasket":
+      case "shopping-basket":
         return FontAwesomeIcons.shoppingBasket;
       case "pills":
         return FontAwesomeIcons.pills;
