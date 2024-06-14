@@ -36,43 +36,19 @@ class _LoginNegocioPageState extends State<LoginNegocioPage> {
 
   _iniciarSesionCliente() async {
     if (_formKey.currentState!.validate()) {
-      if (!isRegistered) {
-        // Mostrar AlertDialog si isRegistered es false
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: Center(
-                  child: PrincipalText(
-                string: "Bienvenido a Pide Nomás",
-              )),
-              content: Text(
-                  textAlign: TextAlign.center,
-                  "Espere la validacion del administrador para hacer uso del aplicativo"),
-              actions: [
-                ButtonWidget(
-                    onPressed: Navigator.of(context).pop, text: "Aceptar")
-              ],
-            );
-          },
-        );
-        return; // Salir de la función
-      }
       setState(() {
         isLoading = true;
       });
 
       try {
-        final UserCredential userCredential =
-            await _auth.signInWithEmailAndPassword(
+        final UserCredential userCredential = await _auth.signInWithEmailAndPassword(
           email: _emailBusinessOwnerController.text.trim(),
           password: _passwordBusinessOwnerController.text.trim(),
         );
 
         // Verificar si el correo electrónico está verificado
         if (!userCredential.user!.emailVerified) {
-          mostrarSnackBar(
-              "Por favor, verifica si tiene el correo de confirmacion del registro de su negocio");
+          mostrarSnackBar("Por favor, verifica si tiene el correo de confirmacion del registro de su negocio");
           await _auth.signOut(); // Cerrar sesión del usuario no verificado
           setState(() {
             isLoading = false;
@@ -80,12 +56,44 @@ class _LoginNegocioPageState extends State<LoginNegocioPage> {
           return;
         }
 
+        // Chequear si el usuario está registrado
+        if (!isRegistered) {
+          // Mostrar AlertDialog si isRegistered es false
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Center(
+                  child: PrincipalText(
+                    string: "Bienvenido a Pide Nomás",
+                  ),
+                ),
+                content: Text(
+                    textAlign: TextAlign.center,
+                    "Espere la validacion del administrador para hacer uso del aplicativo"
+                ),
+                actions: [
+                  ButtonWidget(
+                      onPressed: Navigator.of(context).pop,
+                      text: "Aceptar"
+                  )
+                ],
+              );
+            },
+          );
+          await _auth.signOut(); // Cerrar sesión del usuario no registrado
+          setState(() {
+            isLoading = false;
+          });
+          return; // Salir de la función
+        }
+
         // Logueo con Éxito
         snackBarMessage(context, Typemessage.loginSuccess);
         Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(builder: (context) => PrincipalPage()),
-          (route) => false,
+              (route) => false,
         );
       } on FirebaseAuthException catch (e) {
         String errorMessage;
@@ -94,8 +102,7 @@ class _LoginNegocioPageState extends State<LoginNegocioPage> {
             errorMessage = "La contraseña es incorrecta.";
             break;
           case 'user-not-found':
-            errorMessage =
-                "No se encontró un usuario con ese correo electrónico.";
+            errorMessage = "No se encontró un usuario con ese correo electrónico.";
             break;
           case 'user-disabled':
             errorMessage = "El usuario con este correo ha sido deshabilitado.";
@@ -104,8 +111,7 @@ class _LoginNegocioPageState extends State<LoginNegocioPage> {
             errorMessage = "Demasiados intentos. Inténtalo más tarde.";
             break;
           case 'operation-not-allowed':
-            errorMessage =
-                "El inicio de sesión con contraseña está deshabilitado.";
+            errorMessage = "El inicio de sesión con contraseña está deshabilitado.";
             break;
           default:
             errorMessage = "Error de autenticación: ${e.message}";
@@ -127,6 +133,7 @@ class _LoginNegocioPageState extends State<LoginNegocioPage> {
       }
     }
   }
+
 
   void mostrarSnackBar(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
