@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:pidenomas/pages/registrar_negocio1_page.dart';
+import 'package:pidenomas/pages/registrar_negocio2_page.dart';
 import 'package:pidenomas/pages/registrar_negocio5_page.dart';
 import 'package:pidenomas/ui/general/colors.dart';
 import 'package:pidenomas/ui/widgets/background_widget.dart';
@@ -44,16 +45,13 @@ class RegistrarNegocio3Page extends StatefulWidget {
     required this.detalleDireccion,
     required this.referenciaUbicacion,
     required this.typeOfHousing,
-
   });
 
   @override
-  _RegistrarNegocio3PageState createState() =>
-      _RegistrarNegocio3PageState();
+  _RegistrarNegocio3PageState createState() => _RegistrarNegocio3PageState();
 }
 
-class _RegistrarNegocio3PageState
-    extends State<RegistrarNegocio3Page> {
+class _RegistrarNegocio3PageState extends State<RegistrarNegocio3Page> {
   String? selectedCategoryId;
   late Future<List<Map<String, dynamic>>> _categoriesFuture;
 
@@ -62,8 +60,7 @@ class _RegistrarNegocio3PageState
     super.initState();
     _categoriesFuture = fetchCategories();
     print("PAGINA 3");
-    print(
-        '''nombre: ${widget.nombre}, apellidos: ${widget.apellidos},
+    print('''nombre: ${widget.nombre}, apellidos: ${widget.apellidos},
 fechaDeNacimiento: ${widget.fechaDeNacimiento}, celular: ${widget.celular},
 tipoDocumento: ${widget.tipoDocumento}, docIdentidad: ${widget.documentoIdentidad},
 genero: ${widget.genero}, email: ${widget.email}, password: ${widget.password},
@@ -74,7 +71,7 @@ tipo de inmueble: ${widget.typeOfHousing}''');
 
   Future<List<Map<String, dynamic>>> fetchCategories() async {
     final QuerySnapshot categoriesSnapshot =
-    await FirebaseFirestore.instance.collection('categories').get();
+        await FirebaseFirestore.instance.collection('categories').get();
     return categoriesSnapshot.docs.map((doc) {
       String id = doc.id;
       Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
@@ -90,7 +87,8 @@ tipo de inmueble: ${widget.typeOfHousing}''');
         child: BackGroundWidget(
           child: Column(
             children: [
-              PrincipalText(string: "Cual categoria se adapta mejor a tu tienda"),
+              PrincipalText(
+                  string: "Cual categoria se adapta mejor a tu tienda"),
               divider12(),
               FutureBuilder<List<Map<String, dynamic>>>(
                 future: _categoriesFuture,
@@ -107,7 +105,7 @@ tipo de inmueble: ${widget.typeOfHousing}''');
                     );
                   } else {
                     final List<Map<String, dynamic>> categories =
-                    snapshot.data!;
+                        snapshot.data!;
                     return GridView.builder(
                       shrinkWrap: true,
                       physics: NeverScrollableScrollPhysics(),
@@ -178,11 +176,20 @@ tipo de inmueble: ${widget.typeOfHousing}''');
                     icon: Icon(FontAwesomeIcons.arrowLeft),
                     onPressed: () {
                       Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => RegistrarNegocio1Page(),
-                        ),
-                      );
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => RegistrarNegocio2Page(
+                              nombre: widget.nombre,
+                              apellidos: widget.apellidos,
+                              fechaDeNacimiento: widget.fechaDeNacimiento,
+                              celular: widget.celular,
+                              tipoDocumento: widget.tipoDocumento,
+                              documentoIdentidad: widget.documentoIdentidad,
+                              genero: widget.genero,
+                              email: widget.email,
+                              password: widget.password,
+                            ),
+                          ));
                     },
                   ),
                   SizedBox(width: 20.0),
@@ -231,7 +238,7 @@ tipo de inmueble: ${widget.typeOfHousing}''');
 
   IconData getIconData(String iconName) {
     switch (iconName) {
-      case "shopping-basket":
+      case "shoppingBasket":
         return FontAwesomeIcons.shoppingBasket;
       case "pills":
         return FontAwesomeIcons.pills;

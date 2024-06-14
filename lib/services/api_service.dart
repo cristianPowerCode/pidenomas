@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:pidenomas/models/register_business_model.dart';
 import 'package:pidenomas/models/register_client_model.dart';
 import '../helps/sp.global.dart';
-import '../models/register_negocio_model.dart';
 import '../utils/constants.dart';
 
 class APIService {
@@ -53,7 +53,8 @@ class APIService {
       "detalleDireccion": detalleDireccion,
       "referenciaDireccion": referenciaDireccion,
       "photoURL": photoUrl,
-      "fechaDeCreacion": "${fechaDeCreacion.year.toString().padLeft(4, '0')}-${fechaDeCreacion.month.toString().padLeft(2, '0')}-${fechaDeCreacion.day.toString().padLeft(2, '0')}",
+      "fechaDeCreacion":
+          "${fechaDeCreacion.year.toString().padLeft(4, '0')}-${fechaDeCreacion.month.toString().padLeft(2, '0')}-${fechaDeCreacion.day.toString().padLeft(2, '0')}",
       "agreeNotifications": agreeNotifications
     };
 
@@ -95,34 +96,38 @@ class APIService {
     }
   }
 
-  Future<RegisterNegocioModel?> registerNegocioToDB(
-      String uid,
-      String nombre,
-      String apellidos,
-      String email,
-      bool isVerified,
-      String celular,
-      int tipoDocumento,
-      DateTime fechaDeNacimiento,
-      String documentoIdentidad,
-      int genero,
-      String password,
-      double lat,
-      double lng,
-      String direccion,
-      String detalleDireccion,
-      String referenciaDireccion,
-      String photoUrl,
-      DateTime fechaDeCreacion,
-      bool agreeNotifications,
-      int categoria,
-      String rucNegocio,
-      String razSocNegocio,
-      String nombNegocio,
-
-
-      ) async {
-    String _path = pathProduction + "/api/negocios/";
+  Future<RegisterBusinessModel?> registrarNegocioToDB(
+    String uid,
+    String nombre,
+    String apellidos,
+    String email,
+    bool isVerified,
+    int isRegistered,
+    bool agreeNotifications,
+    String celular,
+    int tipoDocumento,
+    String documentoIdentidad,
+    DateTime fechaDeNacimiento,
+    int genero,
+    String password,
+    double lat,
+    double lng,
+    String direccion,
+    String detalleDireccion,
+    String referenciaDireccion,
+    String tipoDeInmueble,
+    String photoFachadaInterna,
+    String photoFachadaExterna,
+    String photoDocIdentidadAnv,
+    String photoDocIdentidadRev,
+    DateTime fechaDeCreacion,
+    int categoria,
+    String rucNegocio,
+    String razSocNegocio,
+    String nombNegocio,
+    // List<Map<String, String>> horarios,
+  ) async {
+    String _path = pathProduction + "/negocio/registrarNegocio/";
     print(_path);
     Uri _uri = Uri.parse(_path);
 
@@ -131,27 +136,38 @@ class APIService {
       "uid": uid,
       "nombre": nombre,
       "apellidos": apellidos,
-      "email": email,
-      "isVerified": isVerified,
+      "fechaDeNacimiento":
+          "${fechaDeNacimiento.year.toString().padLeft(4, '0')}-${fechaDeNacimiento.month.toString().padLeft(2, '0')}-${fechaDeNacimiento.day.toString().padLeft(2, '0')}",
       "celular": celular,
       "tipoDocumento": tipoDocumento,
-      "fechaDeNacimiento":
-      "${fechaDeNacimiento.year.toString().padLeft(4, '0')}-${fechaDeNacimiento.month.toString().padLeft(2, '0')}-${fechaDeNacimiento.day.toString().padLeft(2, '0')}",
-      "documentoIdentidad": documentoIdentidad,
+      "docIdentidad": documentoIdentidad,
       "genero": genero,
+      "email": email,
       "password": password,
+      "isVerifiedEmail": isVerified,
+      "isRegistered": isRegistered,
+      "agreeNotifications": agreeNotifications,
       "lat": lat,
       "lng": lng,
       "direccion": direccion,
       "detalleDireccion": detalleDireccion,
       "referenciaDireccion": referenciaDireccion,
-      "photoURL": photoUrl,
-      "fechaDeCreacion": "${fechaDeCreacion.year.toString().padLeft(4, '0')}-${fechaDeCreacion.month.toString().padLeft(2, '0')}-${fechaDeCreacion.day.toString().padLeft(2, '0')}",
-      "agreeNotifications": agreeNotifications,
-      "categorias": categoria,
+      "tipoDeInmueble": tipoDeInmueble,
+      "categoria": categoria,
+      "photoFachadaInterna": photoFachadaInterna,
+      "photoFachadaExterna": photoFachadaExterna,
+      "photoDocIdentidadAnv": photoDocIdentidadAnv,
+      "photoDocIdentidadRev": photoDocIdentidadRev,
       "rucNegocio": rucNegocio,
       "razSocNegocio": razSocNegocio,
-      "nombNegocio": nombNegocio
+      "nombreNegocio": nombNegocio,
+      "fechaDeCreacion":
+          "${fechaDeCreacion.year.toString().padLeft(4, '0')}-${fechaDeCreacion.month.toString().padLeft(2, '0')}-${fechaDeCreacion.day.toString().padLeft(2, '0')}",
+      "horarios": [
+        {"dia": "lunes", "horaInicia": "13:09:53", "horaFin": "13:09:54"},
+        {"dia": "viernes", "horaInicia": "13:44:51", "horaFin": "13:44:52"},
+        {"dia": "feriado", "horaInicia": "13:44:51", "horaFin": "13:44:52"}
+      ],
     };
 
     print("JSON DATA: ${json.encode(body)}");
@@ -173,8 +189,8 @@ class APIService {
         Map<String, dynamic> userMap = json.decode(response.body);
         print("===========");
         print("Mapa cliente: $userMap");
-        RegisterNegocioModel registerNegocioToDB =
-        RegisterNegocioModel.fromJson(userMap);
+        RegisterBusinessModel registerNegocioToDB =
+            RegisterBusinessModel.fromJson(userMap);
         print("=========================");
         print("UID registrado a DB: ${registerNegocioToDB.uid}");
 
@@ -187,9 +203,9 @@ class APIService {
       }
     } catch (e) {
       // Manejar errores de red o excepciones aquí
+      print("NO SE LOGRO 200");
       print("Network/Exception Error: $e");
       throw Exception('Error de red: $e');
     }
   }
-
 }

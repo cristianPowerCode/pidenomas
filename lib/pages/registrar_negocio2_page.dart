@@ -49,6 +49,7 @@ class _RegistrarNegocio2PageState extends State<RegistrarNegocio2Page> {
   TextEditingController _referenciaUbicacionController =
       TextEditingController();
 
+  final _formKey = GlobalKey<FormState>();
   int typeOfHousing = 0;
 
   void _handleSelectedIndex(int index) {
@@ -69,13 +70,14 @@ genero: ${widget.genero}, email: ${widget.email}, password: ${widget.password}''
 
   late GoogleMapController mapController;
 
-  final LatLng _center = const LatLng(-12.0422754,-77.057543); // Coordenadas de San Francisco
+  final LatLng _center =
+      const LatLng(-12.0422754, -77.057543); // Coordenadas de San Francisco
 
   void _onMapCreated(GoogleMapController controller) {
     mapController = controller;
   }
-  bool isLoading = true;
 
+  bool isLoading = true;
 
   @override
   Widget build(BuildContext context) {
@@ -107,8 +109,18 @@ genero: ${widget.genero}, email: ${widget.email}, password: ${widget.password}''
                     padding: const EdgeInsets.fromLTRB(22.0, 26.0, 16.0, 16.0),
                     // Añade padding para respetar el espacio del leading
                     child: IconButton(
-                      icon: Icon(Icons.keyboard_arrow_left, size: 40, color: Colors.white,),
-                      onPressed: (){Navigator.push(context, MaterialPageRoute(builder: (context) => RegistrarNegocio1Page(),));},
+                      icon: Icon(
+                        Icons.keyboard_arrow_left,
+                        size: 40,
+                        color: Colors.white,
+                      ),
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => RegistrarNegocio1Page(),
+                            ));
+                      },
                     ),
                   )),
             ),
@@ -201,149 +213,157 @@ genero: ${widget.genero}, email: ${widget.email}, password: ${widget.password}''
             divider30(),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 25),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    "Direccion",
-                    style: TextStyle(fontSize: 12, color: Color(0xffB1B1B1)),
-                  ),
-                  InputTextFieldWidget(
-                    hintText: "Latitud",
-                    icon: Icons.location_on,
-                    textInputType: TextInputType.numberWithOptions(
-                        decimal: true, signed: false),
-                    inputFormatters: [
-                      FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),
-                    ],
-                    controller: _latController,
-                    maxLength: 12,
-                    optionRegex: [
-                      (RegExp(r'^[0-9]*\.?[0-9]+$'), "Use el punto decimal"),
-                      (RegExp(r'[0-9]'), "Ingresar solo números"),
-                    ],
-                  ),
-                  divider12(),
-                  InputTextFieldWidget(
-                    hintText: "Longitud",
-                    icon: Icons.location_on,
-                    textInputType: TextInputType.numberWithOptions(
-                        decimal: true, signed: false),
-                    inputFormatters: [
-                      FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),
-                    ],
-                    controller: _lngController,
-                    maxLength: 12,
-                    optionRegex: [
-                      (RegExp(r'^[0-9]*\.?[0-9]+$'), "Use el punto decimal"),
-                      (RegExp(r'[0-9]'), "Ingresar solo números"),
-                    ],
-                  ),
-                  divider12(),
-                  ConstrainedBox(
-                    constraints: BoxConstraints(
-                      maxHeight: 500.0,
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      "Direccion",
+                      style: TextStyle(fontSize: 12, color: Color(0xffB1B1B1)),
                     ),
-                    child: InputTextFieldWidget(
-                      hintText: "Dirección del Negocio o Punto de Venta",
+                    divider30(),
+                    InputTextFieldWidget(
+                      hintText: "Latitud",
                       icon: Icons.location_on,
-                      textInputType: TextInputType.text,
-                      controller: _direccionController,
+                      textInputType: TextInputType.numberWithOptions(
+                          decimal: true, signed: false),
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),
+                      ],
+                      controller: _latController,
+                      maxLength: 12,
+                      optionRegex: [
+                        (RegExp(r'^[0-9]*\.?[0-9]+$'), "Use el punto decimal"),
+                        (RegExp(r'[0-9]'), "Ingresar solo números"),
+                      ],
+                    ),
+                    divider12(),
+                    InputTextFieldWidget(
+                      hintText: "Longitud",
+                      icon: Icons.location_on,
+                      textInputType: TextInputType.numberWithOptions(
+                          decimal: true, signed: false),
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),
+                      ],
+                      controller: _lngController,
+                      maxLength: 12,
+                      optionRegex: [
+                        (RegExp(r'^[0-9]*\.?[0-9]+$'), "Use el punto decimal"),
+                        (RegExp(r'[0-9]'), "Ingresar solo números"),
+                      ],
+                    ),
+                    divider12(),
+                    ConstrainedBox(
+                      constraints: BoxConstraints(
+                        maxHeight: 500.0,
+                      ),
+                      child: InputTextFieldWidget(
+                        hintText: "Dirección del Negocio o Punto de Venta",
+                        icon: Icons.location_on,
+                        textInputType: TextInputType.text,
+                        controller: _direccionController,
+                        maxLength: 250,
+                        minLines: 2,
+                        maxLines: null,
+                        count: 250,
+                      ),
+                    ),
+                    divider30(),
+                    const Text(
+                      "Detalle si es puerta calle o Interior",
+                      style: TextStyle(fontSize: 12, color: Color(0xffB1B1B1)),
+                    ),
+                    InputTextFieldWidget(
+                      hintText: "Puerta Calle/ Block B - Dpto 405/ Interior A",
+                      icon: (Icons.map_sharp),
+                      controller: _detalleDireccionController,
                       maxLength: 250,
                       minLines: 2,
                       maxLines: null,
                       count: 250,
                     ),
-                  ),
-                  divider30(),
-                  const Text(
-                    "Detalle si es puerta calle o Interior",
-                    style: TextStyle(fontSize: 12, color: Color(0xffB1B1B1)),
-                  ),
-                  InputTextFieldWidget(
-                    hintText: "Puerta Calle/ Block B - Dpto 405/ Interior A",
-                    icon: (Icons.map_sharp),
-                    controller: _detalleDireccionController,
-                    maxLength: 250,
-                    minLines: 2,
-                    maxLines: null,
-                    count: 250,
-                  ),
-                  divider30(),
-                  const Text(
-                    "Referencia de su ubicacion",
-                    style: TextStyle(fontSize: 12, color: Color(0xffB1B1B1)),
-                  ),
-                  InputTextFieldWidget(
-                    hintText: "Ejm: A una cuadra de la Municipalidad de Lince",
-                    icon: Icons.maps_ugc,
-                    controller: _referenciaUbicacionController,
-                    maxLength: 250,
-                    minLines: 2,
-                    maxLines: null,
-                    count: 250,
-                  ),
-                  divider12(),
-                  const Text(
-                    "Tipo de Inmueble",
-                    style: TextStyle(fontSize: 12, color: Color(0xffB1B1B1)),
-                  ),
-                  GridTypeOfHousingWidget(
-                    options: {
-                      Icons.house: "Casa",
-                      Icons.local_cafe: "Oficina",
-                      Icons.favorite: "Pareja",
-                      Icons.add: "Otro",
-                    },
-                    onSelected: _handleSelectedIndex,
-                  ),
-                  divider30(),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      IconFormButtonWidget(
-                        icon: Icon(FontAwesomeIcons.arrowLeft),
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => RegistrarNegocio1Page(),
-                            ),
-                          );
-                        },
-                      ),
-                      SizedBox(width: 20.0),
-                      IconFormButtonWidget(
-                        icon: Icon(FontAwesomeIcons.arrowRight),
-                        onPressed: () {
-                          Navigator.push(
+                    divider30(),
+                    const Text(
+                      "Referencia de su ubicacion",
+                      style: TextStyle(fontSize: 12, color: Color(0xffB1B1B1)),
+                    ),
+                    InputTextFieldWidget(
+                      hintText: "Ejm: A una cuadra de la Municipalidad de Lince",
+                      icon: Icons.maps_ugc,
+                      controller: _referenciaUbicacionController,
+                      maxLength: 250,
+                      minLines: 2,
+                      maxLines: null,
+                      count: 250,
+                    ),
+                    divider12(),
+                    const Text(
+                      "Tipo de Inmueble",
+                      style: TextStyle(fontSize: 12, color: Color(0xffB1B1B1)),
+                    ),
+                    GridTypeOfHousingWidget(
+                      options: {
+                        Icons.house: "Casa",
+                        Icons.local_cafe: "Oficina",
+                        Icons.favorite: "Pareja",
+                        Icons.add: "Otro",
+                      },
+                      onSelected: _handleSelectedIndex,
+                    ),
+                    divider30(),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        IconFormButtonWidget(
+                          icon: Icon(FontAwesomeIcons.arrowLeft),
+                          onPressed: () {
+                            Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => RegistrarNegocio3Page(
-                                  nombre: widget.nombre,
-                                  apellidos: widget.apellidos,
-                                  fechaDeNacimiento: widget.fechaDeNacimiento,
-                                  celular: widget.celular,
-                                  tipoDocumento: widget.tipoDocumento,
-                                  documentoIdentidad: widget.documentoIdentidad,
-                                  genero: widget.genero,
-                                  email: widget.email,
-                                  password: widget.password,
-                                  lat: _latController.text,
-                                  lng: _lngController.text,
-                                  direccion: _direccionController.text,
-                                  detalleDireccion:
-                                  _detalleDireccionController.text,
-                                  referenciaUbicacion:
-                                  _referenciaUbicacionController.text,
-                                  typeOfHousing: typeOfHousing.toString(),
-                                ),
-                              ));
-                        },
-                      ),
-                    ],
-                  ),
-                ],
+                                builder: (context) => RegistrarNegocio1Page(),
+                              ),
+                            );
+                          },
+                        ),
+                        SizedBox(width: 20.0),
+                        IconFormButtonWidget(
+                          icon: Icon(FontAwesomeIcons.arrowRight),
+                          onPressed: () {
+                            final formState = _formKey.currentState;
+                            if (formState != null && formState.validate()) {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => RegistrarNegocio3Page(
+                                      nombre: widget.nombre,
+                                      apellidos: widget.apellidos,
+                                      fechaDeNacimiento: widget.fechaDeNacimiento,
+                                      celular: widget.celular,
+                                      tipoDocumento: widget.tipoDocumento,
+                                      documentoIdentidad:
+                                          widget.documentoIdentidad,
+                                      genero: widget.genero,
+                                      email: widget.email,
+                                      password: widget.password,
+                                      lat: _latController.text,
+                                      lng: _lngController.text,
+                                      direccion: _direccionController.text,
+                                      detalleDireccion:
+                                          _detalleDireccionController.text,
+                                      referenciaUbicacion:
+                                          _referenciaUbicacionController.text,
+                                      typeOfHousing: typeOfHousing.toString(),
+                                    ),
+                                  ));
+                            }
+                          },
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
           ],

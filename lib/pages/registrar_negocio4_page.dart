@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:pidenomas/pages/registrar_cliente3_page.dart';
+import 'package:pidenomas/pages/registrar_negocio3_page.dart';
 import 'package:pidenomas/ui/widgets/background_widget.dart';
 import 'package:pidenomas/ui/widgets/general_widgets.dart';
 import 'package:pidenomas/ui/widgets/photo_widget.dart';
@@ -81,13 +82,13 @@ tipo de inmueble: ${widget.typeOfHousing}, category: ${widget.categoria}''');
     _checkPermissions();
   }
 
-  String? fachadaUrl;
+  String? fachadaInterna;
+  String? fachadaExterna;
   String? docAnversoUrl;
   String? docReversoUrl;
   final ImagePicker _picker = ImagePicker();
   bool _isImagePickerActive = false;
   bool loading = false;
-
 
   // Función _uploadPhoto
   void _uploadPhoto(Function(String) setUrl, String path) async {
@@ -110,11 +111,15 @@ tipo de inmueble: ${widget.typeOfHousing}, category: ${widget.categoria}''');
           print("URL asignada correctamente");
         } else {
           print("La URL de la imagen está vacía");
-          loading = false;
+          setState(() {
+            loading = false;
+          });
         }
       } else {
         print("No se seleccionó ninguna imagen");
-        loading = false;
+        setState(() {
+          loading = false;
+        });
       }
     } catch (e) {
       print("Error en la carga de la imagen: $e");
@@ -139,7 +144,8 @@ tipo de inmueble: ${widget.typeOfHousing}, category: ${widget.categoria}''');
     });
 
     try {
-      final XFile? pickedFile = await _picker.pickImage(source: ImageSource.camera);
+      final XFile? pickedFile =
+          await _picker.pickImage(source: ImageSource.camera);
 
       if (pickedFile != null) {
         final url = await uploadImageToFirebase(File(pickedFile.path), path);
@@ -173,6 +179,7 @@ tipo de inmueble: ${widget.typeOfHousing}, category: ${widget.categoria}''');
       return ""; // Retorna una cadena vacía en caso de error
     }
   }
+
   // Ajustamos la función mostrarSnackBar para aceptar la duración como parámetro
   void mostrarSnackBar(String message, int duration) {
     ScaffoldMessenger.of(context).showSnackBar(
@@ -199,17 +206,34 @@ tipo de inmueble: ${widget.typeOfHousing}, category: ${widget.categoria}''');
             children: [
               PrincipalText(string: "Ya falta poco..."),
               divider40(),
-              PrincipalText(string: "Suba una foto de la fachada del negocio"),
+              PrincipalText(
+                  string: "Suba una foto de la fachada interna del negocio"),
               PhotoWidget(
                 tipo: 1,
                 icon: Icons.storefront,
                 loading: loading,
                 onPressedUploadPhoto: () => _uploadPhoto(
-                    (url) => fachadaUrl = url,
-                    "negocio/${widget.documentoIdentidad}/negocio-${widget.documentoIdentidad}-fachada.jpg"),
-                onPressedTakePhoto: () => takePhoto((url) => fachadaUrl = url,
-                    "negocio/${widget.documentoIdentidad}/negocio-${widget.documentoIdentidad}-fachada.jpg"),
-                imageUrl: fachadaUrl,
+                    (url) => fachadaInterna = url,
+                    "negocio/${widget.documentoIdentidad}/negocio-${widget.documentoIdentidad}-fachada-interna.jpg"),
+                onPressedTakePhoto: () => takePhoto(
+                    (url) => fachadaInterna = url,
+                    "negocio/${widget.documentoIdentidad}/negocio-${widget.documentoIdentidad}-fachada-interna.jpg"),
+                imageUrl: fachadaInterna,
+              ),
+              divider40(),
+              PrincipalText(
+                  string: "Suba una foto de la fachada externa del negocio"),
+              PhotoWidget(
+                tipo: 1,
+                icon: Icons.storefront,
+                loading: loading,
+                onPressedUploadPhoto: () => _uploadPhoto(
+                    (url) => fachadaExterna = url,
+                    "negocio/${widget.documentoIdentidad}/negocio-${widget.documentoIdentidad}-fachada-externa.jpg"),
+                onPressedTakePhoto: () => takePhoto(
+                    (url) => fachadaExterna = url,
+                    "negocio/${widget.documentoIdentidad}/negocio-${widget.documentoIdentidad}-fachada-externa.jpg"),
+                imageUrl: fachadaExterna,
               ),
               divider40(),
               PrincipalText(
@@ -264,11 +288,26 @@ tipo de inmueble: ${widget.typeOfHousing}, category: ${widget.categoria}''');
                     icon: Icon(FontAwesomeIcons.arrowLeft),
                     onPressed: () {
                       Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => RegistrarCliente3Page(),
-                        ),
-                      );
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => RegistrarNegocio3Page(
+                              nombre: widget.nombre,
+                              apellidos: widget.apellidos,
+                              fechaDeNacimiento: widget.fechaDeNacimiento,
+                              celular: widget.celular,
+                              tipoDocumento: widget.tipoDocumento,
+                              documentoIdentidad: widget.documentoIdentidad,
+                              genero: widget.genero,
+                              email: widget.email,
+                              password: widget.password,
+                              lat: widget.lat,
+                              lng: widget.lng,
+                              direccion: widget.direccion,
+                              detalleDireccion: widget.detalleDireccion,
+                              referenciaUbicacion: widget.referenciaUbicacion,
+                              typeOfHousing: widget.typeOfHousing,
+                            ),
+                          ));
                     },
                   ),
                   SizedBox(width: 20.0),
@@ -276,19 +315,25 @@ tipo de inmueble: ${widget.typeOfHousing}, category: ${widget.categoria}''');
                     icon: Icon(FontAwesomeIcons.arrowRight),
                     onPressed: () {
                       List<String> mensajes = [];
-
-                      if (fachadaUrl == null) {
-                        mensajes.add("X Debe subir una foto de la fachada del negocio.");
+                      if (fachadaInterna == null) {
+                        mensajes.add(
+                            "X Debe subir una foto de la fachada externa del negocio.");
+                      }
+                      if (fachadaExterna == null) {
+                        mensajes.add(
+                            "X Debe subir una foto de la fachada interna del negocio.");
                       }
                       if (docAnversoUrl == null) {
-                        mensajes.add("X Debe subir una foto de la parte frontal de su documento de identidad.");
+                        mensajes.add(
+                            "X Debe subir una foto de la parte frontal de su documento de identidad.");
                       }
                       if (docReversoUrl == null) {
-                        mensajes.add("X Debe subir una foto de la parte de atrás de su documento de identidad.");
+                        mensajes.add(
+                            "X Debe subir una foto de la parte de atrás de su documento de identidad.");
                       }
 
                       if (mensajes.isNotEmpty) {
-                        int duracion = 2;  // Duración base
+                        int duracion = 2; // Duración base
                         if (mensajes.length == 1) {
                           duracion = 3;
                         } else if (mensajes.length == 2) {
@@ -298,11 +343,11 @@ tipo de inmueble: ${widget.typeOfHousing}, category: ${widget.categoria}''');
                         }
 
                         mostrarSnackBar(mensajes.join("\n"), duracion);
-                        print("Fachada $fachadaUrl");
+                        print("Fachada interna $fachadaInterna");
+                        print("Fachada externa $fachadaExterna");
                         print("Documento Frontal $docAnversoUrl");
                         print("Reverso del documento $docReversoUrl");
                       } else {
-                        print("HOLA MUNDO");
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -323,6 +368,10 @@ tipo de inmueble: ${widget.typeOfHousing}, category: ${widget.categoria}''');
                               referenciaUbicacion: widget.referenciaUbicacion,
                               typeOfHousing: widget.typeOfHousing,
                               categoria: widget.categoria,
+                              fachadaInterna: fachadaInterna!,
+                              fachadaExterna: fachadaExterna!,
+                              docAnversoUrl: docAnversoUrl!,
+                              docReversoUrl: docReversoUrl!,
                             ),
                           ),
                         );

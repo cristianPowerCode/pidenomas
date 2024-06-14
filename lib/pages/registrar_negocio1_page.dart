@@ -24,12 +24,10 @@ class RegistrarNegocio1Page extends StatefulWidget {
   const RegistrarNegocio1Page({super.key});
 
   @override
-  State<RegistrarNegocio1Page> createState() =>
-      _RegistrarNegocio1PageState();
+  State<RegistrarNegocio1Page> createState() => _RegistrarNegocio1PageState();
 }
 
-class _RegistrarNegocio1PageState
-    extends State<RegistrarNegocio1Page> {
+class _RegistrarNegocio1PageState extends State<RegistrarNegocio1Page> {
   final _formKey = GlobalKey<FormState>();
 
   final CollectionReference _clientsCollection =
@@ -255,8 +253,7 @@ class _RegistrarNegocio1PageState
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) =>
-                                        RegistrarNegocio2Page(
+                                    builder: (context) => RegistrarNegocio2Page(
                                       nombre: _nombreController.text,
                                       apellidos: _apellidoController.text,
                                       fechaDeNacimiento:
