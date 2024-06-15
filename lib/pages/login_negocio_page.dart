@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import '../services/login_negocio_service.dart';
 import '../ui/general/type_messages.dart';
 import 'principal_page.dart';
 import '../ui/general/colors.dart';
@@ -22,6 +23,8 @@ class LoginNegocioPage extends StatefulWidget {
 }
 
 class _LoginNegocioPageState extends State<LoginNegocioPage> {
+  final LoginNegocioService _loginNegocioService = LoginNegocioService();
+
   final TextEditingController _emailBusinessOwnerController =
       TextEditingController();
   final TextEditingController _passwordBusinessOwnerController =
@@ -34,106 +37,107 @@ class _LoginNegocioPageState extends State<LoginNegocioPage> {
   bool isLoading = false;
   bool isRegistered = false;
 
-  _iniciarSesionCliente() async {
-    if (_formKey.currentState!.validate()) {
-      setState(() {
-        isLoading = true;
-      });
-
-      try {
-        final UserCredential userCredential = await _auth.signInWithEmailAndPassword(
-          email: _emailBusinessOwnerController.text.trim(),
-          password: _passwordBusinessOwnerController.text.trim(),
-        );
-
-        // Verificar si el correo electrónico está verificado
-        if (!userCredential.user!.emailVerified) {
-          mostrarSnackBar("Por favor, verifica si tiene el correo de confirmacion del registro de su negocio");
-          await _auth.signOut(); // Cerrar sesión del usuario no verificado
-          setState(() {
-            isLoading = false;
-          });
-          return;
-        }
-
-        // Chequear si el usuario está registrado
-        if (!isRegistered) {
-          // Mostrar AlertDialog si isRegistered es false
-          showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                title: Center(
-                  child: PrincipalText(
-                    string: "Bienvenido a Pide Nomás",
-                  ),
-                ),
-                content: Text(
-                    textAlign: TextAlign.center,
-                    "Espere la validacion del administrador para hacer uso del aplicativo"
-                ),
-                actions: [
-                  ButtonWidget(
-                      onPressed: Navigator.of(context).pop,
-                      text: "Aceptar"
-                  )
-                ],
-              );
-            },
-          );
-          await _auth.signOut(); // Cerrar sesión del usuario no registrado
-          setState(() {
-            isLoading = false;
-          });
-          return; // Salir de la función
-        }
-
-        // Logueo con Éxito
-        snackBarMessage(context, Typemessage.loginSuccess);
-        Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(builder: (context) => PrincipalPage()),
-              (route) => false,
-        );
-      } on FirebaseAuthException catch (e) {
-        String errorMessage;
-        switch (e.code) {
-          case 'wrong-password':
-            errorMessage = "La contraseña es incorrecta.";
-            break;
-          case 'user-not-found':
-            errorMessage = "No se encontró un usuario con ese correo electrónico.";
-            break;
-          case 'user-disabled':
-            errorMessage = "El usuario con este correo ha sido deshabilitado.";
-            break;
-          case 'too-many-requests':
-            errorMessage = "Demasiados intentos. Inténtalo más tarde.";
-            break;
-          case 'operation-not-allowed':
-            errorMessage = "El inicio de sesión con contraseña está deshabilitado.";
-            break;
-          default:
-            errorMessage = "Error de autenticación: ${e.message}";
-        }
-        snackBarMessage2(context, Typemessage.incomplete, errorMessage);
-        print("Error de autenticación: $e");
-      } on SocketException catch (_) {
-        // Error de conexión de red
-        snackBarMessage(context, Typemessage.networkError);
-        print("Error de conexión de red");
-      } catch (e) {
-        // Otros Errores
-        mostrarSnackBar("Error al iniciar sesión");
-        print("Error al iniciar sesión: $e");
-      } finally {
+    _iniciarSesionNegocio() async {
+      if (_formKey.currentState!.validate()) {
         setState(() {
-          isLoading = false;
+          isLoading = true;
         });
+
+        try {
+          final UserCredential userCredential = await _auth.signInWithEmailAndPassword(
+            email: _emailBusinessOwnerController.text.trim(),
+            password: _passwordBusinessOwnerController.text.trim(),
+          );
+
+          // Verificar si el correo electrónico está verificado
+          if (!userCredential.user!.emailVerified) {
+            mostrarSnackBar("Por favor, verifica si tiene el correo de confirmacion del registro de su negocio");
+            await _auth.signOut(); // Cerrar sesión del usuario no verificado
+            setState(() {
+              isLoading = false;
+            });
+            return;
+          }
+
+          // Intentar login en el negocio
+          try {
+            await _loginNegocioToDB();
+          } catch (e) {
+            // Mostrar AlertDialog si el login al negocio falla
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: Center(
+                    child: PrincipalText(
+                      string: "Bienvenido a Pide Nomás",
+                    ),
+                  ),
+                  content: Text(
+                      textAlign: TextAlign.center,
+                      "Espere la validacion del administrador para hacer uso del aplicativo"
+                  ),
+                  actions: [
+                    ButtonWidget(
+                        onPressed: Navigator.of(context).pop,
+                        text: "Aceptar"
+                    )
+                  ],
+                );
+              },
+            );
+            await _auth.signOut(); // Cerrar sesión del usuario no registrado
+            setState(() {
+              isLoading = false;
+            });
+            return; // Salir de la función
+          }
+
+          // Logueo con Éxito
+          snackBarMessage(context, Typemessage.loginSuccess);
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => PrincipalPage()),
+                (route) => false,
+          );
+        } on FirebaseAuthException catch (e) {
+          String errorMessage;
+          switch (e.code) {
+            case 'wrong-password':
+              errorMessage = "La contraseña es incorrecta.";
+              break;
+            case 'user-not-found':
+              errorMessage = "No se encontró un usuario con ese correo electrónico.";
+              break;
+            case 'user-disabled':
+              errorMessage = "El usuario con este correo ha sido deshabilitado.";
+              break;
+            case 'too-many-requests':
+              errorMessage = "Demasiados intentos. Inténtalo más tarde.";
+              break;
+            case 'operation-not-allowed':
+              errorMessage = "El inicio de sesión con contraseña está deshabilitado.";
+              break;
+            default:
+              errorMessage = "Error de autenticación: ${e.message}";
+          }
+          snackBarMessage2(context, Typemessage.incomplete, errorMessage);
+          print("Error de autenticación: $e");
+        } on SocketException catch (_) {
+          // Error de conexión de red
+          snackBarMessage(context, Typemessage.networkError);
+          print("Error de conexión de red");
+        } catch (e) {
+          // Otros Errores
+          mostrarSnackBar("Error al iniciar sesión");
+          print("Error al iniciar sesión: $e");
+        } finally {
+          setState(() {
+            isLoading = false;
+          });
+        }
       }
     }
-  }
-
 
   void mostrarSnackBar(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
@@ -142,6 +146,43 @@ class _LoginNegocioPageState extends State<LoginNegocioPage> {
         duration: Duration(seconds: 2),
       ),
     );
+  }
+
+  Future<void> _loginNegocioToDB() async {
+    print("Entró a la funcion _loginNegocioToBD()");
+
+    if (_formKey.currentState!.validate()) {
+      print("el formulario no tiene campos vacios");
+      setState(() {
+        isLoading = true;
+      });
+      try {
+        print("Calling loginNeogcioToDB...");
+        final value = await _loginNegocioService.loginNegocio(
+          _emailBusinessOwnerController.text,
+          _passwordBusinessOwnerController.text,
+        );
+        if (value != null) {
+          print("REGISTRANDO A LA DB");
+          snackBarMessage(context, Typemessage.loginSuccess);
+        } else {
+          print("Error: Value is null");
+          // snackBarMessage(context, Typemessage.error);
+        }
+      } catch (error) {
+        print("Catch Error: $error");
+        // snackBarMessage(context, Typemessage.error);
+      } finally {
+        setState(() {
+          isLoading = false;
+        });
+      }
+    } else {
+      mostrarSnackBar("Termine de rellenar el formulario por favor");
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
 
   @override
@@ -200,7 +241,7 @@ class _LoginNegocioPageState extends State<LoginNegocioPage> {
                           ButtonWidget(
                             onPressed: () {
                               print("INICIANDO SESION");
-                              _iniciarSesionCliente();
+                              _iniciarSesionNegocio();
                               FocusScope.of(context)
                                   .unfocus(); // esto minimiza el teclado
                             },
