@@ -424,15 +424,6 @@ photoDocIdentidadAnv: ${widget.docAnversoUrl}, photoDocIdentidadRev: ${widget.do
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        ElevatedButton(
-                          onPressed: () async {
-                            _registroYGuardarDatos();
-                          },
-                          child: Text("Registrar"),
-                        ),
-                        Container(
-                          child: Text("STATUS: "),
-                        ),
                         PrincipalText(string: "Completa"),
                         PrincipalText(string: "tus datos del negocio"),
                         divider30(),
