@@ -7,10 +7,14 @@
     <!---Permisos de Google-->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <!-- Declarar que la cámara no es un requisito obligatorio -->
+    <!-- 8vo intento Comentario para probar el .gitignore -->
     <uses-feature android:name="android.hardware.camera" android:required="false"/>
 
     <application
@@ -26,8 +30,11 @@
         <!-- Permiso necesario para utilizar Google Maps -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+            android:value="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
             />
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" />
 
         <activity
             android:name=".MainActivity"
