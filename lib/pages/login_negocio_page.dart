@@ -38,12 +38,72 @@ class _LoginNegocioPageState extends State<LoginNegocioPage> {
   bool isRegistered = false;
 
   void _iniciarSesionNegocio() async {
+    print("funcion iniciar sesion neogio");
     if (_formKey.currentState!.validate()) {
+      print("formulario completado");
       setState(() {
         isLoading = true;
       });
-
       try {
+        final UserCredential userCredential =
+        await _auth.signInWithEmailAndPassword(
+          email: _emailBusinessOwnerController.text.trim(),
+          password: _passwordBusinessOwnerController.text.trim(),
+        );
+
+        // Verificar si el correo electrónico está verificado
+        if (!userCredential.user!.emailVerified) {
+          mostrarSnackBar(
+              "Por favor, verifica si tiene el correo de confirmacion del registro de su negocio");
+          await _auth.signOut(); // Cerrar sesión del usuario no verificado
+          setState(() {
+            isLoading = false;
+          });
+          return;
+        }
+
+        // Intentar login en el negocio
+        final int statusCode = await _loginNegocioToDB();
+
+        // Verificar el statusCode
+        if (statusCode == 200) {
+          // Logueo con Éxito
+          snackBarMessage(context, Typemessage.loginSuccess);
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => PrincipalPage()),
+                (route) => false,
+          );
+        } else {
+          // Mostrar AlertDialog si el login al negocio falla
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Center(
+                  child: PrincipalText(
+                    string: "Bienvenido a Pide Nomás",
+                  ),
+                ),
+                content: Text(
+                    textAlign: TextAlign.center,
+                    "Espere la validacion del administrador para hacer uso del aplicativo"),
+                actions: [
+                  ButtonWidget(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      text: "Aceptar")
+                ],
+              );
+            },
+          );
+          await _auth.signOut(); // Cerrar sesión del usuario no registrado
+          setState(() {
+            isLoading = false;
+          });
+          return; // Salir de la función
+        }
       } on FirebaseAuthException catch (e) {
         String errorMessage;
         switch (e.code) {
@@ -51,7 +111,8 @@ class _LoginNegocioPageState extends State<LoginNegocioPage> {
             errorMessage = "La contraseña es incorrecta.";
             break;
           case 'user-not-found':
-            errorMessage = "No se encontró un usuario con ese correo electrónico.";
+            errorMessage =
+            "No se encontró un usuario con ese correo electrónico.";
             break;
           case 'user-disabled':
             errorMessage = "El usuario con este correo ha sido deshabilitado.";
@@ -60,7 +121,8 @@ class _LoginNegocioPageState extends State<LoginNegocioPage> {
             errorMessage = "Demasiados intentos. Inténtalo más tarde.";
             break;
           case 'operation-not-allowed':
-            errorMessage = "El inicio de sesión con contraseña está deshabilitado.";
+            errorMessage =
+            "El inicio de sesión con contraseña está deshabilitado.";
             break;
           default:
             errorMessage = "Error de autenticación: ${e.message}";
@@ -80,9 +142,10 @@ class _LoginNegocioPageState extends State<LoginNegocioPage> {
           isLoading = false;
         });
       }
+    } else {
+      print("formulario incompleto");
     }
   }
-
 
   void mostrarSnackBar(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
@@ -102,19 +165,20 @@ class _LoginNegocioPageState extends State<LoginNegocioPage> {
       try {
         print("Llamando a loginNegocioToDB...");
         final ApiResponse response = await _loginNegocioService.loginNegocio(
-          _emailBusinessOwnerController.text,
-          _passwordBusinessOwnerController.text,
+          _emailBusinessOwnerController.text.trim(),
+          _passwordBusinessOwnerController.text.trim(),
         );
 
         final int statusCode = response.statusCode;
 
         if (statusCode == 200) {
           print("Registro exitoso en la BD");
-          snackBarMessage(context, Typemessage.loginSuccess);
+          // Puedes manejar la lógica adicional aquí si es necesario
+
         } else {
           print("Error: Código de Estado no es 200");
           // Puedes manejar otros códigos de estado aquí si es necesario
-          mostrarSnackBar("Error en el inicio de sesión: Código $statusCode");
+          // mostrarSnackBar("Error en el inicio de sesión: Código $statusCode");
         }
 
         return statusCode; // Retornar el statusCode para su uso externo
