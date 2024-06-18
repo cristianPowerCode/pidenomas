@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:pidenomas/pages/registrar_negocio1_page.dart';
 import 'package:pidenomas/pages/registrar_negocio3_page.dart';
@@ -42,12 +43,13 @@ class RegistrarNegocio2Page extends StatefulWidget {
 }
 
 class _RegistrarNegocio2PageState extends State<RegistrarNegocio2Page> {
+
   TextEditingController _latController = TextEditingController();
   TextEditingController _lngController = TextEditingController();
   TextEditingController _direccionController = TextEditingController();
   TextEditingController _detalleDireccionController = TextEditingController();
   TextEditingController _referenciaUbicacionController =
-      TextEditingController();
+  TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
   int typeOfHousing = 0;
@@ -57,6 +59,10 @@ class _RegistrarNegocio2PageState extends State<RegistrarNegocio2Page> {
       typeOfHousing = index;
     });
   }
+  String _locationMessage = "";
+  late GoogleMapController mapController;
+  static const LatLng initialPosition = LatLng(-12.0630149,-77.0296179); // Lima
+  LatLng currentPosition = initialPosition;
 
   @override
   void initState() {
@@ -68,13 +74,56 @@ tipoDocumento: ${widget.tipoDocumento}, docIdentidad: ${widget.documentoIdentida
 genero: ${widget.genero}, email: ${widget.email}, password: ${widget.password}''');
   }
 
-  late GoogleMapController mapController;
-
-  final LatLng _center =
-      const LatLng(-12.0422754, -77.057543); // Coordenadas de San Francisco
-
   void _onMapCreated(GoogleMapController controller) {
     mapController = controller;
+  }
+
+  void _getCurrentLocation() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    // Verificar si el servicio de ubicación está habilitado
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("El servicio de ubicación está deshabilitado.")),
+      );
+      return;
+    }
+
+    // Verificar permisos de ubicación
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Los permisos de ubicación están denegados.")),
+        );
+        return;
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Los permisos de ubicación están denegados permanentemente.")),
+      );
+      return;
+    }
+
+    // Obtener la ubicación actual
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+
+    setState(() {
+      currentPosition = LatLng(position.latitude, position.longitude);
+      _latController.text = position.latitude.toString();
+      _lngController.text = position.longitude.toString();
+      mapController.animateCamera(
+        CameraUpdate.newCameraPosition(
+          CameraPosition(target: currentPosition, zoom: 16.4746),
+        ),
+      );
+    });
   }
 
   bool isLoading = true;
@@ -82,8 +131,8 @@ genero: ${widget.genero}, email: ${widget.email}, password: ${widget.password}''
   @override
   Widget build(BuildContext context) {
     CameraPosition _kGooglePlex = CameraPosition(
-      target: _center,
-      zoom: 14.4746,
+      target: initialPosition,
+      zoom: 16.4746,
     );
     return Scaffold(
       resizeToAvoidBottomInset: true,
@@ -143,7 +192,17 @@ genero: ${widget.genero}, email: ${widget.email}, password: ${widget.password}''
                         Marker(
                           markerId: MarkerId("_currentLocation"),
                           icon: BitmapDescriptor.defaultMarker,
-                          position: _center,
+                          position: currentPosition,
+                          draggable: true,
+                          onDragEnd: (newPosition) {
+                            setState(() {
+                              currentPosition = newPosition;
+                              _latController.text =
+                                  newPosition.latitude.toString();
+                              _lngController.text =
+                                  newPosition.longitude.toString();
+                            });
+                          },
                         ),
                       },
                     ),
@@ -192,6 +251,7 @@ genero: ${widget.genero}, email: ${widget.email}, password: ${widget.password}''
                     child: IconButton(
                       onPressed: () {
                         // Acción al presionar el botón
+                        _getCurrentLocation();
                       },
                       icon: Container(
                         decoration: BoxDecoration(
@@ -223,36 +283,24 @@ genero: ${widget.genero}, email: ${widget.email}, password: ${widget.password}''
                       style: TextStyle(fontSize: 12, color: Color(0xffB1B1B1)),
                     ),
                     divider30(),
-                    InputTextFieldWidget(
-                      hintText: "Latitud",
-                      icon: Icons.location_on,
-                      textInputType: TextInputType.numberWithOptions(
-                          decimal: true, signed: false),
-                      inputFormatters: [
-                        FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),
-                      ],
+                    TextField(
                       controller: _latController,
-                      maxLength: 12,
-                      optionRegex: [
-                        (RegExp(r'^[0-9]*\.?[0-9]+$'), "Use el punto decimal"),
-                        (RegExp(r'[0-9]'), "Ingresar solo números"),
-                      ],
+                      decoration: InputDecoration(
+                        labelText: "Latitud",
+                        border: OutlineInputBorder(),
+                      ),
+                      readOnly: true,
+                      enabled: false,
                     ),
                     divider12(),
-                    InputTextFieldWidget(
-                      hintText: "Longitud",
-                      icon: Icons.location_on,
-                      textInputType: TextInputType.numberWithOptions(
-                          decimal: true, signed: false),
-                      inputFormatters: [
-                        FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),
-                      ],
+                    TextField(
                       controller: _lngController,
-                      maxLength: 12,
-                      optionRegex: [
-                        (RegExp(r'^[0-9]*\.?[0-9]+$'), "Use el punto decimal"),
-                        (RegExp(r'[0-9]'), "Ingresar solo números"),
-                      ],
+                      decoration: InputDecoration(
+                        labelText: "Longitud",
+                        border: OutlineInputBorder(),
+                      ),
+                      readOnly: true,
+                      enabled: false,
                     ),
                     divider12(),
                     ConstrainedBox(
