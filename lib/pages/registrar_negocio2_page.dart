@@ -279,7 +279,7 @@ genero: ${widget.genero}, email: ${widget.email}, password: ${widget.password}''
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
-                      "Direccion",
+                      "Dirección",
                       style: TextStyle(fontSize: 12, color: Color(0xffB1B1B1)),
                     ),
                     divider30(),
@@ -334,7 +334,7 @@ genero: ${widget.genero}, email: ${widget.email}, password: ${widget.password}''
                     ),
                     divider30(),
                     const Text(
-                      "Referencia de su ubicacion",
+                      "Referencia de su ubicación",
                       style: TextStyle(fontSize: 12, color: Color(0xffB1B1B1)),
                     ),
                     InputTextFieldWidget(

@@ -57,6 +57,54 @@ class _RegistrarNegocio1PageState extends State<RegistrarNegocio1Page> {
   bool isChanged = false;
   bool agreeNotifications = false;
 
+  Future<bool> checkIfEmailExists(String email) async {
+    // Se creará temporalmente para verificar si el email existe y luego se eliminará
+    setState(() {
+      isLoading = true;
+    });
+    try {
+      // Intentamos crear un usuario con el correo y una contraseña temporal
+      UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: email,
+        password: 'temporary-password', // Contraseña temporal que no se usará
+      );
+      // Si la creación tiene éxito, es porque el correo no estaba en uso
+      // Entonces procedemos a eliminar este usuario temporal
+      if (userCredential.user != null) {
+        await userCredential.user!.delete();
+        setState(() {
+          isLoading = false;
+        });
+      } else {
+        isLoading = false;
+      }
+
+      return false; // Retornamos false, ya que el correo no está en uso
+    } catch (e) {
+      // Manejamos el error
+      if (e is FirebaseAuthException) {
+        if (e.code == 'email-already-in-use') {
+          // Si el error es porque el correo ya está en uso
+          setState(() {
+            isLoading = false;
+          });
+          mostrarSnackBar("El correo electrónico ya está registrado");
+          return true; // Retornamos true, indicando que el correo está en uso
+        } setState(() {
+          isLoading = false;
+        });
+      }
+
+      // Otro tipo de error
+      print('Error al verificar el email: $e');
+      setState(() {
+        isLoading = false;
+      });
+      mostrarSnackBar("Error al verificar el email: $e");
+      return false; // Retornamos false en caso de cualquier error
+    }
+  }
+
   void mostrarSnackBar(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -148,7 +196,7 @@ class _RegistrarNegocio1PageState extends State<RegistrarNegocio1Page> {
                       ),
                       InputTextFieldWidget(
                         icon: Icons.phone,
-                        hintText: "Telefono",
+                        hintText: "Celular",
                         controller: _celularController,
                         textInputType: TextInputType.number,
                         inputFormatters: [
@@ -247,28 +295,34 @@ class _RegistrarNegocio1PageState extends State<RegistrarNegocio1Page> {
                           IconFormButtonWidget(
                             icon: Icon(FontAwesomeIcons.arrowRight),
                             isFormComplete: true,
-                            onPressed: () {
+                            onPressed: () async{
+                              String email = _emailController.text.trim();
+                              bool emailExists = await checkIfEmailExists(email);
                               final formState = _formKey.currentState;
                               if (formState != null && formState.validate()) {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => RegistrarNegocio2Page(
-                                      nombre: _nombreController.text,
-                                      apellidos: _apellidoController.text,
-                                      fechaDeNacimiento:
-                                          _fechaDeNacimientoController.text,
-                                      celular: _celularController.text,
-                                      tipoDocumento:
-                                          _tipoDocumentoController.text,
-                                      documentoIdentidad:
-                                          _documentoIdentidadController.text,
-                                      genero: _generoController.text,
-                                      email: _emailController.text,
-                                      password: _passwordController.text,
+                                if(emailExists){
+                                  mostrarSnackBar("El correo electrónico ya está registrado");
+                                }else{
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => RegistrarNegocio2Page(
+                                        nombre: _nombreController.text,
+                                        apellidos: _apellidoController.text,
+                                        fechaDeNacimiento:
+                                        _fechaDeNacimientoController.text,
+                                        celular: _celularController.text,
+                                        tipoDocumento:
+                                        _tipoDocumentoController.text,
+                                        documentoIdentidad:
+                                        _documentoIdentidadController.text,
+                                        genero: _generoController.text,
+                                        email: _emailController.text,
+                                        password: _passwordController.text,
+                                      ),
                                     ),
-                                  ),
-                                );
+                                  );
+                                }
                               } else {
                                 snackBarMessage(context, Typemessage.error);
                               }
