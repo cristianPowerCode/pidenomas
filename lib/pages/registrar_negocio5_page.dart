@@ -127,92 +127,13 @@ photoDocIdentidadAnv: ${widget.docAnversoUrl}, photoDocIdentidadRev: ${widget.do
   bool isChanged = false;
   bool agreeNotifications = false;
 
-  Future<void> _registerNegocioToDB() async {
-    print("Entró a la funcion _registerNegocioToDB()");
-
-    if (uidForFirebase.isNotEmpty) {
-      print("el formulario no tiene campos vacios");
-      setState(() {
-        isLoading = true;
-      });
-      try {
-        print("Calling registerClienteToDB...");
-        final value = await _apiService.registrarNegocioToDB(
-          uidForFirebase,
-          widget.nombre,
-          widget.apellidos,
-          widget.email,
-          false,
-          1,
-          agreeNotifications,
-          widget.celular,
-          int.parse(widget.tipoDocumento),
-          widget.documentoIdentidad,
-          DateTime.parse(widget.fechaDeNacimiento),
-          int.parse(widget.genero),
-          widget.password,
-          double.parse(widget.lat),
-          double.parse(widget.lng),
-          widget.direccion,
-          widget.detalleDireccion,
-          widget.referenciaUbicacion,
-          widget.typeOfHousing,
-          widget.fachadaInterna,
-          widget.fachadaExterna,
-          widget.docAnversoUrl,
-          widget.docReversoUrl,
-          DateTime.now(),
-          int.parse(widget.categoria),
-          _rucController.text,
-          _razSocialNegocioController.text,
-          _nombreNegocioController.text,
-          // horarios,
-        );
-        if (value != null) {
-          print("REGISTRANDO A LA DB");
-          snackBarMessage(context, Typemessage.loginSuccess);
-        } else {
-          print("Error: Value is null");
-          // snackBarMessage(context, Typemessage.error);
-        }
-      } catch (error) {
-        print("Catch Error: $error");
-        // snackBarMessage(context, Typemessage.error);
-      } finally {
-        setState(() {
-          isLoading = false;
-        });
-      }
-    } else {
-      mostrarSnackBar("Termine de rellenar el formulario por favor", 2);
-      setState(() {
-        isLoading = false;
-      });
-    }
-  }
-
-  void mostrarSnackBar(String message, int duration) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        duration: Duration(seconds: duration),
-        backgroundColor: kErrorColor,
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12.0),
-        ),
-      ),
-    );
-  }
-
-  Future<void> _registroYGuardarDatos() async {
+  Future<void> _registrarYGuardarDatos() async {
     setState(() {
       isLoading = true; // Establece isLoading en true al iniciar el proceso
     });
     if (_formKey.currentState!.validate()) {
       try {
-        UserCredential userCredential =
-        await _auth.createUserWithEmailAndPassword(
+        UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
           email: widget.email,
           password: widget.password,
         );
@@ -229,61 +150,61 @@ photoDocIdentidadAnv: ${widget.docAnversoUrl}, photoDocIdentidadRev: ${widget.do
 
           // Guardar datos en Firestore
           print("GUARDANDO DATOS EN FIREBASE - Function _guardarDatos()");
-          await _guardarDatos();
-          print(_guardarDatos());
-          print("DATOS GUARDADOS EN FIREBASE- Function _guardarDatos()");
-          print("REGISTRANDO A LA BASE DE DATOS - Function _registroYGuardarDatos()");
-          await _registerNegocioToDB();
-          print(_registerNegocioToDB);
-          print("REGISTRADO A LA BASE DE DATOS - Function _registroYGuardarDatos()");
+          try {
+            await _guardarDatos();
+            print("DATOS GUARDADOS EN FIREBASE- Function _guardarDatos()");
+            print("REGISTRANDO A LA BASE DE DATOS - Function _registroYGuardarDatos()");
+            await _registrarNegocioToDB();
+            print("REGISTRADO A LA BASE DE DATOS - Function _registroYGuardarDatos()");
 
-          // Mostrar AlertDialog para informar al usuario que verifique su correo
-          showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                title: Text("Registro Exitoso"),
-                content: Text(
-                    "Se ha enviado un correo de verificación a ${user.email}. Por favor verifica tu correo antes de iniciar sesión."),
-                actions: [
-                  TextButton(
-                    child: Text("OK"),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                      // Redirigir a la pantalla de login
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => LoginNegocioPage()),
-                      );
+            // Mostrar AlertDialog para informar al usuario que verifique su correo
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: Text("Registro Exitoso"),
+                  content: Text("Se ha enviado un correo de verificación a ${user.email}. Por favor verifica tu correo antes de iniciar sesión."),
+                  actions: [
+                    TextButton(
+                      child: Text("OK"),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                        // Redirigir a la pantalla de login
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(builder: (context) => LoginNegocioPage()),
+                        );
+                      },
+                    ),
+                  ],
+                );
+              },
+            );
+          } catch (e) {
+            print("Error al guardar datos en Firestore: $e");
+            mostrarSnackBar("Hubo un problema al estructurar su registro: $e", 3);
 
-                    },
-                  ),
-                ],
-              );
-            },
-          );
+            // Eliminar la cuenta en Firebase Authentication
+            await user.delete();
+
+            setState(() {
+              isLoading = false;
+            });
+          }
         }
-        setState(() {
-          isLoading =
-          false; // Establece isLoading en false al completar con éxito el proceso
-        });
       } catch (e) {
         setState(() {
-          isLoading =
-          false; // Establece isLoading en false si ocurre un error durante el proceso
+          isLoading = false; // Establece isLoading en false si ocurre un error durante el proceso
         });
         print('Error al registrar el negocio: $e');
-        // Mostrar SnackBar de error
-        // snackBarMessage(context, Typemessage.error);
+        mostrarSnackBar("Error al registrar el negocio: $e", 3);
       }
-    } else{
+    } else {
       setState(() {
         isLoading = false;
         mostrarSnackBar("No tiene el formulario validado", 2);
       });
-    };
-
+    }
   }
 
   Future<void> _guardarDatos() async {
@@ -330,7 +251,105 @@ photoDocIdentidadAnv: ${widget.docAnversoUrl}, photoDocIdentidadRev: ${widget.do
       print(jsonEncode(businessOwnerModel.toJson()));
     } catch (e) {
       print("Error al guardar datos en cloud firestore: $e");
+      mostrarSnackBar("Error al guardar datos en Firestore: $e", 2);
+      throw Exception("Error al guardar datos en Firestore: $e");
     }
+  }
+
+  Future<void> _registrarNegocioToDB() async {
+    print("Entró a la funcion _registerNegocioToDB()");
+
+    if (uidForFirebase.isNotEmpty) {
+      print("el formulario no tiene campos vacios");
+      setState(() {
+        isLoading = true;
+      });
+      try {
+        print("Calling registerClienteToDB...");
+        final value = await _apiService.registrarNegocioToDB(
+          uidForFirebase,
+          widget.nombre,
+          widget.apellidos,
+          widget.email,
+          false,
+          1,
+          agreeNotifications,
+          widget.celular,
+          int.parse(widget.tipoDocumento),
+          widget.documentoIdentidad,
+          DateTime.parse(widget.fechaDeNacimiento),
+          int.parse(widget.genero),
+          widget.password,
+          double.parse(widget.lat),
+          double.parse(widget.lng),
+          widget.direccion,
+          widget.detalleDireccion,
+          widget.referenciaUbicacion,
+          widget.typeOfHousing,
+          widget.fachadaInterna,
+          widget.fachadaExterna,
+          widget.docAnversoUrl,
+          widget.docReversoUrl,
+          DateTime.now(),
+          int.parse(widget.categoria),
+          _rucController.text,
+          _razSocialNegocioController.text,
+          _nombreNegocioController.text,
+          // horarios,
+        );
+        if (value != null) {
+          print("REGISTRANDO A LA DB");
+          // snackBarMessage(context, Typemessage.loginSuccess);
+        } else {
+          print("Error: Value is null");
+          mostrarSnackBar("Hubo un problema al registrar en la BD: Value is null", 3);
+
+          // Eliminar la cuenta en Firebase Authentication
+          User? user = _auth.currentUser;
+          await user?.delete();
+
+          // Eliminar el documento en Firestore
+          await _clientsCollection.doc(uidForFirebase).delete();
+
+          setState(() {
+            isLoading = false;
+          });
+        }
+      } catch (error) {
+        print("Catch Error: $error");
+        mostrarSnackBar("Hubo un problema al registrar en la BD: $error", 3);
+
+        // Eliminar la cuenta en Firebase Authentication
+        User? user = _auth.currentUser;
+        await user?.delete();
+
+        // Eliminar el documento en Firestore
+        await _clientsCollection.doc(uidForFirebase).delete();
+
+        setState(() {
+          isLoading = false;
+        });
+      }
+    } else {
+      mostrarSnackBar("Termine de rellenar el formulario por favor", 2);
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  void mostrarSnackBar(String message, int duration) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        duration: Duration(seconds: duration),
+        backgroundColor: Colors.grey,
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12.0),
+        ),
+      ),
+    );
   }
 
   void _onCheckbox1Changed(bool value) {
@@ -492,7 +511,7 @@ photoDocIdentidadAnv: ${widget.docAnversoUrl}, photoDocIdentidadRev: ${widget.do
                             if (formState != null &&
                                 formState.validate() &&
                                 agreeTerms) {
-                              await _registroYGuardarDatos();
+                              await _registrarYGuardarDatos();
                             } else {
                               if (!agreeTerms) {
                                 setState(() {
