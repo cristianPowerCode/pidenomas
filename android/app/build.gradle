@@ -72,5 +72,14 @@ flutter {
 dependencies {
     //agregando a partir de aca
     implementation 'androidx.multidex:multidex:2.0.1'
-    
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.9.10"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.10"
+}
+
+configurations.all {
+    resolutionStrategy.eachDependency { details ->
+        if (details.requested.group == 'org.jetbrains.kotlin') {
+            details.useVersion '1.9.10'
+        }
+    }
 }
