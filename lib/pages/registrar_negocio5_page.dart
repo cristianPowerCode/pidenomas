@@ -266,7 +266,7 @@ photoDocIdentidadAnv: ${widget.docAnversoUrl}, photoDocIdentidadRev: ${widget.do
       });
       try {
         print("Calling registerClienteToDB...");
-        final value = await _apiService.registrarNegocioToDB(
+        final RegisterBusinessModel? value = await _apiService.registrarNegocioToDB(
           uidForFirebase,
           widget.nombre,
           widget.apellidos,
@@ -295,8 +295,8 @@ photoDocIdentidadAnv: ${widget.docAnversoUrl}, photoDocIdentidadRev: ${widget.do
           _rucController.text,
           _razSocialNegocioController.text,
           _nombreNegocioController.text,
-          // horarios,
         );
+
         if (value != null) {
           print("REGISTRANDO A LA DB");
           // snackBarMessage(context, Typemessage.loginSuccess);
@@ -315,9 +315,17 @@ photoDocIdentidadAnv: ${widget.docAnversoUrl}, photoDocIdentidadRev: ${widget.do
             isLoading = false;
           });
         }
-      } catch (error) {
-        print("Catch Error: $error");
-        mostrarSnackBar("Hubo un problema al registrar en la BD: $error", 3);
+      } catch (e) {
+        // Manejar errores específicos del servidor
+        String errorMessage;
+        if (e is http.Response && e.statusCode == 400) {
+          final errorData = json.decode(e.body);
+          errorMessage = errorData['message'];
+        } else {
+          errorMessage = e.toString();
+        }
+        print("Catch Error: $errorMessage");
+        mostrarSnackBar("Hubo un problema al registrar en la BD: $errorMessage", 3);
 
         // Eliminar la cuenta en Firebase Authentication
         User? user = _auth.currentUser;
