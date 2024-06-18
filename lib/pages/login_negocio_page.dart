@@ -37,107 +37,52 @@ class _LoginNegocioPageState extends State<LoginNegocioPage> {
   bool isLoading = false;
   bool isRegistered = false;
 
-    _iniciarSesionNegocio() async {
-      if (_formKey.currentState!.validate()) {
-        setState(() {
-          isLoading = true;
-        });
+  void _iniciarSesionNegocio() async {
+    if (_formKey.currentState!.validate()) {
+      setState(() {
+        isLoading = true;
+      });
 
-        try {
-          final UserCredential userCredential = await _auth.signInWithEmailAndPassword(
-            email: _emailBusinessOwnerController.text.trim(),
-            password: _passwordBusinessOwnerController.text.trim(),
-          );
-
-          // Verificar si el correo electrónico está verificado
-          if (!userCredential.user!.emailVerified) {
-            mostrarSnackBar("Por favor, verifica si tiene el correo de confirmacion del registro de su negocio");
-            await _auth.signOut(); // Cerrar sesión del usuario no verificado
-            setState(() {
-              isLoading = false;
-            });
-            return;
-          }
-
-          // Intentar login en el negocio
-          try {
-            await _loginNegocioToDB();
-          } catch (e) {
-            // Mostrar AlertDialog si el login al negocio falla
-            showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return AlertDialog(
-                  title: Center(
-                    child: PrincipalText(
-                      string: "Bienvenido a Pide Nomás",
-                    ),
-                  ),
-                  content: Text(
-                      textAlign: TextAlign.center,
-                      "Espere la validacion del administrador para hacer uso del aplicativo"
-                  ),
-                  actions: [
-                    ButtonWidget(
-                        onPressed: Navigator.of(context).pop,
-                        text: "Aceptar"
-                    )
-                  ],
-                );
-              },
-            );
-            await _auth.signOut(); // Cerrar sesión del usuario no registrado
-            setState(() {
-              isLoading = false;
-            });
-            return; // Salir de la función
-          }
-
-          // Logueo con Éxito
-          snackBarMessage(context, Typemessage.loginSuccess);
-          Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(builder: (context) => PrincipalPage()),
-                (route) => false,
-          );
-        } on FirebaseAuthException catch (e) {
-          String errorMessage;
-          switch (e.code) {
-            case 'wrong-password':
-              errorMessage = "La contraseña es incorrecta.";
-              break;
-            case 'user-not-found':
-              errorMessage = "No se encontró un usuario con ese correo electrónico.";
-              break;
-            case 'user-disabled':
-              errorMessage = "El usuario con este correo ha sido deshabilitado.";
-              break;
-            case 'too-many-requests':
-              errorMessage = "Demasiados intentos. Inténtalo más tarde.";
-              break;
-            case 'operation-not-allowed':
-              errorMessage = "El inicio de sesión con contraseña está deshabilitado.";
-              break;
-            default:
-              errorMessage = "Error de autenticación: ${e.message}";
-          }
-          snackBarMessage2(context, Typemessage.incomplete, errorMessage);
-          print("Error de autenticación: $e");
-        } on SocketException catch (_) {
-          // Error de conexión de red
-          snackBarMessage(context, Typemessage.networkError);
-          print("Error de conexión de red");
-        } catch (e) {
-          // Otros Errores
-          mostrarSnackBar("Error al iniciar sesión");
-          print("Error al iniciar sesión: $e");
-        } finally {
-          setState(() {
-            isLoading = false;
-          });
+      try {
+      } on FirebaseAuthException catch (e) {
+        String errorMessage;
+        switch (e.code) {
+          case 'wrong-password':
+            errorMessage = "La contraseña es incorrecta.";
+            break;
+          case 'user-not-found':
+            errorMessage = "No se encontró un usuario con ese correo electrónico.";
+            break;
+          case 'user-disabled':
+            errorMessage = "El usuario con este correo ha sido deshabilitado.";
+            break;
+          case 'too-many-requests':
+            errorMessage = "Demasiados intentos. Inténtalo más tarde.";
+            break;
+          case 'operation-not-allowed':
+            errorMessage = "El inicio de sesión con contraseña está deshabilitado.";
+            break;
+          default:
+            errorMessage = "Error de autenticación: ${e.message}";
         }
+        snackBarMessage2(context, Typemessage.incomplete, errorMessage);
+        print("Error de autenticación: $e");
+      } on SocketException catch (_) {
+        // Error de conexión de red
+        snackBarMessage(context, Typemessage.networkError);
+        print("Error de conexión de red");
+      } catch (e) {
+        // Otros errores
+        mostrarSnackBar("Error al iniciar sesión: $e");
+        print("Error al iniciar sesión: $e");
+      } finally {
+        setState(() {
+          isLoading = false;
+        });
       }
     }
+  }
+
 
   void mostrarSnackBar(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
@@ -148,40 +93,46 @@ class _LoginNegocioPageState extends State<LoginNegocioPage> {
     );
   }
 
-  Future<void> _loginNegocioToDB() async {
-    print("Entró a la funcion _loginNegocioToBD()");
-
+  Future<int> _loginNegocioToDB() async {
     if (_formKey.currentState!.validate()) {
-      print("el formulario no tiene campos vacios");
+      print("El formulario no tiene campos vacíos");
       setState(() {
         isLoading = true;
       });
       try {
-        print("Calling loginNeogcioToDB...");
-        final value = await _loginNegocioService.loginNegocio(
+        print("Llamando a loginNegocioToDB...");
+        final ApiResponse response = await _loginNegocioService.loginNegocio(
           _emailBusinessOwnerController.text,
           _passwordBusinessOwnerController.text,
         );
-        if (value != null) {
-          print("REGISTRANDO A LA DB");
+
+        final int statusCode = response.statusCode;
+
+        if (statusCode == 200) {
+          print("Registro exitoso en la BD");
           snackBarMessage(context, Typemessage.loginSuccess);
         } else {
-          print("Error: Value is null");
-          // snackBarMessage(context, Typemessage.error);
+          print("Error: Código de Estado no es 200");
+          // Puedes manejar otros códigos de estado aquí si es necesario
+          mostrarSnackBar("Error en el inicio de sesión: Código $statusCode");
         }
+
+        return statusCode; // Retornar el statusCode para su uso externo
       } catch (error) {
-        print("Catch Error: $error");
-        // snackBarMessage(context, Typemessage.error);
+        print("Error en catch: $error");
+        mostrarSnackBar("Error en el inicio de sesión: $error");
+        return 0; // Retornar un valor predeterminado o código de error
       } finally {
         setState(() {
           isLoading = false;
         });
       }
     } else {
-      mostrarSnackBar("Termine de rellenar el formulario por favor");
+      mostrarSnackBar("Por favor, complete todos los campos del formulario");
       setState(() {
         isLoading = false;
       });
+      return 0; // Retornar un valor predeterminado o código de error
     }
   }
 
@@ -241,9 +192,9 @@ class _LoginNegocioPageState extends State<LoginNegocioPage> {
                           ButtonWidget(
                             onPressed: () {
                               print("INICIANDO SESION");
-                              _iniciarSesionNegocio();
                               FocusScope.of(context)
                                   .unfocus(); // esto minimiza el teclado
+                              _iniciarSesionNegocio();
                             },
                             text: "Iniciar Sesión",
                             width: double.infinity,

@@ -5,44 +5,42 @@ import 'package:pidenomas/utils/constants.dart';
 
 import '../models/login_negocio_model.dart';
 
+class ApiResponse {
+  final int statusCode;
+  final dynamic data; // Puedes agregar más campos según lo que necesites
+
+  ApiResponse({
+    required this.statusCode,
+    required this.data,
+  });
+}
+
 class LoginNegocioService {
-  Future<LoginNegocioModel> loginNegocio(String email, String password) async {
+  Future<ApiResponse> loginNegocio(String email, String password) async {
     String path = "$pathProduction/negocio/loginNegocio/";
-    print(path);
     Uri uri = Uri.parse(path);
     final Map<String, String> body = {"email": email, "password": password};
-    print("JSON DATA: ${json.encode(body)}");
 
     try {
-      print("Sending POST LoginNegocio request...");
+      print("Enviando solicitud POST LoginNegocio...");
       http.Response response = await http.post(
         uri,
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: {"Content-Type": "application/json"},
         body: json.encode(body),
       );
-      print("Response Status Code: ${response.statusCode}"); //--
-      print("Response Body: ${response.body}"); //--
-      print("STATUS A LA BD: ${response.statusCode}");
 
-      if (response.statusCode == 200) {
-        Map<String, String> loginMap = json.decode(response.body);
-        print("===========");
-        print("Mapa loginNegocio: $loginMap");
-        LoginNegocioModel loginNegocio = LoginNegocioModel.fromJson(loginMap);
-        print("=========================");
+      print("Código de Estado de la Respuesta: ${response.statusCode}");
+      print("Cuerpo de la Respuesta: ${response.body}");
 
-        return loginNegocio;
-      } else {
-        // Manejar errores de otros códigos de estado HTTP aquí
-        print("HTTP Error: ${response.statusCode}");
-        throw Exception(
-            'Error en la solicitud A LA BD: ${response.statusCode}');
-      }
+      // Decodificar la respuesta JSON
+      Map<String, dynamic> responseBody = json.decode(response.body);
+
+      return ApiResponse(
+        statusCode: response.statusCode,
+        data: responseBody, // Puedes ajustar esto según la estructura de tu respuesta
+      );
     } catch (e) {
-      // Manejar errores de red o excepciones aquí
-      print("Network/Exception Error: $e");
+      print("Error de Red/Excepción: $e");
       throw Exception('Error de red: $e');
     }
   }
