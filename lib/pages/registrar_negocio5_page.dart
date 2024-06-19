@@ -13,6 +13,7 @@ import 'package:http/http.dart';
 import 'package:pidenomas/pages/login_negocio_page.dart';
 import 'package:pidenomas/pages/registrar_negocio4_page.dart';
 import 'package:pidenomas/ui/widgets/background_widget.dart';
+import 'package:pidenomas/ui/widgets/circular_loading_widget.dart';
 import 'package:pidenomas/ui/widgets/general_widgets.dart';
 import 'package:pidenomas/ui/widgets/input_textfield_widget.dart';
 
@@ -541,19 +542,7 @@ photoDocIdentidadAnv: ${widget.docAnversoUrl}, photoDocIdentidadRev: ${widget.do
             ),
           ),
           isLoading
-              ? Container(
-                  color: kDefaultIconDarkColor.withOpacity(0.85),
-                  child: Center(
-                    child: SizedBox(
-                      width: 50,
-                      height: 50,
-                      child: CircularProgressIndicator(
-                        color: kBrandPrimaryColor1,
-                        strokeWidth: 5,
-                      ),
-                    ),
-                  ),
-                )
+              ? CircularLoadingWidget()
               : SizedBox(),
         ],
       ),
