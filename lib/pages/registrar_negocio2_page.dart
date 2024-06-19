@@ -10,6 +10,7 @@ import 'package:pidenomas/pages/registrar_negocio1_page.dart';
 import 'package:pidenomas/pages/registrar_negocio3_page.dart';
 import 'package:pidenomas/ui/general/colors.dart';
 import 'package:pidenomas/ui/widgets/button_widget.dart';
+import 'package:pidenomas/ui/widgets/circular_loading_widget.dart';
 import 'package:pidenomas/ui/widgets/general_widgets.dart';
 
 import '../ui/widgets/grid_type_of_house_widget.dart';
@@ -60,16 +61,17 @@ class _RegistrarNegocio2PageState extends State<RegistrarNegocio2Page> {
     });
   }
 
-  String _locationMessage = "";
   late GoogleMapController mapController;
   static const LatLng initialPosition =
       LatLng(-12.0630149, -77.0296179); // Lima
   LatLng currentPosition = initialPosition;
   String address = ''; // Variable para almacenar la dirección
+  bool isLoading = false;
 
   @override
   void initState() {
     super.initState();
+    _getCurrentLocation();
     print("PAGINA 2");
     print('''nombre: ${widget.nombre}, apellidos: ${widget.apellidos},
 fechaDeNacimiento: ${widget.fechaDeNacimiento}, celular: ${widget.celular},
@@ -83,8 +85,11 @@ genero: ${widget.genero}, email: ${widget.email}, password: ${widget.password}''
 
   void _onCameraMove(CameraPosition position) {
     currentPosition = position.target;
-    _getAddressFromLatLng(); // Obtener la dirección al mover el mapa
-    setState(() {}); // Actualiza el estado para reflejar el movimiento del mapa
+    // No actualizar la dirección aquí para evitar múltiples actualizaciones
+  }
+
+  void _onCameraIdle() {
+    _getAddressFromLatLng(); // Obtener la dirección solo cuando la cámara deja de moverse
   }
 
   Future<void> _getAddressFromLatLng() async {
@@ -95,8 +100,9 @@ genero: ${widget.genero}, email: ${widget.email}, password: ${widget.password}''
       );
       if (placemarks != null && placemarks.isNotEmpty) {
         Placemark placemark = placemarks[0];
+        String address = placemark.street ?? '...'; // Usar operador de nulabilidad para manejar posibles valores nulos
         setState(() {
-          _direccionController.text = placemark.street ?? '...';
+          _direccionController.text = address; // Asignar la dirección al controlador de texto
         });
       }
     } catch (e) {
@@ -107,6 +113,9 @@ genero: ${widget.genero}, email: ${widget.email}, password: ${widget.password}''
   void _getCurrentLocation() async {
     bool serviceEnabled;
     LocationPermission permission;
+    setState(() {
+      isLoading = true;
+    });
 
     // Verificar si el servicio de ubicación está habilitado
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
@@ -114,6 +123,9 @@ genero: ${widget.genero}, email: ${widget.email}, password: ${widget.password}''
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("El servicio de ubicación está deshabilitado.")),
       );
+      setState(() {
+        isLoading = false;
+      });
       return;
     }
 
@@ -125,8 +137,14 @@ genero: ${widget.genero}, email: ${widget.email}, password: ${widget.password}''
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text("Los permisos de ubicación están denegados.")),
         );
+        setState(() {
+          isLoading = false;
+        });
         return;
       }
+      setState(() {
+        isLoading = false;
+      });
     }
 
     if (permission == LocationPermission.deniedForever) {
@@ -135,6 +153,9 @@ genero: ${widget.genero}, email: ${widget.email}, password: ${widget.password}''
             content: Text(
                 "Los permisos de ubicación están denegados permanentemente.")),
       );
+      setState(() {
+        isLoading = false;
+      });
       return;
     }
 
@@ -154,8 +175,6 @@ genero: ${widget.genero}, email: ${widget.email}, password: ${widget.password}''
     });
   }
 
-  bool isLoading = true;
-
   @override
   Widget build(BuildContext context) {
     CameraPosition _kGooglePlex = CameraPosition(
@@ -172,7 +191,7 @@ genero: ${widget.genero}, email: ${widget.email}, password: ${widget.password}''
           children: [
             Expanded(
               flex: 5,
-              child: SizedBox(
+              child: isLoading ? SizedBox(
                 width: double.infinity,
                 height: size.height * 0.5,
                 child: Stack(
@@ -184,6 +203,7 @@ genero: ${widget.genero}, email: ${widget.email}, password: ${widget.password}''
                       onMapCreated: _onMapCreated,
                       initialCameraPosition: _kGooglePlex,
                       onCameraMove: _onCameraMove,
+                      onCameraIdle: _onCameraIdle,
                     ),
                     Center(
                       child: Icon(
@@ -192,7 +212,6 @@ genero: ${widget.genero}, email: ${widget.email}, password: ${widget.password}''
                         size: 40,
                       ),
                     ),
-
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Row(
@@ -224,8 +243,9 @@ genero: ${widget.genero}, email: ${widget.email}, password: ${widget.password}''
                             ),
                           ),
                           Container(
-                            width: size.width-(36*2)-20,
-                            // Ancho del contenedor
+                            width: size.width-2*(36+10),
+                            // Ancho del contenedor menos
+                            // el ancho de los 2 iconos: 36 y el margin: 10
                             padding:
                             const EdgeInsets.symmetric(horizontal: 20),
                             // Espaciado horizontal
@@ -277,7 +297,7 @@ genero: ${widget.genero}, email: ${widget.email}, password: ${widget.password}''
                     ),
                   ],
                 ),
-              ),
+              ) : CircularLoadingWidget()
             ),
             Expanded(
               flex: 5,
