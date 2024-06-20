@@ -249,39 +249,43 @@ genero: ${widget.genero}, email: ${widget.email}, password: ${widget.password}''
                               onCameraIdle: _onCameraIdle,
                             ),
                             Center(
-                              child: _direccionController.text == '' ?
-                              Icon(
-                                Icons.location_pin,
-                                color: kBrandPrimaryColor1,
-                                size: 40,
-                              )
-                                  :Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Container(
-                                    decoration: BoxDecoration(
-                                      color: kBrandPrimaryColor1,
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 1.0, horizontal: 8.0),
-                                      child: Text(
-                                        _direccionController.text.length > 25
-                                            ? _direccionController.text.substring(0, 25) + '...'
-                                            : _direccionController.text,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(color: Colors.white),
+                              child: Transform.translate(
+                                offset: Offset(0, -32),
+                                //El offset eleva 32 pixeles para que el icono de location esté al centro
+                                child: _direccionController.text == '' ?
+                                Icon(
+                                  Icons.location_pin,
+                                  color: kBrandPrimaryColor1,
+                                  size: 40,
+                                )
+                                    :Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        color: kBrandPrimaryColor1,
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 1.0, horizontal: 8.0),
+                                        child: Text(
+                                          _direccionController.text.length > 25
+                                              ? _direccionController.text.substring(0, 25) + '...'
+                                              : _direccionController.text,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(color: Colors.white),
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                  divider12(),
-                                  Icon(
-                                    Icons.location_pin,
-                                    color: kBrandPrimaryColor1,
-                                    size: 40,
-                                  ),
-                                ],
+                                    divider12(),
+                                    Icon(
+                                      Icons.location_pin,
+                                      color: kBrandPrimaryColor1,
+                                      size: 40,
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                             Padding(
