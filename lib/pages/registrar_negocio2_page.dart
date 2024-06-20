@@ -75,12 +75,111 @@ class _RegistrarNegocio2PageState extends State<RegistrarNegocio2Page> {
   @override
   void initState() {
     super.initState();
-    _getCurrentLocation();
+    _checkLocationPermissions();
     print("PAGINA 2");
     print('''nombre: ${widget.nombre}, apellidos: ${widget.apellidos},
 fechaDeNacimiento: ${widget.fechaDeNacimiento}, celular: ${widget.celular},
 tipoDocumento: ${widget.tipoDocumento}, docIdentidad: ${widget.documentoIdentidad},
 genero: ${widget.genero}, email: ${widget.email}, password: ${widget.password}''');
+    }
+
+  Future<void> _checkLocationPermissions() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    setState(() {
+      isLoading = true;
+    });
+
+    // Verificar si el servicio de ubicación está habilitado
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("El servicio de ubicación está deshabilitado.")),
+      );
+
+      setState(() {
+        currentPosition = initialPosition;
+        isLoading = false;
+      });
+      return;
+    }
+
+    // Verificar permisos de ubicación
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Los permisos de ubicación están denegados.")),
+        );
+        setState(() {
+          isLoading = false;
+        });
+        return;
+      }
+      // Aquí también debe actualizar isLoading en caso de que los permisos se otorguen después de estar denegados
+      setState(() {
+        isLoading = false;
+      });
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+            content: Text(
+                "Los permisos de ubicación están denegados permanentemente.")),
+      );
+      setState(() {
+        isLoading = false;
+      });
+      return;
+    }
+
+    // Si llegamos aquí, los permisos están concedidos y el servicio de ubicación está habilitado
+    if (!await Geolocator.isLocationServiceEnabled()) {
+      // Si el servicio de ubicación está deshabilitado después de otorgar permisos
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Para una mejor experiencia, active la ubicación del dispositivo.")),
+      );
+      setState(() {
+        isLoading = false;
+      });
+      return;
+    }
+    _getCurrentLocation();
+  }
+
+  void _getCurrentLocation() async {
+    setState(() {
+      isLoading = true;
+    });
+
+    // Obtener la ubicación actual
+    try{
+      Position position = await Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.high);
+
+      setState(() {
+        currentPosition = LatLng(position.latitude, position.longitude);
+        _latController.text = position.latitude.toString();
+        _lngController.text = position.longitude.toString();
+        isLoading = false;
+        mapController.animateCamera(
+          CameraUpdate.newCameraPosition(
+            CameraPosition(target: currentPosition, zoom: 16.4746),
+          ),
+        );
+      });
+    } catch(e){
+      print(e);
+      setState(() {
+        isLoading = false;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Error al obtener la ubicación: ${e.toString()}")),
+      );
+    }
   }
 
   void _onMapCreated(GoogleMapController controller) {
@@ -109,76 +208,13 @@ genero: ${widget.genero}, email: ${widget.email}, password: ${widget.password}''
         setState(() {
           _direccionController.text =
               address; // Asignar la dirección al controlador de texto
+          _latController.text = currentPosition.latitude.toString(); // Asignar la latitud al controlador de texto
+          _lngController.text = currentPosition.longitude.toString(); // Asignar la longitud al controlador de texto
         });
       }
     } catch (e) {
       print(e);
     }
-  }
-
-  void _getCurrentLocation() async {
-    bool serviceEnabled;
-    LocationPermission permission;
-    setState(() {
-      isLoading = true;
-    });
-
-    // Verificar si el servicio de ubicación está habilitado
-    serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("El servicio de ubicación está deshabilitado.")),
-      );
-      setState(() {
-        isLoading = false;
-      });
-      return;
-    }
-
-    // Verificar permisos de ubicación
-    permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Los permisos de ubicación están denegados.")),
-        );
-        setState(() {
-          isLoading = false;
-        });
-        return;
-      }
-      setState(() {
-        isLoading = false;
-      });
-    }
-
-    if (permission == LocationPermission.deniedForever) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-            content: Text(
-                "Los permisos de ubicación están denegados permanentemente.")),
-      );
-      setState(() {
-        isLoading = false;
-      });
-      return;
-    }
-
-    // Obtener la ubicación actual
-    Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
-
-    setState(() {
-      currentPosition = LatLng(position.latitude, position.longitude);
-      _latController.text = position.latitude.toString();
-      _lngController.text = position.longitude.toString();
-      mapController.animateCamera(
-        CameraUpdate.newCameraPosition(
-          CameraPosition(target: currentPosition, zoom: 16.4746),
-        ),
-      );
-    });
   }
 
   @override
@@ -197,7 +233,7 @@ genero: ${widget.genero}, email: ${widget.email}, password: ${widget.password}''
           children: [
             Expanded(
                 flex: 5,
-                child: isLoading
+                child: !isLoading
                     ? SizedBox(
                         width: double.infinity,
                         height: size.height * 0.5,
@@ -399,6 +435,11 @@ genero: ${widget.genero}, email: ${widget.email}, password: ${widget.password}''
                         divider12(),
                         const Text(
                           "Dirección",
+                          style:
+                              TextStyle(fontSize: 12, color: Color(0xffB1B1B1)),
+                        ),
+                        const Text(
+                          "   Edite su dirección si no es precisa",
                           style:
                               TextStyle(fontSize: 12, color: Color(0xffB1B1B1)),
                         ),
