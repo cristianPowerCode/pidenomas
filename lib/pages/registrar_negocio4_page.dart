@@ -207,78 +207,120 @@ tipo de inmueble: ${widget.typeOfHousing}, category: ${widget.categoria}''');
               PrincipalText(string: "Ya falta poco..."),
               divider40(),
               PrincipalText(
-                  string: "Suba una foto de la fachada interna del negocio"),
-              PhotoWidget(
-                tipo: 1,
-                icon: Icons.storefront,
-                loading: loading,
-                onPressedUploadPhoto: () => _uploadPhoto(
-                    (url) => fachadaInterna = url,
-                    "negocio/${widget.documentoIdentidad}/negocio-${widget.documentoIdentidad}-fachada-interna.jpg"),
-                onPressedTakePhoto: () => takePhoto(
-                    (url) => fachadaInterna = url,
-                    "negocio/${widget.documentoIdentidad}/negocio-${widget.documentoIdentidad}-fachada-interna.jpg"),
-                imageUrl: fachadaInterna,
+                  string: "Suba las fotos de la fachada de su negocio"),
+              GridView.count(
+                crossAxisCount: 2,
+                mainAxisSpacing: 20.0,
+                crossAxisSpacing: 20.0,
+                childAspectRatio: 0.8,
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                children: [
+                  Column(
+                    children: [
+                      PhotoWidget(
+                        tipo: 1,
+                        icon: Icons.storefront,
+                        loading: loading,
+                        onPressedUploadPhoto: () => _uploadPhoto(
+                            (url) => fachadaInterna = url,
+                            "negocio/${widget.documentoIdentidad}/negocio-${widget.documentoIdentidad}-fachada-interna.jpg"),
+                        onPressedTakePhoto: () => takePhoto(
+                            (url) => fachadaInterna = url,
+                            "negocio/${widget.documentoIdentidad}/negocio-${widget.documentoIdentidad}-fachada-interna.jpg"),
+                        imageUrl: fachadaInterna,
+                      ),
+                      Text(
+                        "Interior del negocio",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(color: Colors.grey, fontSize: 12),
+                      ),
+                    ],
+                  ),
+                  Column(
+                    children: [
+                      PhotoWidget(
+                        tipo: 1,
+                        icon: Icons.storefront,
+                        loading: loading,
+                        onPressedUploadPhoto: () => _uploadPhoto(
+                            (url) => fachadaExterna = url,
+                            "negocio/${widget.documentoIdentidad}/negocio-${widget.documentoIdentidad}-fachada-externa.jpg"),
+                        onPressedTakePhoto: () => takePhoto(
+                            (url) => fachadaExterna = url,
+                            "negocio/${widget.documentoIdentidad}/negocio-${widget.documentoIdentidad}-fachada-externa.jpg"),
+                        imageUrl: fachadaExterna,
+                      ),
+                      Text(
+                        "Exterior del negocio",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(color: Colors.grey, fontSize: 12),
+                      ),
+                    ],
+                  )
+                ],
               ),
-              divider40(),
+              divider20(),
               PrincipalText(
-                  string: "Suba una foto de la fachada externa del negocio"),
-              PhotoWidget(
-                tipo: 1,
-                icon: Icons.storefront,
-                loading: loading,
-                onPressedUploadPhoto: () => _uploadPhoto(
-                    (url) => fachadaExterna = url,
-                    "negocio/${widget.documentoIdentidad}/negocio-${widget.documentoIdentidad}-fachada-externa.jpg"),
-                onPressedTakePhoto: () => takePhoto(
-                    (url) => fachadaExterna = url,
-                    "negocio/${widget.documentoIdentidad}/negocio-${widget.documentoIdentidad}-fachada-externa.jpg"),
-                imageUrl: fachadaExterna,
-              ),
-              divider40(),
-              PrincipalText(
-                  string: "Suba una foto de su documento de indentidad"),
+                  string: "Suba las fotos de su documento de identidad"),
               Text(
                 "La foto debe ser lo más nitido posible para contrastar sus datos",
                 style: TextStyle(
-                    color: Colors.black45, fontStyle: FontStyle.italic),
+                    color: Colors.black54, fontStyle: FontStyle.italic),
                 textAlign: TextAlign.justify,
               ),
               divider12(),
-              PhotoWidget(
-                tipo: 2,
-                assetDefault: "assets/images/docIdentidadAnverso.jpg",
-                loading: loading,
-                onPressedUploadPhoto: () => _uploadPhoto(
-                    (url) => docAnversoUrl = url,
-                    "negocio/${widget.documentoIdentidad}/negocio-${widget.documentoIdentidad}-docIdentidadAnverso.jpg"),
-                onPressedTakePhoto: () => takePhoto(
-                    (url) => docAnversoUrl = url,
-                    "negocio/${widget.documentoIdentidad}/negocio-${widget.documentoIdentidad}-docIdentidadAnverso.jpg"),
-                imageUrl: docAnversoUrl,
-              ),
-              divider40(),
-              PrincipalText(
-                  string:
-                      "Suba una foto del reverso de su documento de indentidad"),
-              Text(
-                "Esta foto tambien debe ser lo más nitido posible para contrastar sus datos",
-                style: TextStyle(
-                    color: Colors.black45, fontStyle: FontStyle.italic),
-                textAlign: TextAlign.justify,
-              ),
-              divider12(),
-              PhotoWidget(
-                tipo: 2,
-                assetDefault: "assets/images/docIdentidadReverso.jpg",
-                loading: loading,
-                onPressedUploadPhoto: () => _uploadPhoto(
-                    (url) => docReversoUrl = url,
-                    "negocio/${widget.documentoIdentidad}/negocio-${widget.documentoIdentidad}-docIdentidadReverso.jpg"),
-                onPressedTakePhoto: () => takePhoto(
-                    (url) => docReversoUrl = url,
-                    "negocio/${widget.documentoIdentidad}/negocio-${widget.documentoIdentidad}-docIdentidadReverso.jpg"),
-                imageUrl: docReversoUrl,
+              GridView.count(
+                crossAxisCount: 2,
+                mainAxisSpacing: 20.0,
+                crossAxisSpacing: 20.0,
+                childAspectRatio: 0.8,
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                children: [
+                  Column(
+                    children: [
+                      PhotoWidget(
+                        tipo: 2,
+                        assetDefault: "assets/images/docIdentidadAnverso.jpg",
+                        loading: loading,
+                        onPressedUploadPhoto: () => _uploadPhoto(
+                                (url) => docAnversoUrl = url,
+                            "negocio/${widget.documentoIdentidad}/negocio-${widget.documentoIdentidad}-docIdentidadAnverso.jpg"),
+                        onPressedTakePhoto: () => takePhoto(
+                                (url) => docAnversoUrl = url,
+                            "negocio/${widget.documentoIdentidad}/negocio-${widget.documentoIdentidad}-docIdentidadAnverso.jpg"),
+                        imageUrl: docAnversoUrl,
+                      ),
+                      Text(
+                        "Foto frontal",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(color: Colors.grey, fontSize: 12),
+                      ),
+                    ],
+                  ),
+                  Column(
+                    children: [
+                      PhotoWidget(
+                        tipo: 2,
+                        assetDefault: "assets/images/docIdentidadReverso.jpg",
+                        loading: loading,
+                        onPressedUploadPhoto: () => _uploadPhoto(
+                                (url) => docReversoUrl = url,
+                            "negocio/${widget.documentoIdentidad}/negocio-${widget.documentoIdentidad}-docIdentidadReverso.jpg"),
+                        onPressedTakePhoto: () => takePhoto(
+                                (url) => docReversoUrl = url,
+                            "negocio/${widget.documentoIdentidad}/negocio-${widget.documentoIdentidad}-docIdentidadReverso.jpg"),
+                        imageUrl: docReversoUrl,
+                      ),
+                      Text(
+                        "Foto reverso",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(color: Colors.grey, fontSize: 12),
+                      ),
+                    ],
+                  ),
+                ],
               ),
               divider30(),
               Row(
