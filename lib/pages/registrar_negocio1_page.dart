@@ -7,6 +7,7 @@ import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:pidenomas/pages/login_negocio_page.dart';
 import 'package:pidenomas/pages/registrar_negocio2_page.dart';
+import 'package:pidenomas/services/verficar_email_dni_negocio_service.dart';
 import 'package:pidenomas/ui/general/type_messages.dart';
 import 'package:pidenomas/ui/widgets/icon_form_button_widget.dart';
 import 'package:pidenomas/ui/widgets/radio_button_widget.dart';
@@ -56,52 +57,29 @@ class _RegistrarNegocio1PageState extends State<RegistrarNegocio1Page> {
   bool agreeTerms = false;
   bool isChanged = false;
   bool agreeNotifications = false;
+  VerficarEmailDniNegocioService verificarEmailDni = VerficarEmailDniNegocioService();
 
-  Future<bool> checkIfEmailExists(String email) async {
-    // Se creará temporalmente para verificar si el email existe y luego se eliminará
-    setState(() {
-      isLoading = true;
-    });
+  Future<Map<String, dynamic>> checkIfEmailExists() async {
+    print("Calling verificarEmailDniNegocioEnBD...");
     try {
-      // Intentamos crear un usuario con el correo y una contraseña temporal
-      UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: email,
-        password: 'temporary-password', // Contraseña temporal que no se usará
+      final response = await verificarEmailDni.verificarEmailDniNegocioEnBD(
+        _emailController.text,
+        _documentoIdentidadController.text,
       );
-      // Si la creación tiene éxito, es porque el correo no estaba en uso
-      // Entonces procedemos a eliminar este usuario temporal
-      if (userCredential.user != null) {
-        await userCredential.user!.delete();
-        setState(() {
-          isLoading = false;
-        });
-      } else {
-        isLoading = false;
-      }
 
-      return false; // Retornamos false, ya que el correo no está en uso
+      // Verificar el estado y el mensaje del response
+      return {
+        "exists": response.status != 200, // Si no es 200, email y/o documento ya existen
+        "message": response.message,
+      };
     } catch (e) {
-      // Manejamos el error
-      if (e is FirebaseAuthException) {
-        if (e.code == 'email-already-in-use') {
-          // Si el error es porque el correo ya está en uso
-          setState(() {
-            isLoading = false;
-          });
-          mostrarSnackBar("El correo electrónico ya está registrado");
-          return true; // Retornamos true, indicando que el correo está en uso
-        } setState(() {
-          isLoading = false;
-        });
-      }
-
-      // Otro tipo de error
-      print('Error al verificar el email: $e');
-      setState(() {
-        isLoading = false;
-      });
-      mostrarSnackBar("Error al verificar el email: $e");
-      return false; // Retornamos false en caso de cualquier error
+      // Manejar errores de red o excepciones aquí
+      print("Error al verificar email y DNI: $e");
+      mostrarSnackBar("Error al verificar email y DNI");
+      return {
+        "exists": false,
+        "message": "Error al verificar email y DNI",
+      };
     }
   }
 
@@ -297,12 +275,18 @@ class _RegistrarNegocio1PageState extends State<RegistrarNegocio1Page> {
                             isFormComplete: true,
                             onPressed: () async{
                               String email = _emailController.text.trim();
-                              bool emailExists = await checkIfEmailExists(email);
                               final formState = _formKey.currentState;
                               if (formState != null && formState.validate()) {
-                                if(emailExists){
-                                  mostrarSnackBar("El correo electrónico ya está registrado");
+                                Map<String, dynamic> result = await checkIfEmailExists();
+                                bool isEmailDniExists = result["exists"];
+                                String message = result["message"];
+                                if(isEmailDniExists){
+                                  print("Existe? $isEmailDniExists");
+                                  print(message);
+                                  mostrarSnackBar(message);
                                 }else{
+                                  print("Existe? $isEmailDniExists");
+                                  print(message);
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
