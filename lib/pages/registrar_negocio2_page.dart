@@ -81,7 +81,7 @@ class _RegistrarNegocio2PageState extends State<RegistrarNegocio2Page> {
 fechaDeNacimiento: ${widget.fechaDeNacimiento}, celular: ${widget.celular},
 tipoDocumento: ${widget.tipoDocumento}, docIdentidad: ${widget.documentoIdentidad},
 genero: ${widget.genero}, email: ${widget.email}, password: ${widget.password}''');
-    }
+  }
 
   Future<void> _checkLocationPermissions() async {
     bool serviceEnabled;
@@ -140,7 +140,9 @@ genero: ${widget.genero}, email: ${widget.email}, password: ${widget.password}''
     if (!await Geolocator.isLocationServiceEnabled()) {
       // Si el servicio de ubicación está deshabilitado después de otorgar permisos
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Para una mejor experiencia, active la ubicación del dispositivo.")),
+        SnackBar(
+            content: Text(
+                "Para una mejor experiencia, active la ubicación del dispositivo.")),
       );
       setState(() {
         isLoading = false;
@@ -154,31 +156,29 @@ genero: ${widget.genero}, email: ${widget.email}, password: ${widget.password}''
     setState(() {
       isLoading = true;
     });
-
-    // Obtener la ubicación actual
-    try{
+    try {
       Position position = await Geolocator.getCurrentPosition(
           desiredAccuracy: LocationAccuracy.high);
-
       setState(() {
         currentPosition = LatLng(position.latitude, position.longitude);
         _latController.text = position.latitude.toString();
         _lngController.text = position.longitude.toString();
         isLoading = false;
+      });
+
+      // Verifica si mapController está inicializado
+      if (mapController != null) {
         mapController.animateCamera(
           CameraUpdate.newCameraPosition(
             CameraPosition(target: currentPosition, zoom: 16.4746),
           ),
         );
-      });
-    } catch(e){
+      }
+    } catch (e) {
       print(e);
       setState(() {
         isLoading = false;
       });
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Error al obtener la ubicación: ${e.toString()}")),
-      );
     }
   }
 
@@ -208,8 +208,10 @@ genero: ${widget.genero}, email: ${widget.email}, password: ${widget.password}''
         setState(() {
           _direccionController.text =
               address; // Asignar la dirección al controlador de texto
-          _latController.text = currentPosition.latitude.toString(); // Asignar la latitud al controlador de texto
-          _lngController.text = currentPosition.longitude.toString(); // Asignar la longitud al controlador de texto
+          _latController.text = currentPosition.latitude
+              .toString(); // Asignar la latitud al controlador de texto
+          _lngController.text = currentPosition.longitude
+              .toString(); // Asignar la longitud al controlador de texto
         });
       }
     } catch (e) {
@@ -242,7 +244,7 @@ genero: ${widget.genero}, email: ${widget.email}, password: ${widget.password}''
                             // Fondo gris
                             GoogleMap(
                               mapType: MapType.terrain,
-                              zoomControlsEnabled: false,
+                              zoomControlsEnabled: true,
                               onMapCreated: _onMapCreated,
                               initialCameraPosition: _kGooglePlex,
                               onCameraMove: _onCameraMove,
@@ -252,40 +254,48 @@ genero: ${widget.genero}, email: ${widget.email}, password: ${widget.password}''
                               child: Transform.translate(
                                 offset: Offset(0, -32),
                                 //El offset eleva 32 pixeles para que el icono de location esté al centro
-                                child: _direccionController.text == '' ?
-                                Icon(
-                                  Icons.location_pin,
-                                  color: kBrandPrimaryColor1,
-                                  size: 40,
-                                )
-                                    :Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Container(
-                                      decoration: BoxDecoration(
+                                child: _direccionController.text == ''
+                                    ? Icon(
+                                        Icons.location_pin,
                                         color: kBrandPrimaryColor1,
-                                        borderRadius: BorderRadius.circular(10),
+                                        size: 40,
+                                      )
+                                    : Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Container(
+                                            decoration: BoxDecoration(
+                                              color: kBrandPrimaryColor1,
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                            ),
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      vertical: 1.0,
+                                                      horizontal: 8.0),
+                                              child: Text(
+                                                _direccionController
+                                                            .text.length >
+                                                        25
+                                                    ? _direccionController.text
+                                                            .substring(0, 25) +
+                                                        '...'
+                                                    : _direccionController.text,
+                                                overflow: TextOverflow.ellipsis,
+                                                style: TextStyle(
+                                                    color: Colors.white),
+                                              ),
+                                            ),
+                                          ),
+                                          divider12(),
+                                          Icon(
+                                            Icons.location_pin,
+                                            color: kBrandPrimaryColor1,
+                                            size: 40,
+                                          ),
+                                        ],
                                       ),
-                                      child: Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            vertical: 1.0, horizontal: 8.0),
-                                        child: Text(
-                                          _direccionController.text.length > 25
-                                              ? _direccionController.text.substring(0, 25) + '...'
-                                              : _direccionController.text,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: TextStyle(color: Colors.white),
-                                        ),
-                                      ),
-                                    ),
-                                    divider12(),
-                                    Icon(
-                                      Icons.location_pin,
-                                      color: kBrandPrimaryColor1,
-                                      size: 40,
-                                    ),
-                                  ],
-                                ),
                               ),
                             ),
                             Padding(
