@@ -24,6 +24,7 @@ class _InputTextFieldPasswordWidgetState extends State<InputTextFieldPasswordWid
       margin: const EdgeInsets.symmetric(vertical: 7.0),
       child: TextFormField(
         controller: widget.controller,
+        maxLength: 16,
         onSaved: widget.onSaved,
         obscureText: isInvisible,
         style: TextStyle(
@@ -39,7 +40,6 @@ class _InputTextFieldPasswordWidgetState extends State<InputTextFieldPasswordWid
             color: Color(0xffB1B1B1),
             fontSize: 14.0,
           ),
-          counterText: "",
           suffixIcon: IconButton(
             onPressed: () {
               setState((){
@@ -77,6 +77,11 @@ class _InputTextFieldPasswordWidgetState extends State<InputTextFieldPasswordWid
         ),
         validator: (String? value){
           if(value!.isEmpty) return "El campo es obligatorio";
+          if (value!.length < 8) {
+            return 'Ingrese mínimo 8 dígitos';
+          } else {
+            return null;
+          }
           return null;
         },
       ),
