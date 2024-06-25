@@ -1,7 +1,9 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:pidenomas/pages/modulo4/agregar_producto_page.dart';
 import 'package:pidenomas/ui/general/colors.dart';
 import 'package:pidenomas/ui/widgets/general_widgets.dart';
+import 'package:flutter/services.dart';
 
 class PedidosNegocioPage extends StatelessWidget {
   final List<String> imgList = [
@@ -51,6 +53,7 @@ class PedidosNegocioPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
@@ -67,7 +70,7 @@ class PedidosNegocioPage extends StatelessWidget {
                   options: CarouselOptions(
                     height: 150.0,
                     autoPlay: true,
-          
+
                     autoPlayInterval: Duration(seconds: 5),
                     autoPlayAnimationDuration: Duration(milliseconds: 400),
                     autoPlayCurve: Curves.fastOutSlowIn,
@@ -147,16 +150,15 @@ class PedidosNegocioPage extends StatelessWidget {
                       margin: EdgeInsets.all(10),
                       padding: EdgeInsets.all(10),
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
+                          borderRadius: BorderRadius.circular(10),
                           color: Colors.white,
                           boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.4),
-                            offset: const Offset(4, 4),
-                            blurRadius: 7.0,
-                          ),
-                        ]
-                      ),
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.4),
+                              offset: const Offset(4, 4),
+                              blurRadius: 7.0,
+                            ),
+                          ]),
                       child: Row(
                         children: [
                           ClipRRect(
@@ -176,10 +178,18 @@ class PedidosNegocioPage extends StatelessWidget {
                                 Row(
                                   children: [
                                     Text("S/${item['int1'].toString()}",
-                                        style: TextStyle(fontSize: 16, color: kBrandPrimaryColor2, fontWeight: FontWeight.bold)),
+                                        style: TextStyle(
+                                            fontSize: 16,
+                                            color: kBrandPrimaryColor2,
+                                            fontWeight: FontWeight.bold)),
                                     SizedBox(width: 10.0),
                                     Text("S/${item['int2'].toString()}",
-                                        style: TextStyle(fontSize: 16, color: Colors.grey, fontWeight: FontWeight.w500, decoration: TextDecoration.lineThrough)),
+                                        style: TextStyle(
+                                            fontSize: 16,
+                                            color: Colors.grey,
+                                            fontWeight: FontWeight.w500,
+                                            decoration:
+                                                TextDecoration.lineThrough)),
                                   ],
                                 ),
                                 SizedBox(height: 10),
@@ -199,6 +209,27 @@ class PedidosNegocioPage extends StatelessWidget {
             ),
           ),
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(
+          color: Colors.white,
+          Icons.add,
+          size: 40.0,
+        ),
+        onPressed: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => AgregarProductoPage(),
+              ));
+        },
+        shape: CircleBorder(
+          side: BorderSide(
+            color: kBrandSecundaryColor1,
+            width: 1.0,
+          ),
+        ),
+        backgroundColor: kBrandSecundaryColor1,
       ),
     );
   }
