@@ -517,7 +517,7 @@ genero: ${widget.genero}, email: ${widget.email}, password: ${widget.password}''
                           options: {
                             Icons.house: "Casa",
                             Icons.local_cafe: "Oficina",
-                            Icons.favorite: "Pareja",
+                            Icons.business: "Edificio",
                             Icons.add: "Otro",
                           },
                           onSelected: _handleSelectedIndex,
