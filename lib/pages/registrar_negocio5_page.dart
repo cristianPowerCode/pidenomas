@@ -4,23 +4,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:http/http.dart';
-import 'package:http/http.dart';
-import 'package:http/http.dart';
-import 'package:http/http.dart';
-import 'package:http/http.dart';
-import 'package:http/http.dart';
 import 'package:pidenomas/pages/login_negocio_page.dart';
 import 'package:pidenomas/pages/registrar_negocio4_page.dart';
-import 'package:pidenomas/ui/widgets/background_widget.dart';
 import 'package:pidenomas/ui/widgets/circular_loading_widget.dart';
 import 'package:pidenomas/ui/widgets/general_widgets.dart';
 import 'package:pidenomas/ui/widgets/input_textfield_widget.dart';
 
 import '../models/register_business_model.dart';
+import '../models/response_model.dart';
 import '../services/api_service.dart';
 import '../ui/general/colors.dart';
-import '../ui/general/constant_responsive.dart';
 import '../ui/general/type_messages.dart';
 import '../ui/widgets/button_widget.dart';
 import '../ui/widgets/check_box1_widget.dart';
@@ -103,21 +96,14 @@ photoDocIdentidadAnv: ${widget.docAnversoUrl}, photoDocIdentidadRev: ${widget.do
 
   String uidForFirebase = '';
   List<Horario> horarios = [
-    Horario(
-      dia: "lunes",
-      horaInicia: "13:09:53",
-      horaFin: "13:09:54",
-    ),
-    Horario(
-      dia: "viernes",
-      horaInicia: "13:44:51",
-      horaFin: "13:44:52",
-    ),
-    Horario(
-      dia: "feriado",
-      horaInicia: "13:44:51",
-      horaFin: "13:44:52",
-    ),
+    Horario(dia: "lunes", horaInicia: "07:59:59", horaFin: "06:02:02"),
+    Horario(dia: "martes", horaInicia: "07:59:59", horaFin: "06:02:02"),
+    Horario(dia: "miercoles", horaInicia: "07:59:59", horaFin: "06:02:02"),
+    Horario(dia: "jueves", horaInicia: "07:59:59", horaFin: "06:02:02"),
+    Horario(dia: "viernes", horaInicia: "07:59:59", horaFin: "06:02:02"),
+    Horario(dia: "sabado", horaInicia: "07:59:59", horaFin: "06:02:02"),
+    Horario(dia: "domingo", horaInicia: "07:59:59", horaFin: "06:02:02"),
+    Horario(dia: "feriado", horaInicia: "07:59:59", horaFin: "06:02:02")
   ];
   TextEditingController _rucController = TextEditingController();
   TextEditingController _razSocialNegocioController = TextEditingController();
@@ -128,91 +114,110 @@ photoDocIdentidadAnv: ${widget.docAnversoUrl}, photoDocIdentidadRev: ${widget.do
   bool isChanged = false;
   bool agreeNotifications = false;
 
-  Future<void> _registrarYGuardarDatos() async {
-    setState(() {
-      isLoading = true; // Establece isLoading en true al iniciar el proceso
-    });
-    if (_formKey.currentState!.validate()) {
-      try {
-        UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
-          email: widget.email,
-          password: widget.password,
+  List<bool> _checkboxSelected = List.generate(8, (index) => false);
+
+  String capitalize(String s) {
+    return s.isNotEmpty ? s[0].toUpperCase() + s.substring(1) : "";
+  }
+
+  // Función para editar hora de inicio
+  void _editHoraInicia(BuildContext context, int index) async {
+    TimeOfDay? selectedTime = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
+      helpText: 'Hora de Inicio',
+      initialEntryMode: TimePickerEntryMode.dial,
+      builder: (BuildContext context, Widget? child) {
+        return Theme(
+          data: ThemeData.light().copyWith(
+            colorScheme: ColorScheme.light(
+              primary: kBrandPrimaryColor1, // Color primario para el tema
+              onPrimary: Colors.white, // Color del texto cuando se selecciona
+            ),
+          ),
+          child: child!,
         );
-
-        if (userCredential.user != null) {
-          User? user = userCredential.user;
-          uidForFirebase = user!.uid;
-
-          print('Negocio registrado con éxito.');
-          print(uidForFirebase);
-
-          // Enviar correo de verificación
-          await user.sendEmailVerification();
-
-          // Guardar datos en Firestore
-          print("GUARDANDO DATOS EN FIREBASE - Function _guardarDatos()");
-          try {
-            await _guardarDatos();
-            print("DATOS GUARDADOS EN FIREBASE- Function _guardarDatos()");
-            print("REGISTRANDO A LA BASE DE DATOS - Function _registroYGuardarDatos()");
-            await _registrarNegocioToDB();
-            print("REGISTRADO A LA BASE DE DATOS - Function _registroYGuardarDatos()");
-
-            // Mostrar AlertDialog para informar al usuario que verifique su correo
-            showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return AlertDialog(
-                  title: Text("Registro Exitoso"),
-                  content: Text("Se ha enviado un correo de verificación a ${user.email}. Por favor verifica tu correo antes de iniciar sesión."),
-                  actions: [
-                    TextButton(
-                      child: Text("OK"),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                        // Redirigir a la pantalla de login
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(builder: (context) => LoginNegocioPage()),
-                        );
-                      },
-                    ),
-                  ],
-                );
-              },
-            );
-          } catch (e) {
-            print("Error al guardar datos en Firestore: $e");
-            mostrarSnackBar("Hubo un problema al estructurar su registro: $e", 3);
-
-            // Eliminar la cuenta en Firebase Authentication
-            await user.delete();
-
-            setState(() {
-              isLoading = false;
-            });
-          }
-        }
-      } catch (e) {
-        setState(() {
-          isLoading = false; // Establece isLoading en false si ocurre un error durante el proceso
-        });
-        print('Error al registrar el negocio: $e');
-        mostrarSnackBar("Error al registrar el negocio: $e", 3);
-      }
+      },
+    );
+    if (selectedTime != null) {
+      setState(() {
+        horarios[index].horaInicia =
+            "${selectedTime.hour.toString().padLeft(2, '0')}:${selectedTime.minute.toString().padLeft(2, '0')}:00";
+      });
+      _editHoraFin(context, index);
     } else {
       setState(() {
-        isLoading = false;
-        mostrarSnackBar("No tiene el formulario validado", 2);
+        _checkboxSelected[index] = false;
+        horarios[index].horaInicia = "null";
+        horarios[index].horaFin = "null";
       });
     }
   }
 
-  Future<void> _guardarDatos() async {
-    print("!!!!!!!!!!!!!!");
-    print("{Nombre: ${widget.nombre}, RUC${"10125514061"} }");
+  void _editHoraFin(BuildContext context, int index) async {
+    TimeOfDay? selectedTime = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
+      helpText: 'Hora de Cierre',
+      initialEntryMode: TimePickerEntryMode.dial,
+      builder: (BuildContext context, Widget? child) {
+        return Theme(
+          data: ThemeData.light().copyWith(
+            colorScheme: ColorScheme.light(
+              primary: kBrandSecundaryColor2, // Color primario para el tema
+              onPrimary: Colors.white, // Color del texto cuando se selecciona
+            ),
+          ),
+          child: child!,
+        );
+      },
+    );
+    if (selectedTime != null) {
+      setState(() {
+        horarios[index].horaFin =
+            "${selectedTime.hour.toString().padLeft(2, '0')}:${selectedTime.minute.toString().padLeft(2, '0')}:00";
+      });
+    } else {
+      setState(() {
+        _checkboxSelected[index] = false;
+        horarios[index].horaInicia = "null";
+        horarios[index].horaFin = "null";
+      });
+    }
+  }
 
-    RegisterBusinessModel businessOwnerModel = RegisterBusinessModel(
+  // Función para verificar si todos los días están cerrados
+  bool isAllClosed(List<Horario> horarios) {
+    for (int i = 0; i < horarios.length; i++) {
+      if (horarios[i].horaInicia != "null" && horarios[i].horaFin != "null") {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  // Función para manejar la acción del botón
+  void handleGuardarCambios() {
+    bool todosCerrados = isAllClosed(horarios);
+
+    if (todosCerrados) {
+      // Mostrar SnackBar si todos los días están cerrados
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Debe ingresar al menos un día de atencion'),
+        ),
+      );
+    } else {
+      // Imprimir todos los días si no todos están cerrados
+      print("Horarios actuales:");
+      horarios.forEach((horario) {
+        print("${horario.dia}: ${horario.horaInicia} - ${horario.horaFin}");
+      });
+    }
+  }
+
+  RegisterBusinessModel _createBusinessModel() {
+    return RegisterBusinessModel(
       uid: uidForFirebase,
       nombre: widget.nombre,
       apellidos: widget.apellidos,
@@ -243,6 +248,12 @@ photoDocIdentidadAnv: ${widget.docAnversoUrl}, photoDocIdentidadRev: ${widget.do
       fechaDeCreacion: DateTime.now(),
       horarios: horarios,
     );
+  }
+
+  Future<void> _guardarDatos() async {
+    print("!!!!!!!!!!!!!!");
+    print("GUARDANDO DATOS EN FIREBASE");
+    RegisterBusinessModel businessOwnerModel = _createBusinessModel();
 
     try {
       await _clientsCollection
@@ -250,100 +261,150 @@ photoDocIdentidadAnv: ${widget.docAnversoUrl}, photoDocIdentidadRev: ${widget.do
           .set(businessOwnerModel.toJson());
       print("RESULTADO DE REGISTRO");
       print(jsonEncode(businessOwnerModel.toJson()));
+      print("Datos guardados en Firestore para UID: $uidForFirebase");
     } catch (e) {
-      print("Error al guardar datos en cloud firestore: $e");
-      mostrarSnackBar("Error al guardar datos en Firestore: $e", 2);
+      print("Error al guardar datos en Firestore: $e");
+      mostrarSnackBar("Hubo un problema al guardar datos en Firestore: $e", 2);
+
+      // Eliminar la cuenta en Firebase Authentication
+      await _auth.currentUser?.delete();
+
+      // Eliminar el documento en Firestore si se creó antes
+      if (uidForFirebase.isNotEmpty) {
+        await _clientsCollection.doc(uidForFirebase).delete();
+      }
+
+      // Establecer uidForFirebase en vacío
+      uidForFirebase = "";
+
       throw Exception("Error al guardar datos en Firestore: $e");
     }
   }
 
   Future<void> _registrarNegocioToDB() async {
     print("Entró a la funcion _registerNegocioToDB()");
-
     if (uidForFirebase.isNotEmpty) {
-      print("el formulario no tiene campos vacios");
+      print("uid capturado desde Firebase: $uidForFirebase");
+      print("el uid fue capturado con exito de Firebase");
       setState(() {
         isLoading = true;
       });
       try {
         print("Calling registerClienteToDB...");
-        final RegisterBusinessModel? value = await _apiService.registrarNegocioToDB(
-          uidForFirebase,
-          widget.nombre,
-          widget.apellidos,
-          widget.email,
-          false,
-          1,
-          agreeNotifications,
-          widget.celular,
-          int.parse(widget.tipoDocumento),
-          widget.documentoIdentidad,
-          DateTime.parse(widget.fechaDeNacimiento),
-          int.parse(widget.genero),
-          widget.password,
-          double.parse(widget.lat),
-          double.parse(widget.lng),
-          widget.direccion,
-          widget.detalleDireccion,
-          widget.referenciaUbicacion,
-          widget.typeOfHousing,
-          widget.fachadaInterna,
-          widget.fachadaExterna,
-          widget.docAnversoUrl,
-          widget.docReversoUrl,
-          DateTime.now(),
-          int.parse(widget.categoria),
-          _rucController.text,
-          _razSocialNegocioController.text,
-          _nombreNegocioController.text,
-        );
+        final ResponseModel response =
+            await _apiService.registrarNegocioToDB(_createBusinessModel());
 
-        if (value != null) {
-          print("REGISTRANDO A LA DB");
-          // snackBarMessage(context, Typemessage.loginSuccess);
+        if (response.status == 200) {
+          print("Negocio registrado exitosamente: ${response.message}");
+          mostrarSnackBar(response.message, 2);
         } else {
-          print("Error: Value is null");
-          mostrarSnackBar("Hubo un problema al registrar en la BD: Value is null", 3);
+          print("Error al registrar negocio: ${response.message}");
+          mostrarSnackBar(
+              "Hubo un problema al registrar en la BD: ${response.message}", 3);
 
           // Eliminar la cuenta en Firebase Authentication
-          User? user = _auth.currentUser;
-          await user?.delete();
+          await _auth.currentUser?.delete();
 
           // Eliminar el documento en Firestore
           await _clientsCollection.doc(uidForFirebase).delete();
-
-          setState(() {
-            isLoading = false;
-          });
         }
       } catch (e) {
         // Manejar errores específicos del servidor
-        String errorMessage;
-        if (e is http.Response && e.statusCode == 400) {
-          final errorData = json.decode(e.body);
-          errorMessage = errorData['message'];
-        } else {
-          errorMessage = e.toString();
-        }
-        print("Catch Error: $errorMessage");
-        mostrarSnackBar("Hubo un problema al registrar en la BD: $errorMessage", 3);
+        String errorMessage = e.toString();
+        print("Error en _registrarNegocioToDB(): $errorMessage");
+        mostrarSnackBar(
+            "Hubo un problema al registrar en la BD: $errorMessage", 3);
 
         // Eliminar la cuenta en Firebase Authentication
-        User? user = _auth.currentUser;
-        await user?.delete();
+        await _auth.currentUser?.delete();
 
         // Eliminar el documento en Firestore
         await _clientsCollection.doc(uidForFirebase).delete();
-
-        setState(() {
-          isLoading = false;
-        });
       }
-    } else {
-      mostrarSnackBar("Termine de rellenar el formulario por favor", 2);
       setState(() {
         isLoading = false;
       });
+    } else {
+      mostrarSnackBar("Hubo problemas al registrar en Firebase", 3);
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  Future<void> _registrarYGuardarDatos() async {
+    setState(() {
+      isLoading = true;
+    });
+    if (_formKey.currentState!.validate()) {
+      try {
+        UserCredential userCredential =
+            await _auth.createUserWithEmailAndPassword(
+          email: widget.email,
+          password: widget.password,
+        );
+        print('Correo registrado en Firebase con éxito.');
+
+        if (userCredential.user != null) {
+          User? user = userCredential.user;
+          uidForFirebase = user!.uid;
+          print("uid capturado: $uidForFirebase");
+
+          // Enviar correo de verificación
+          await user.sendEmailVerification();
+          print("Email de verificacion enviado");
+
+          // Guardar datos en Firestore y registrar en la base de datos
+          print("GUARDANDO DATOS EN FIREBASE - Function _guardarDatos()");
+          await _guardarDatos();
+          print(
+              "REGISTRANDO A LA BASE DE DATOS - Function _registroYGuardarDatos()");
+          await _registrarNegocioToDB();
+          // Mostrar AlertDialog para informar al usuario que verifique su correo
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Text("Registro Exitoso"),
+                content: Text(
+                    "Se ha enviado un correo de verificación a ${user.email}. Por favor verifica tu correo antes de iniciar sesión."),
+                actions: [
+                  TextButton(
+                    child: Text("OK"),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      // Redirigir a la pantalla de login
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => LoginNegocioPage()),
+                      );
+                    },
+                  ),
+                ],
+              );
+            },
+          );
+        }
+      } catch (e) {
+        setState(() {
+          isLoading =
+              false; // Establece isLoading en false si ocurre un error durante el proceso
+        });
+        print('Error al registrar el negocio: $e');
+        mostrarSnackBar("Error al registrar el negocio: $e", 3);
+        // Si hubo un error, eliminar la cuenta en Firebase Authentication y el documento en Firestore
+        await _auth.currentUser?.delete();
+        await _clientsCollection.doc(uidForFirebase).delete();
+
+        // Establecer uidForFirebase en vacío
+        uidForFirebase = "";
+      }
+    } else {
+      setState(() {
+        isLoading = false;
+      });
+      mostrarSnackBar("No tiene el formulario validado", 2);
     }
   }
 
@@ -434,7 +495,8 @@ photoDocIdentidadAnv: ${widget.docAnversoUrl}, photoDocIdentidadRev: ${widget.do
                                     detalleDireccion: widget.detalleDireccion,
                                     referenciaUbicacion:
                                         widget.referenciaUbicacion,
-                                    typeOfHousing: widget.typeOfHousing,
+                                    typeOfHousing:
+                                        widget.typeOfHousing.toString(),
                                     categoria: widget.categoria,
                                   ),
                                 ));
@@ -484,6 +546,7 @@ photoDocIdentidadAnv: ${widget.docAnversoUrl}, photoDocIdentidadRev: ${widget.do
                           labelText: "Razon Social del Negocio",
                           controller: _razSocialNegocioController,
                           icon: Icons.check_circle_outline,
+                          textInputType: TextInputType.text,
                           maxLines: null,
                           maxLength: 250,
                           count: 250,
@@ -493,17 +556,74 @@ photoDocIdentidadAnv: ${widget.docAnversoUrl}, photoDocIdentidadRev: ${widget.do
                           labelText: "Nombre del negocio o emprendimiento",
                           controller: _nombreNegocioController,
                           icon: Icons.check_circle_outline,
+                          textInputType: TextInputType.text,
                           maxLines: null,
                           maxLength: 250,
                           count: 250,
                         ),
                         divider40(),
-                        // HorariosPage(),
-                        divider40(),
-                        Center(
-                          child: screenWidth > ResponsiveConfig.widthResponsive
-                              ? buildRowLoginAgain(context)
-                              : buildColumnLoginAgain(context),
+                        Text("Dias de Atención"),
+                        ListView.builder(
+                          itemCount: horarios.length,
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          itemBuilder: (BuildContext context, int index) {
+                            return Container(
+                              margin: EdgeInsets.symmetric(vertical: 5.0),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(16.0),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.08),
+                                    offset: Offset(4, 4),
+                                    blurRadius: 12.0,
+                                  ),
+                                ],
+                              ),
+                              child: ListTile(
+                                leading: Checkbox(
+                                  value: _checkboxSelected[index],
+                                  activeColor: Colors.green,
+                                  onChanged: (bool? value) {
+                                    setState(() {
+                                      _checkboxSelected[index] = value!;
+                                      if (!_checkboxSelected[index]) {
+                                        horarios[index].horaInicia = "null";
+                                        horarios[index].horaFin = "null";
+                                      } else {
+                                        _editHoraInicia(context, index);
+                                      }
+                                    });
+                                  },
+                                ),
+                                title: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(capitalize(horarios[index].dia),
+                                        style: TextStyle(fontSize: 18)),
+                                    if (_checkboxSelected[index])
+                                      Text(
+                                        "${horarios[index].horaInicia} - ${horarios[index].horaFin}",
+                                        style: TextStyle(fontSize: 14),
+                                      )
+                                    else
+                                      Text(
+                                        "Cerrado",
+                                        style: TextStyle(fontSize: 14),
+                                      ),
+                                  ],
+                                ),
+                                trailing: _checkboxSelected[index]
+                                    ? IconButton(
+                                        icon: Icon(Icons.edit),
+                                        onPressed: () =>
+                                            _editHoraInicia(context, index),
+                                      )
+                                    : Container(margin: EdgeInsets.only(right: 12.0),child: Icon(Icons.edit, color: Colors.grey)),
+                              ),
+                            );
+                          },
                         ),
                         divider40(),
                         CheckBox1Widget(
@@ -520,7 +640,14 @@ photoDocIdentidadAnv: ${widget.docAnversoUrl}, photoDocIdentidadRev: ${widget.do
                             if (formState != null &&
                                 formState.validate() &&
                                 agreeTerms) {
-                              await _registrarYGuardarDatos();
+                              bool todosCerrados = isAllClosed(horarios);
+                              if (todosCerrados) {
+                                mostrarSnackBar(
+                                    "Debe ingresar al menos un día de atencion",
+                                    2);
+                              } else {
+                                await _registrarYGuardarDatos();
+                              }
                             } else {
                               if (!agreeTerms) {
                                 setState(() {
@@ -541,91 +668,9 @@ photoDocIdentidadAnv: ${widget.docAnversoUrl}, photoDocIdentidadRev: ${widget.do
               ],
             ),
           ),
-          isLoading
-              ? CircularLoadingWidget()
-              : SizedBox(),
+          isLoading ? CircularLoadingWidget() : SizedBox(),
         ],
       ),
     );
   }
-
-  Widget buildRowLoginAgain(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(
-          "¿Ya tienes una cuenta?",
-          style: TextStyle(
-            color: kBrandPrimaryColor1,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        TextButton(
-          onPressed: () {
-            Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => LoginNegocioPage(),
-                ));
-          },
-          child: Text(
-            "Inicia sesión aquí",
-            style: TextStyle(
-              color: Colors.black,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget buildColumnLoginAgain(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(
-          "¿Ya tienes una cuenta?",
-          style: TextStyle(
-            color: kBrandPrimaryColor1,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        TextButton(
-          onPressed: () {
-            Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => LoginNegocioPage(),
-                ));
-          },
-          child: Text(
-            "Inicia sesión aquí",
-            style: TextStyle(
-              color: Colors.black,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
-      ],
-    );
-  }
 }
-
-////////////////
-
-// class Horario {
-//   String dia;
-//   TimeOfDay horaInicio;
-//   TimeOfDay horaFin;
-//
-//   Horario({required this.dia, required this.horaInicio, required this.horaFin});
-//
-//   Map<String, dynamic> toJson(BuildContext context) {
-//     return {
-//       'dia': dia,
-//       'horaInicio': horaInicio.format(context),
-//       'horaFin': horaFin.format(context),
-//     };
-//   }
-// }
