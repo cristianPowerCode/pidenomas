@@ -39,7 +39,7 @@ class _LoginNegocioPageState extends State<LoginNegocioPage> {
   bool isRegistered = false;
 
   void _iniciarSesionNegocio() async {
-    print("funcion iniciar sesion neogio");
+    print("funcion iniciar sesion negocio");
     if (_formKey.currentState!.validate()) {
       print("formulario completado");
       setState(() {
