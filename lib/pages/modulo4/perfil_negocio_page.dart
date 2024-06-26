@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 class PerfilNegocioPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return Scaffold(
       resizeToAvoidBottomInset: true,
       body: SafeArea(
@@ -103,7 +104,7 @@ class PerfilNegocioPage extends StatelessWidget {
                     "Categories : solip , kolimatrio , hellop , mafirat , mop lopiranto"),
                 divider12(),
                 Container(
-                  width: 330,
+                  width: size.width,
                   child: TextField(
                     keyboardType: TextInputType.number,
                     decoration: InputDecoration(
@@ -142,7 +143,7 @@ class PerfilNegocioPage extends StatelessWidget {
                     children: [
                       Container(
                         padding: EdgeInsets.symmetric(horizontal: 10.0),
-                        width: 160,
+                        width: 180,
                         height: 60,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(18.0),
@@ -163,7 +164,7 @@ class PerfilNegocioPage extends StatelessWidget {
                       ),
                       Container(
                         padding: EdgeInsets.symmetric(horizontal: 10.0),
-                        width: 160,
+                        width: 180,
                         height: 60,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(18.0),
