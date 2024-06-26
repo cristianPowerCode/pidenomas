@@ -16,7 +16,7 @@ class RegisterClientModel {
   String direccion;
   String detalleDireccion;
   String referenciaDireccion;
-  int tipoDeInmueble;
+  int tiposInmueble;
   DateTime fechaDeCreacion;
 
   RegisterClientModel({
@@ -37,7 +37,7 @@ class RegisterClientModel {
     required this.direccion,
     required this.detalleDireccion,
     required this.referenciaDireccion,
-    required this.tipoDeInmueble,
+    required this.tiposInmueble,
     required this.fechaDeCreacion,
   });
 
@@ -59,7 +59,7 @@ class RegisterClientModel {
     direccion: json["direccion"],
     detalleDireccion: json["detalleDireccion"],
     referenciaDireccion: json["referenciaDireccion"],
-    tipoDeInmueble: json["tipoDeInmueble"],
+    tiposInmueble: json["tiposInmueble"],
     fechaDeCreacion: DateTime.parse(json["fechaDeCreacion"]),
   );
 
@@ -81,7 +81,7 @@ class RegisterClientModel {
     "direccion": direccion,
     "detalleDireccion": detalleDireccion,
     "referenciaDireccion": referenciaDireccion,
-    "tipoDeInmueble": tipoDeInmueble,
+    "tiposInmueble": tiposInmueble,
     "fechaDeCreacion": "${fechaDeCreacion.year.toString().padLeft(4, '0')}-${fechaDeCreacion.month.toString().padLeft(2, '0')}-${fechaDeCreacion.day.toString().padLeft(2, '0')}",
   };
 }

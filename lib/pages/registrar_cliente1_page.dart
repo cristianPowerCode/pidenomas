@@ -104,7 +104,7 @@ class _RegistrarCliente1PageState extends State<RegistrarCliente1Page> {
     double height = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
-      resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomInset: true,
       body: Stack(
         children: [
           SingleChildScrollView(

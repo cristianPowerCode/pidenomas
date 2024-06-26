@@ -37,7 +37,43 @@ class LoginNegocioService {
 
       return ApiResponse(
         statusCode: response.statusCode,
-        data: responseBody, // Puedes ajustar esto según la estructura de tu respuesta
+        data:
+            responseBody, // Puedes ajustar esto según la estructura de tu respuesta
+      );
+    } catch (e) {
+      print("Error de Red/Excepción: $e");
+      throw Exception('Error de red: $e');
+    }
+  }
+}
+
+class LoginClienteService {
+  Future<ApiResponse> loginCliente(String email, String password) async {
+    String path = "$pathProduction/negocio/loginNegocio/";
+    Uri uri = Uri.parse(path);
+    final Map<String, String> body = {
+      "email": email,
+      "password": password,
+    };
+
+    try {
+      print("Enviando solicitud POST LoginNegocio...");
+      http.Response response = await http.post(
+        uri,
+        headers: {"Content-Type": "application/json"},
+        body: json.encode(body),
+      );
+
+      print("Código de Estado de la Respuesta: ${response.statusCode}");
+      print("Cuerpo de la Respuesta: ${response.body}");
+
+      // Decodificar la respuesta JSON
+      Map<String, dynamic> responseBody = json.decode(response.body);
+
+      return ApiResponse(
+        statusCode: response.statusCode,
+        data:
+            response.body, // Puedes ajustar esto según la estructura de tu respuesta
       );
     } catch (e) {
       print("Error de Red/Excepción: $e");

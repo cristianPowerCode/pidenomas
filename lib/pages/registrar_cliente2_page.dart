@@ -4,13 +4,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_places_flutter/google_places_flutter.dart';
 import 'package:google_places_flutter/model/prediction.dart';
-import '../models/register_business_model.dart';
 import '../models/register_client_model.dart';
 import '../models/response_model.dart';
 import '../services/api_service.dart';
@@ -20,14 +18,10 @@ import '../ui/widgets/check_box1_widget.dart';
 import '../ui/widgets/check_box2_widget.dart';
 import '../ui/widgets/circular_loading_widget.dart';
 import '../ui/widgets/grid_type_of_house_widget.dart';
-import '../ui/widgets/icon_form_button_widget.dart';
 import '../ui/widgets/input_textfield_widget.dart';
 import '../utils/constants.dart';
 import 'login_cliente_page.dart';
-import 'registrar_cliente3_page.dart';
-import 'registrar_cliente_4_page.dart';
 import '../ui/general/colors.dart';
-import '../ui/widgets/background_widget.dart';
 import '../ui/widgets/general_widgets.dart';
 
 class RegistrarCliente2Page extends StatefulWidget {
@@ -74,7 +68,7 @@ class _RegistrarCliente2PageState extends State<RegistrarCliente2Page> {
   final APIService _apiService = APIService();
 
   final CollectionReference _clientsCollection =
-  FirebaseFirestore.instance.collection('business_owner');
+  FirebaseFirestore.instance.collection('client');
 
   final _formKey = GlobalKey<FormState>();
   int typeOfHousing = 0;
@@ -194,9 +188,11 @@ genero: ${widget.genero}, email: ${widget.email}, password: ${widget.password}''
             CameraPosition(target: currentPosition, zoom: 16.4746),
           ),
         );
+        print("mapController inicializado");
       }
+      print("mapController sin inicializar");
     } catch (e) {
-      print(e);
+      print("error en _getCurrentLocation $e");
       setState(() {
         isLoading = false;
       });
@@ -233,6 +229,7 @@ genero: ${widget.genero}, email: ${widget.email}, password: ${widget.password}''
               .toString(); // Asignar la latitud al controlador de texto
           _lngController.text = currentPosition.longitude
               .toString(); // Asignar la longitud al controlador de texto
+          print("Latitud y Longitud: ${_latController.text}, ${_lngController.text}");
         });
       }
     } catch (e) {
@@ -259,7 +256,7 @@ genero: ${widget.genero}, email: ${widget.email}, password: ${widget.password}''
       direccion: _direccionController.text,
       detalleDireccion: _detalleDireccionController.text,
       referenciaDireccion: _referenciaUbicacionController.text,
-      tipoDeInmueble: typeOfHousing,
+      tiposInmueble: typeOfHousing,
       fechaDeCreacion: DateTime.now(),
     );
   }
@@ -267,14 +264,14 @@ genero: ${widget.genero}, email: ${widget.email}, password: ${widget.password}''
   Future<void> _guardarDatos() async {
     print("!!!!!!!!!!!!!!");
     print("GUARDANDO DATOS EN FIREBASE");
-    RegisterClientModel businessOwnerModel = _createClientModel();
+    RegisterClientModel clientModel = _createClientModel();
 
     try {
       await _clientsCollection
           .doc(uidForFirebase)
-          .set(businessOwnerModel.toJson());
+          .set(clientModel.toJson());
       print("RESULTADO DE REGISTRO");
-      print(jsonEncode(businessOwnerModel.toJson()));
+      print(jsonEncode(clientModel.toJson()));
       print("Datos guardados en Firestore para UID: $uidForFirebase");
     } catch (e) {
       print("Error al guardar datos en Firestore: $e");
@@ -309,10 +306,10 @@ genero: ${widget.genero}, email: ${widget.email}, password: ${widget.password}''
         await _apiService.registrarClienteToDB(_createClientModel());
 
         if (response.status == 200) {
-          print("Negocio registrado exitosamente: ${response.message}");
-          mostrarSnackBar(response.message, 2);
+          print("Cliente registrado exitosamente: ${response.message}");
+          mostrarSnackBar(response.message, 3);
         } else {
-          print("Error al registrar negocio: ${response.message}");
+          print("Error al registrar al cliente: ${response.message}");
           mostrarSnackBar(
               "Hubo un problema al registrar en la BD: ${response.message}", 3);
 
@@ -450,6 +447,7 @@ genero: ${widget.genero}, email: ${widget.email}, password: ${widget.password}''
   void _onCheckbox2Changed(bool value) {
     setState(() {
       agreeNotifications = value;
+      print("acepta notificacion: $value");
     });
   }
 
@@ -463,7 +461,7 @@ genero: ${widget.genero}, email: ${widget.email}, password: ${widget.password}''
     );
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-      resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomInset: true,
       body: SafeArea(
         child: Column(
           children: [
