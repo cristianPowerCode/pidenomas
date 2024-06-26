@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pidenomas/pages/modulo4/pedidos_negocio_page.dart';
+import 'package:pidenomas/pages/modulo4/productos_negocio_page.dart';
 import 'package:pidenomas/ui/general/colors.dart';
 import 'package:pidenomas/ui/widgets/button_widget.dart';
 import 'package:pidenomas/ui/widgets/general_widgets.dart';
@@ -65,7 +66,7 @@ class _AgregarProductoPageState extends State<AgregarProductoPage> {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => PedidosNegocioPage(),
+                    builder: (context) => ProductosNegocioPage(),
                   ));
             },
           ),
@@ -372,7 +373,12 @@ class _AgregarProductoPageState extends State<AgregarProductoPage> {
                     ),
                   ),
                   divider40(),
-                  PhotoWidget(tipo: 1, onPressedUploadPhoto: (){}, onPressedTakePhoto: (){}, loading: _isLoading ),
+                  Center(
+                      child: PhotoWidget(
+                          tipo: 1,
+                          onPressedUploadPhoto: () {},
+                          onPressedTakePhoto: () {},
+                          loading: _isLoading)),
                   ButtonWidget(
                     onPressed: () {
                       print('Nombre: ${nombreController.text}');
