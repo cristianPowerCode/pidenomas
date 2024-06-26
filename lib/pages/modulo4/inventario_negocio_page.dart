@@ -10,6 +10,7 @@ class InventarioNegocioPage extends StatefulWidget {
 
 class _InventarioNegocioPageState extends State<InventarioNegocioPage> {
   int _selectedValue = 1;
+  bool isSelected = false;
 
   @override
   Widget build(BuildContext context) {
@@ -22,9 +23,10 @@ class _InventarioNegocioPageState extends State<InventarioNegocioPage> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Container(
-                    width: MediaQuery.of(context).size.width / 2,
-                    child: Image.asset("assets/images/logo.png")),
-                divider30(),
+                  width: MediaQuery.of(context).size.width / 2,
+                  child: Image.asset("assets/images/logo.png"),
+                ),
+                SizedBox(height: 30),
                 Text(
                   "Bienvenido",
                   style: TextStyle(fontSize: 18),
@@ -33,22 +35,27 @@ class _InventarioNegocioPageState extends State<InventarioNegocioPage> {
                   "Rosario Chavez Torres",
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
-                divider40(),
-                SizedBox(
-                  width: double.infinity,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(18.0),
-                      border: Border.all(
-                        width: 1,
-                        color: kBrandPrimaryColor1,
-                      ),
+                SizedBox(height: 40),
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(18.0),
+                    border: Border.all(
+                      width: 2,
+                      color: kBrandPrimaryColor1,
                     ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: Column(
-                        children: [
-                          Container(
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Column(
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              _selectedValue = 1;
+                              print(_selectedValue);
+                            });
+                          },
+                          child: Container(
                             width: double.infinity,
                             height: 120,
                             padding: EdgeInsets.all(25.0),
@@ -59,62 +66,38 @@ class _InventarioNegocioPageState extends State<InventarioNegocioPage> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      "Usar plantilla",
+                                Container(
+                                  width: 150,
+                                  child: Text(
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 20,
                                       ),
-                                    ),
-                                    Text(
-                                      "Predeterminada",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 20,
-                                      ),
-                                    ),
-                                  ],
+                                      'Usar plantilla preterminada'),
                                 ),
-                                Align(
-                                  alignment: Alignment.center,
-                                  child: Container(
-                                    width: 16,
-                                    height: 16,
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(18.0),
-                                    ),
-                                    child: Radio<int>(
-                                      activeColor: kBrandSecundaryColor1,
-                                      fillColor: WidgetStateProperty
-                                          .resolveWith<Color>(
-                                        (Set<WidgetState> states) {
-                                          if (states
-                                              .contains(WidgetState.selected)) {
-                                            return Colors.yellow;
-                                          }
-                                          return Colors.yellow;
-                                        },
-                                      ),
-                                      value: 1,
-                                      groupValue: _selectedValue,
-                                      onChanged: (int? value) {
-                                        setState(() {
-                                          _selectedValue = value!;
-                                        });
-                                      },
-                                    ),
-                                  ),
+                                Radio(
+                                  value: 1,
+                                  groupValue: _selectedValue,
+                                  activeColor: kBrandSecundaryColor1,
+                                  onChanged: (int? value) {
+                                    setState(() {
+                                      _selectedValue = value!;
+                                    });
+                                  },
                                 ),
                               ],
                             ),
                           ),
-                          divider20(),
-                          Container(
+                        ),
+                        SizedBox(height: 20),
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              _selectedValue = 2;
+                              print(_selectedValue);
+                            });
+                          },
+                          child: Container(
                             width: double.infinity,
                             height: 120,
                             padding: EdgeInsets.all(25.0),
@@ -125,80 +108,48 @@ class _InventarioNegocioPageState extends State<InventarioNegocioPage> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      "Agregar",
+                                Container(
+                                  width: 150,
+                                  child: Text(
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 20,
                                       ),
-                                    ),
-                                    Text(
-                                      "Manualmente",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 20,
-                                      ),
-                                    ),
-                                  ],
+                                      'Agregar Manualmante'),
                                 ),
-                                Align(
-                                  alignment: Alignment.center,
-                                  child: Container(
-                                    width: 18,
-                                    height: 18,
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(18.0),
-                                    ),
-                                    child: Radio<int>(
-                                      activeColor: kBrandSecundaryColor1,
-                                      fillColor: WidgetStateProperty
-                                          .resolveWith<Color>(
-                                        (Set<WidgetState> states) {
-                                          if (states
-                                              .contains(WidgetState.selected)) {
-                                            return Colors.yellow;
-                                          }
-                                          return Colors.yellow;
-                                        },
-                                      ),
-                                      value: 2,
-                                      groupValue: _selectedValue,
-                                      onChanged: (int? value) {
-                                        setState(() {
-                                          _selectedValue = value!;
-                                        });
-                                      },
-                                    ),
-                                  ),
+                                Radio(
+                                  value: 2,
+                                  groupValue: _selectedValue,
+                                  activeColor: kBrandSecundaryColor1,
+                                  onChanged: (int? value) {
+                                    setState(() {
+                                      _selectedValue = value!;
+
+                                    });
+                                  },
                                 ),
                               ],
                             ),
                           ),
-                          divider12(),
-                          Container(
-                            alignment: Alignment.bottomRight,
-                            child: ElevatedButton(
-                              style: ButtonStyle(
-                                backgroundColor:
-                                    MaterialStateProperty.all<Color>(
-                                        kBrandSecundaryColor1),
-                              ),
-                              onPressed: () {
-                                // Acción del botón aceptar
-                              },
-                              child: Text(
-                                'Aceptar',
-                                style: TextStyle(color: Colors.white),
-                              ),
+                        ),
+                        SizedBox(height: 12),
+                        Container(
+                          alignment: Alignment.bottomRight,
+                          child: ElevatedButton(
+                            style: ButtonStyle(
+                              backgroundColor: WidgetStateProperty.all<Color>(
+                                  kBrandSecundaryColor1),
+                            ),
+                            onPressed: () {
+                              // Acción del botón aceptar
+                            },
+                            child: Text(
+                              'Aceptar',
+                              style: TextStyle(color: Colors.white),
                             ),
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
