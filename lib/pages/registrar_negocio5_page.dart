@@ -567,20 +567,6 @@ photoDocIdentidadAnv: ${widget.docAnversoUrl}, photoDocIdentidadRev: ${widget.do
                           count: 250,
                         ),
                         divider40(),
-                        ElevatedButton(
-                          onPressed: () {
-                            List<Horario> horariosSeleccionados = horarios.where((horario) =>
-                            horario.horaInicia != "null" && horario.horaFin != "null").toList();
-
-                            horariosNuevos = horariosSeleccionados;
-
-                            horariosNuevos.forEach((horario) {
-                              print("${horario.dia}: ${horario.horaInicia} - ${horario.horaFin}");
-                            });
-                          },
-                          child: Text("Horarios"),
-                        ),
-                        divider40(),
                         Text("Dias de Atención"),
                         ListView.builder(
                           itemCount: horarios.length,
