@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pidenomas/pages/modulo4/productos_negocio_page.dart';
 import 'package:pidenomas/ui/general/colors.dart';
 import 'package:pidenomas/ui/widgets/button_widget.dart';
 import 'package:pidenomas/ui/widgets/general_widgets.dart';
@@ -124,7 +125,6 @@ class _InventarioNegocioPageState extends State<InventarioNegocioPage> {
                                   onChanged: (int? value) {
                                     setState(() {
                                       _selectedValue = value!;
-
                                     });
                                   },
                                 ),
@@ -141,7 +141,17 @@ class _InventarioNegocioPageState extends State<InventarioNegocioPage> {
                                   kBrandSecundaryColor1),
                             ),
                             onPressed: () {
-                              // Acción del botón aceptar
+                              if (_selectedValue == 2) {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        ProductosNegocioPage(),
+                                  ),
+                                );
+                              } else {
+                                print('primer contenedor');
+                              }
                             },
                             child: Text(
                               'Aceptar',

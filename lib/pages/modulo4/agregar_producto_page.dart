@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pidenomas/pages/modulo4/pedidos_negocio_page.dart';
+import 'package:pidenomas/pages/modulo4/productos_negocio_page.dart';
 import 'package:pidenomas/ui/general/colors.dart';
 import 'package:pidenomas/ui/widgets/button_widget.dart';
+import 'package:pidenomas/ui/widgets/general_widgets.dart';
+import 'package:pidenomas/ui/widgets/photo_widget.dart';
 
 const List<String> list = <String>['One', 'Two', 'Three', 'Four'];
 
@@ -16,6 +19,7 @@ class AgregarProductoPage extends StatefulWidget {
 }
 
 class _AgregarProductoPageState extends State<AgregarProductoPage> {
+  bool _isLoading = false;
   bool _selectedValue = true;
   int? _selectedValue2;
   String dropdownValue = list.first;
@@ -43,26 +47,27 @@ class _AgregarProductoPageState extends State<AgregarProductoPage> {
         resizeToAvoidBottomInset: true,
         appBar: AppBar(
           title: Text(
-            "Añadir Producto",
-            style: TextStyle(
-              color: kBrandPrimaryColor2,
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
+              style: TextStyle(
+                  color: kBrandPrimaryColor2,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold),
+              "Añadir Producto"),
           centerTitle: true,
           leading: IconButton(
+            style: ButtonStyle(
+              backgroundColor: WidgetStateProperty.all(kBrandSecundaryColor1),
+              padding: WidgetStateProperty.all(EdgeInsets.only(left: 7.0)),
+            ),
             icon: Icon(
-              Icons.arrow_back_ios,
               color: Colors.white,
+              Icons.arrow_back_ios,
             ),
             onPressed: () {
               Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => PedidosNegocioPage(),
-                ),
-              );
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ProductosNegocioPage(),
+                  ));
             },
           ),
         ),
@@ -75,7 +80,17 @@ class _AgregarProductoPageState extends State<AgregarProductoPage> {
                 children: [
                   Container(
                     width: size.width,
+                    decoration: BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(
+                          color: Colors.green,
+                          width: 1.0,
+                        ),
+                      ),
+                      borderRadius: BorderRadius.circular(18.0),
+                    ),
                     child: TextField(
+                      cursorColor: Colors.green,
                       controller: nombreController,
                       keyboardType: TextInputType.text,
                       decoration: InputDecoration(
@@ -107,6 +122,7 @@ class _AgregarProductoPageState extends State<AgregarProductoPage> {
                   Container(
                     width: size.width,
                     child: TextField(
+                      cursorColor: Colors.green,
                       controller: marcaController,
                       keyboardType: TextInputType.text,
                       decoration: InputDecoration(
@@ -145,7 +161,8 @@ class _AgregarProductoPageState extends State<AgregarProductoPage> {
                       children: [
                         Expanded(
                           child: ListTile(
-                            contentPadding: EdgeInsets.symmetric(horizontal: 0.0),
+                            contentPadding:
+                                EdgeInsets.symmetric(horizontal: 0.0),
                             leading: GestureDetector(
                               onTap: () {
                                 setState(() {
@@ -161,9 +178,9 @@ class _AgregarProductoPageState extends State<AgregarProductoPage> {
                                       : Colors.white,
                                   child: _selectedValue
                                       ? Icon(Icons.brightness_1_outlined,
-                                      color: Colors.white, size: 16.0)
+                                          color: Colors.white, size: 16.0)
                                       : Icon(Icons.brightness_1_outlined,
-                                      color: Colors.green, size: 21.0),
+                                          color: Colors.green, size: 21.0),
                                 ),
                               ),
                             ),
@@ -172,7 +189,8 @@ class _AgregarProductoPageState extends State<AgregarProductoPage> {
                         ),
                         Expanded(
                           child: ListTile(
-                            contentPadding: EdgeInsets.symmetric(horizontal: 0.0),
+                            contentPadding:
+                                EdgeInsets.symmetric(horizontal: 0.0),
                             leading: GestureDetector(
                               onTap: () {
                                 setState(() {
@@ -188,9 +206,9 @@ class _AgregarProductoPageState extends State<AgregarProductoPage> {
                                       : Colors.white,
                                   child: !_selectedValue
                                       ? Icon(Icons.brightness_1_outlined,
-                                      color: Colors.white, size: 16.0)
+                                          color: Colors.white, size: 16.0)
                                       : Icon(Icons.brightness_1_outlined,
-                                      color: Colors.green, size: 21.0),
+                                          color: Colors.green, size: 21.0),
                                 ),
                               ),
                             ),
@@ -211,7 +229,8 @@ class _AgregarProductoPageState extends State<AgregarProductoPage> {
                       children: [
                         Expanded(
                           child: ListTile(
-                            contentPadding: EdgeInsets.symmetric(horizontal: 0.0),
+                            contentPadding:
+                                EdgeInsets.symmetric(horizontal: 0.0),
                             leading: Radio<int>(
                               activeColor: kBrandPrimaryColor2,
                               value: 3,
@@ -229,6 +248,7 @@ class _AgregarProductoPageState extends State<AgregarProductoPage> {
                         Container(
                           width: 170,
                           child: TextField(
+                            cursorColor: Colors.green,
                             controller: descuentoController,
                             enabled: _selectedValue2 == 3,
                             keyboardType: TextInputType.number,
@@ -262,7 +282,21 @@ class _AgregarProductoPageState extends State<AgregarProductoPage> {
                   SizedBox(height: 20),
                   Container(
                     width: size.width,
+                    decoration: BoxDecoration(
+                      border: Border(
+                        top: BorderSide(
+                          color: Colors.green,
+                          width: 1.0,
+                        ),
+                        bottom: BorderSide(
+                          color: Colors.green,
+                          width: 1.0,
+                        ),
+                      ),
+                      borderRadius: BorderRadius.circular(18.0),
+                    ),
                     child: TextField(
+                      cursorColor: Colors.green,
                       controller: precioController,
                       keyboardType: TextInputType.number,
                       decoration: InputDecoration(
@@ -320,7 +354,8 @@ class _AgregarProductoPageState extends State<AgregarProductoPage> {
                             dropdownValue = newValue!;
                           });
                         },
-                        items: list.map<DropdownMenuItem<String>>((String value) {
+                        items:
+                            list.map<DropdownMenuItem<String>>((String value) {
                           return DropdownMenuItem<String>(
                             value: value,
                             child: Container(
@@ -337,12 +372,19 @@ class _AgregarProductoPageState extends State<AgregarProductoPage> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 40),
+                  divider40(),
+                  Center(
+                      child: PhotoWidget(
+                          tipo: 1,
+                          onPressedUploadPhoto: () {},
+                          onPressedTakePhoto: () {},
+                          loading: _isLoading)),
                   ButtonWidget(
                     onPressed: () {
                       print('Nombre: ${nombreController.text}');
                       print('Marca: ${marcaController.text}');
-                      print('Inventario Disponible: ${_selectedValue ? "Stock" : "Sin Stock"}');
+                      print(
+                          'Inventario Disponible: ${_selectedValue ? "Stock" : "Sin Stock"}');
                       print('Aplicar Descuento: ${_selectedValue2 == 3}');
                       if (_selectedValue2 == 3) {
                         print('Descuento: ${descuentoController.text}');
