@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pidenomas/pages/modulo4/pedidos_negocio_page.dart';
 import 'package:pidenomas/ui/general/colors.dart';
-import 'package:pidenomas/ui/widgets/general_widgets.dart';
+import 'package:pidenomas/ui/widgets/button_widget.dart';
 
 const List<String> list = <String>['One', 'Two', 'Three', 'Four'];
 
@@ -16,37 +16,53 @@ class AgregarProductoPage extends StatefulWidget {
 }
 
 class _AgregarProductoPageState extends State<AgregarProductoPage> {
-  int _selectedValue = 1;
+  bool _selectedValue = true;
+  int? _selectedValue2;
   String dropdownValue = list.first;
+
+  TextEditingController nombreController = TextEditingController();
+  TextEditingController marcaController = TextEditingController();
+  TextEditingController descuentoController = TextEditingController();
+  TextEditingController precioController = TextEditingController();
+
+  @override
+  void dispose() {
+    // Limpiar los controladores al finalizar
+    nombreController.dispose();
+    marcaController.dispose();
+    descuentoController.dispose();
+    precioController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return MaterialApp(
       home: Scaffold(
         resizeToAvoidBottomInset: true,
         appBar: AppBar(
           title: Text(
-              style: TextStyle(
-                  color: kBrandPrimaryColor2,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold),
-              "Añadir Producto"),
+            "Añadir Producto",
+            style: TextStyle(
+              color: kBrandPrimaryColor2,
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
           centerTitle: true,
           leading: IconButton(
-            style: ButtonStyle(
-              backgroundColor: WidgetStateProperty.all(kBrandSecundaryColor1),
-              padding: WidgetStateProperty.all(EdgeInsets.only(left: 7.0)),
-            ),
             icon: Icon(
-              color: Colors.white,
               Icons.arrow_back_ios,
+              color: Colors.white,
             ),
             onPressed: () {
               Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => PedidosNegocioPage(),
-                  ));
+                context,
+                MaterialPageRoute(
+                  builder: (context) => PedidosNegocioPage(),
+                ),
+              );
             },
           ),
         ),
@@ -57,14 +73,15 @@ class _AgregarProductoPageState extends State<AgregarProductoPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  divider30(),
                   Container(
-                    width: 330,
+                    width: size.width,
                     child: TextField(
+                      controller: nombreController,
                       keyboardType: TextInputType.text,
                       decoration: InputDecoration(
                         labelStyle: TextStyle(color: Colors.grey),
                         labelText: 'Nombre',
+                        hintText: 'Nombre del producto',
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(18.0),
                           borderSide: BorderSide(
@@ -86,10 +103,11 @@ class _AgregarProductoPageState extends State<AgregarProductoPage> {
                       ),
                     ),
                   ),
-                  divider20(),
+                  SizedBox(height: 20),
                   Container(
-                    width: 330,
+                    width: size.width,
                     child: TextField(
+                      controller: marcaController,
                       keyboardType: TextInputType.text,
                       decoration: InputDecoration(
                         labelStyle: TextStyle(color: Colors.grey),
@@ -115,47 +133,66 @@ class _AgregarProductoPageState extends State<AgregarProductoPage> {
                       ),
                     ),
                   ),
-                  divider20(),
+                  SizedBox(height: 20),
                   Padding(
                     padding: EdgeInsets.only(left: 10.0),
-                    child: Text(
-                      "Inventario Disponible",
-                    ),
+                    child: Text("Inventario Disponible"),
                   ),
                   Container(
+                    padding: EdgeInsets.only(left: 13.0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Expanded(
                           child: ListTile(
-                            contentPadding:
-                                EdgeInsets.symmetric(horizontal: 0.0),
-                            leading: Radio<int>(
-                              activeColor: kBrandPrimaryColor2,
-                              value: 1,
-                              groupValue: _selectedValue,
-                              onChanged: (int? value) {
+                            contentPadding: EdgeInsets.symmetric(horizontal: 0.0),
+                            leading: GestureDetector(
+                              onTap: () {
                                 setState(() {
-                                  _selectedValue = value!;
+                                  _selectedValue = true;
                                 });
                               },
+                              child: Container(
+                                width: 20.0,
+                                height: 20.0,
+                                child: CircleAvatar(
+                                  backgroundColor: _selectedValue
+                                      ? kBrandPrimaryColor2
+                                      : Colors.white,
+                                  child: _selectedValue
+                                      ? Icon(Icons.brightness_1_outlined,
+                                      color: Colors.white, size: 16.0)
+                                      : Icon(Icons.brightness_1_outlined,
+                                      color: Colors.green, size: 21.0),
+                                ),
+                              ),
                             ),
                             title: Text('Stock'),
                           ),
                         ),
                         Expanded(
                           child: ListTile(
-                            contentPadding:
-                                EdgeInsets.symmetric(horizontal: 0.0),
-                            leading: Radio<int>(
-                              activeColor: kBrandPrimaryColor2,
-                              value: 2,
-                              groupValue: _selectedValue,
-                              onChanged: (int? value) {
+                            contentPadding: EdgeInsets.symmetric(horizontal: 0.0),
+                            leading: GestureDetector(
+                              onTap: () {
                                 setState(() {
-                                  _selectedValue = value!;
+                                  _selectedValue = false;
                                 });
                               },
+                              child: Container(
+                                width: 20.0,
+                                height: 20.0,
+                                child: CircleAvatar(
+                                  backgroundColor: !_selectedValue
+                                      ? kBrandPrimaryColor2
+                                      : Colors.white,
+                                  child: !_selectedValue
+                                      ? Icon(Icons.brightness_1_outlined,
+                                      color: Colors.white, size: 16.0)
+                                      : Icon(Icons.brightness_1_outlined,
+                                      color: Colors.green, size: 21.0),
+                                ),
+                              ),
                             ),
                             title: Text('Sin Stock'),
                           ),
@@ -163,11 +200,10 @@ class _AgregarProductoPageState extends State<AgregarProductoPage> {
                       ],
                     ),
                   ),
+                  SizedBox(height: 20),
                   Padding(
                     padding: EdgeInsets.only(left: 10.0),
-                    child: Text(
-                      "Inventario Disponible",
-                    ),
+                    child: Text("Descuento"),
                   ),
                   Container(
                     child: Row(
@@ -175,25 +211,27 @@ class _AgregarProductoPageState extends State<AgregarProductoPage> {
                       children: [
                         Expanded(
                           child: ListTile(
-                            contentPadding:
-                                EdgeInsets.symmetric(horizontal: 0.0),
+                            contentPadding: EdgeInsets.symmetric(horizontal: 0.0),
                             leading: Radio<int>(
                               activeColor: kBrandPrimaryColor2,
                               value: 3,
-                              groupValue: _selectedValue,
+                              groupValue: _selectedValue2,
                               onChanged: (int? value) {
                                 setState(() {
-                                  _selectedValue = value!;
+                                  _selectedValue2 = value;
                                 });
                               },
                             ),
-                            title: Text('Descuento'),
+                            title: Text('Aplicar Descuento'),
                           ),
                         ),
+                        SizedBox(width: 20),
                         Container(
                           width: 170,
                           child: TextField(
-                            keyboardType: TextInputType.text,
+                            controller: descuentoController,
+                            enabled: _selectedValue2 == 3,
+                            keyboardType: TextInputType.number,
                             decoration: InputDecoration(
                               labelStyle: TextStyle(color: Colors.grey),
                               labelText: 'Descuento',
@@ -221,14 +259,17 @@ class _AgregarProductoPageState extends State<AgregarProductoPage> {
                       ],
                     ),
                   ),
-                  divider20(),
+                  SizedBox(height: 20),
                   Container(
-                    width: 330,
+                    width: size.width,
                     child: TextField(
+                      controller: precioController,
                       keyboardType: TextInputType.number,
                       decoration: InputDecoration(
                         labelStyle: TextStyle(color: Colors.grey),
+                        hintStyle: TextStyle(color: Colors.green),
                         labelText: 'Precio',
+                        prefixText: 'S/. ',
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(18.0),
                           borderSide: BorderSide(
@@ -253,9 +294,9 @@ class _AgregarProductoPageState extends State<AgregarProductoPage> {
                       ],
                     ),
                   ),
-                  divider20(),
+                  SizedBox(height: 20),
                   Container(
-                    width: 330,
+                    width: size.width,
                     height: 57,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(18.0),
@@ -264,7 +305,7 @@ class _AgregarProductoPageState extends State<AgregarProductoPage> {
                         width: 1,
                       ),
                     ),
-                    child: SingleChildScrollView(
+                    child: DropdownButtonHideUnderline(
                       child: DropdownButton<String>(
                         isExpanded: true,
                         value: dropdownValue,
@@ -274,24 +315,43 @@ class _AgregarProductoPageState extends State<AgregarProductoPage> {
                         ),
                         elevation: 16,
                         style: const TextStyle(color: Colors.black),
-                        underline: Container(
-                          height: 2,
-                          color: Colors.transparent,
-                        ),
                         onChanged: (String? newValue) {
                           setState(() {
                             dropdownValue = newValue!;
                           });
                         },
-                        items:
-                            list.map<DropdownMenuItem<String>>((String value) {
+                        items: list.map<DropdownMenuItem<String>>((String value) {
                           return DropdownMenuItem<String>(
                             value: value,
-                            child: Text(value),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(18.0),
+                                color: Colors.white,
+                              ),
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(value),
+                            ),
                           );
                         }).toList(),
+                        dropdownColor: Colors.white,
                       ),
                     ),
+                  ),
+                  SizedBox(height: 40),
+                  ButtonWidget(
+                    onPressed: () {
+                      print('Nombre: ${nombreController.text}');
+                      print('Marca: ${marcaController.text}');
+                      print('Inventario Disponible: ${_selectedValue ? "Stock" : "Sin Stock"}');
+                      print('Aplicar Descuento: ${_selectedValue2 == 3}');
+                      if (_selectedValue2 == 3) {
+                        print('Descuento: ${descuentoController.text}');
+                      }
+                      print('Precio: ${precioController.text}');
+                      print('Dropdown Value: $dropdownValue');
+                    },
+                    text: "Aceptar",
+                    width: size.width,
                   ),
                 ],
               ),
