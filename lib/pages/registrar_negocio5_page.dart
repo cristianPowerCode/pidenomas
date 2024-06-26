@@ -96,15 +96,16 @@ photoDocIdentidadAnv: ${widget.docAnversoUrl}, photoDocIdentidadRev: ${widget.do
 
   String uidForFirebase = '';
   List<Horario> horarios = [
-    Horario(dia: "lunes", horaInicia: "07:59:59", horaFin: "06:02:02"),
-    Horario(dia: "martes", horaInicia: "07:59:59", horaFin: "06:02:02"),
-    Horario(dia: "miercoles", horaInicia: "07:59:59", horaFin: "06:02:02"),
-    Horario(dia: "jueves", horaInicia: "07:59:59", horaFin: "06:02:02"),
-    Horario(dia: "viernes", horaInicia: "07:59:59", horaFin: "06:02:02"),
-    Horario(dia: "sabado", horaInicia: "07:59:59", horaFin: "06:02:02"),
-    Horario(dia: "domingo", horaInicia: "07:59:59", horaFin: "06:02:02"),
-    Horario(dia: "feriado", horaInicia: "07:59:59", horaFin: "06:02:02")
+    Horario(dia: "lunes", horaInicia: "null", horaFin: "null"),
+    Horario(dia: "martes", horaInicia: "null", horaFin: "null"),
+    Horario(dia: "miercoles", horaInicia: "null", horaFin: "null"),
+    Horario(dia: "jueves", horaInicia: "null", horaFin: "null"),
+    Horario(dia: "viernes", horaInicia: "null", horaFin: "null"),
+    Horario(dia: "sabado", horaInicia: "null", horaFin: "null"),
+    Horario(dia: "domingo", horaInicia: "null", horaFin: "null"),
+    Horario(dia: "feriado", horaInicia: "null", horaFin: "null")
   ];
+  List<Horario> horariosNuevos = [];
   TextEditingController _rucController = TextEditingController();
   TextEditingController _razSocialNegocioController = TextEditingController();
   TextEditingController _nombreNegocioController = TextEditingController();
@@ -208,9 +209,13 @@ photoDocIdentidadAnv: ${widget.docAnversoUrl}, photoDocIdentidadRev: ${widget.do
         ),
       );
     } else {
-      // Imprimir todos los días si no todos están cerrados
+      // Filtrar horarios para solo incluir los días seleccionados
+      horariosNuevos = horarios.where((horario) =>
+      horario.horaInicia != "null" && horario.horaFin != "null").toList();
+
+      // Imprimir horarios seleccionados
       print("Horarios actuales:");
-      horarios.forEach((horario) {
+      horariosNuevos.forEach((horario) {
         print("${horario.dia}: ${horario.horaInicia} - ${horario.horaFin}");
       });
     }
@@ -246,7 +251,7 @@ photoDocIdentidadAnv: ${widget.docAnversoUrl}, photoDocIdentidadRev: ${widget.do
       razSocNegocio: _razSocialNegocioController.text,
       nombreNegocio: _nombreNegocioController.text,
       fechaDeCreacion: DateTime.now(),
-      horarios: horarios,
+      horarios: horariosNuevos,
     );
   }
 
@@ -562,6 +567,20 @@ photoDocIdentidadAnv: ${widget.docAnversoUrl}, photoDocIdentidadRev: ${widget.do
                           count: 250,
                         ),
                         divider40(),
+                        ElevatedButton(
+                          onPressed: () {
+                            List<Horario> horariosSeleccionados = horarios.where((horario) =>
+                            horario.horaInicia != "null" && horario.horaFin != "null").toList();
+
+                            horariosNuevos = horariosSeleccionados;
+
+                            horariosNuevos.forEach((horario) {
+                              print("${horario.dia}: ${horario.horaInicia} - ${horario.horaFin}");
+                            });
+                          },
+                          child: Text("Horarios"),
+                        ),
+                        divider40(),
                         Text("Dias de Atención"),
                         ListView.builder(
                           itemCount: horarios.length,
@@ -620,7 +639,10 @@ photoDocIdentidadAnv: ${widget.docAnversoUrl}, photoDocIdentidadRev: ${widget.do
                                         onPressed: () =>
                                             _editHoraInicia(context, index),
                                       )
-                                    : Container(margin: EdgeInsets.only(right: 12.0),child: Icon(Icons.edit, color: Colors.grey)),
+                                    : Container(
+                                        margin: EdgeInsets.only(right: 12.0),
+                                        child: Icon(Icons.edit,
+                                            color: Colors.grey)),
                               ),
                             );
                           },
