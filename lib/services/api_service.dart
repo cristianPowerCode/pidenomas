@@ -9,11 +9,12 @@ import '../utils/constants.dart';
 class APIService {
   SPGlobal spGlobal = SPGlobal();
 
-  Future<ResponseModel> registrarClienteToDB(RegisterClientModel business) async {
+  Future<ResponseModel> registrarClienteToDB(RegisterClientModel client) async {
     String _path = pathProduction + "/cliente/registrarCliente/";
     Uri _uri = Uri.parse(_path);
+    print(_path);
 
-    final Map<String, dynamic> body = business.toJson();
+    final Map<String, dynamic> body = client.toJson();
     print("JSON DATA: ${json.encode(body)}");
 
     try {
@@ -25,7 +26,6 @@ class APIService {
         },
         body: json.encode(body),
       );
-
       print("Response Status Code: ${response.statusCode}");
       print("Response Body: ${response.body}");
 

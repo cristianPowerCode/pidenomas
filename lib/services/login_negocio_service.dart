@@ -7,7 +7,7 @@ import '../models/login_negocio_model.dart';
 
 class ApiResponse {
   final int statusCode;
-  final dynamic data; // Puedes agregar más campos según lo que necesites
+  final Map<String, dynamic> data; // Puedes agregar más campos según lo que necesites
 
   ApiResponse({
     required this.statusCode,
@@ -49,7 +49,7 @@ class LoginNegocioService {
 
 class LoginClienteService {
   Future<ApiResponse> loginCliente(String email, String password) async {
-    String path = "$pathProduction/negocio/loginNegocio/";
+    String path = "$pathProduction/cliente/loginCliente/";
     Uri uri = Uri.parse(path);
     final Map<String, String> body = {
       "email": email,
@@ -57,7 +57,7 @@ class LoginClienteService {
     };
 
     try {
-      print("Enviando solicitud POST LoginNegocio...");
+      print("Enviando solicitud POST LoginCliente...");
       http.Response response = await http.post(
         uri,
         headers: {"Content-Type": "application/json"},
@@ -72,8 +72,7 @@ class LoginClienteService {
 
       return ApiResponse(
         statusCode: response.statusCode,
-        data:
-            response.body, // Puedes ajustar esto según la estructura de tu respuesta
+        data: responseBody, // Puedes ajustar esto según la estructura de tu respuesta
       );
     } catch (e) {
       print("Error de Red/Excepción: $e");
