@@ -2,86 +2,86 @@ class RegisterClientModel {
   String uid;
   String nombre;
   String apellidos;
-  String email;
-  bool isVerified;
+  DateTime fechaDeNacimiento;
   String celular;
   int tipoDocumento;
-  DateTime fechaDeNacimiento;
-  String documentoIdentidad;
+  String docIdentidad;
   int genero;
+  String email;
   String password;
+  bool isVerifiedEmail;
+  bool agreeNotifications;
   double lat;
   double lng;
   String direccion;
   String detalleDireccion;
   String referenciaDireccion;
-  String photoUrl;
+  int tipoDeInmueble;
   DateTime fechaDeCreacion;
-  bool agreeNotifications;
 
   RegisterClientModel({
     required this.uid,
     required this.nombre,
     required this.apellidos,
-    required this.email,
-    required this.isVerified,
+    required this.fechaDeNacimiento,
     required this.celular,
     required this.tipoDocumento,
-    required this.fechaDeNacimiento,
-    required this.documentoIdentidad,
+    required this.docIdentidad,
     required this.genero,
+    required this.email,
     required this.password,
+    required this.isVerifiedEmail,
+    required this.agreeNotifications,
     required this.lat,
     required this.lng,
     required this.direccion,
     required this.detalleDireccion,
     required this.referenciaDireccion,
-    required this.photoUrl,
+    required this.tipoDeInmueble,
     required this.fechaDeCreacion,
-    required this.agreeNotifications,
   });
 
   factory RegisterClientModel.fromJson(Map<String, dynamic> json) => RegisterClientModel(
     uid: json["uid"],
     nombre: json["nombre"],
     apellidos: json["apellidos"],
-    email: json["email"],
-    isVerified: json["isVerified"],
+    fechaDeNacimiento: DateTime.parse(json["fechaDeNacimiento"]),
     celular: json["celular"],
     tipoDocumento: json["tipoDocumento"],
-    fechaDeNacimiento: DateTime.parse(json["fechaDeNacimiento"]),
-    documentoIdentidad: json["documentoIdentidad"],
+    docIdentidad: json["docIdentidad"],
     genero: json["genero"],
+    email: json["email"],
     password: json["password"],
+    isVerifiedEmail: json["isVerifiedEmail"],
+    agreeNotifications: json["agreeNotifications"],
     lat: json["lat"]?.toDouble(),
     lng: json["lng"]?.toDouble(),
     direccion: json["direccion"],
     detalleDireccion: json["detalleDireccion"],
     referenciaDireccion: json["referenciaDireccion"],
-    photoUrl: json["photoURL"],
+    tipoDeInmueble: json["tipoDeInmueble"],
     fechaDeCreacion: DateTime.parse(json["fechaDeCreacion"]),
-    agreeNotifications: json["agreeNotifications"],
   );
 
   Map<String, dynamic> toJson() => {
     "uid": uid,
     "nombre": nombre,
     "apellidos": apellidos,
-    "email": email,
-    "isVerified": isVerified,
+    "fechaDeNacimiento": "${fechaDeNacimiento.year.toString().padLeft(4, '0')}-${fechaDeNacimiento.month.toString().padLeft(2, '0')}-${fechaDeNacimiento.day.toString().padLeft(2, '0')}",
     "celular": celular,
     "tipoDocumento": tipoDocumento,
-    "fechaDeNacimiento": "${fechaDeNacimiento.year.toString().padLeft(4, '0')}-${fechaDeNacimiento.month.toString().padLeft(2, '0')}-${fechaDeNacimiento.day.toString().padLeft(2, '0')}",
-    "documentoIdentidad": documentoIdentidad,
+    "docIdentidad": docIdentidad,
     "genero": genero,
+    "email": email,
     "password": password,
+    "isVerifiedEmail": isVerifiedEmail,
+    "agreeNotifications": agreeNotifications,
     "lat": lat,
     "lng": lng,
     "direccion": direccion,
     "detalleDireccion": detalleDireccion,
     "referenciaDireccion": referenciaDireccion,
-    "photoURL": photoUrl,
+    "tipoDeInmueble": tipoDeInmueble,
     "fechaDeCreacion": "${fechaDeCreacion.year.toString().padLeft(4, '0')}-${fechaDeCreacion.month.toString().padLeft(2, '0')}-${fechaDeCreacion.day.toString().padLeft(2, '0')}",
-    "isVerified": isVerified,
   };
 }
