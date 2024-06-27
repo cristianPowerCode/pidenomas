@@ -59,14 +59,15 @@ class _RegistrarCliente1PageState extends State<RegistrarCliente1Page> {
   bool agreeTerms = false;
   bool isChanged = false;
   bool agreeNotifications = false;
-  VerficarEmailDniNegocioService verificarEmailDni = VerficarEmailDniNegocioService();
+  VerificarEmailDniCelNegocioService verificarEmailDniCelNegocio = VerificarEmailDniCelNegocioService();
 
   Future<Map<String, dynamic>> checkIfEmailExists() async {
     print("Calling verificarEmailDniNegocioEnBD...");
     try {
-      final response = await verificarEmailDni.verificarEmailDniNegocioEnBD(
+      final response = await verificarEmailDniCelNegocio.verificarEmailDniCelNegocioEnBD(
         _emailController.text,
         _documentoIdentidadController.text,
+        _celularController.text,
       );
 
       // Verificar el estado y el mensaje del response
@@ -101,8 +102,6 @@ class _RegistrarCliente1PageState extends State<RegistrarCliente1Page> {
 
   @override
   Widget build(BuildContext context) {
-    double height = MediaQuery.of(context).size.height;
-    final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       resizeToAvoidBottomInset: true,
       body: Stack(
@@ -253,12 +252,6 @@ class _RegistrarCliente1PageState extends State<RegistrarCliente1Page> {
                       InputTextFieldPasswordWidget(
                         controller: _passwordController,
                       ),
-                      divider30(),
-                      Center(
-                        child: screenWidth > ResponsiveConfig.widthResponsive
-                            ? buildRowLoginAgain(context)
-                            : buildColumnLoginAgain(context),
-                      ),
                       divider40(),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -279,7 +272,6 @@ class _RegistrarCliente1PageState extends State<RegistrarCliente1Page> {
                             icon: Icon(FontAwesomeIcons.arrowRight),
                             isFormComplete: true,
                             onPressed: () async{
-                              String email = _emailController.text.trim();
                               final formState = _formKey.currentState;
                               if (formState != null && formState.validate()) {
                                 Map<String, dynamic> result = await checkIfEmailExists();

@@ -11,7 +11,6 @@ import 'package:pidenomas/services/verficar_email_dni_negocio_service.dart';
 import 'package:pidenomas/ui/general/type_messages.dart';
 import 'package:pidenomas/ui/widgets/icon_form_button_widget.dart';
 import 'package:pidenomas/ui/widgets/radio_button_widget.dart';
-import '../ui/general/constant_responsive.dart';
 import 'login_cliente_page.dart';
 import '../ui/general/colors.dart';
 import '../ui/widgets/background_widget.dart';
@@ -57,19 +56,22 @@ class _RegistrarNegocio1PageState extends State<RegistrarNegocio1Page> {
   bool agreeTerms = false;
   bool isChanged = false;
   bool agreeNotifications = false;
-  VerficarEmailDniNegocioService verificarEmailDni = VerficarEmailDniNegocioService();
+  VerificarEmailDniCelNegocioService verificarEmailDniCelNegocio =
+      VerificarEmailDniCelNegocioService();
 
   Future<Map<String, dynamic>> checkIfEmailExists() async {
-    print("Calling verificarEmailDniNegocioEnBD...");
+    print("Calling verificarEmailDniCelNegocioEnBD...");
     try {
-      final response = await verificarEmailDni.verificarEmailDniNegocioEnBD(
+      final response = await verificarEmailDniCelNegocio.verificarEmailDniCelNegocioEnBD(
         _emailController.text,
         _documentoIdentidadController.text,
+        _celularController.text,
       );
 
       // Verificar el estado y el mensaje del response
       return {
-        "exists": response.status != 200, // Si no es 200, email y/o documento ya existen
+        "exists": response.status != 200,
+        // Si no es 200, email y/o documento ya existen
         "message": response.message,
       };
     } catch (e) {
@@ -239,7 +241,7 @@ class _RegistrarNegocio1PageState extends State<RegistrarNegocio1Page> {
                           ),
                         ],
                       ),
-                      divider30(),
+                      divider40(),
                       const Text(
                         "Contraseña",
                         style:
@@ -247,12 +249,6 @@ class _RegistrarNegocio1PageState extends State<RegistrarNegocio1Page> {
                       ),
                       InputTextFieldPasswordWidget(
                         controller: _passwordController,
-                      ),
-                      divider30(),
-                      Center(
-                        child: screenWidth > ResponsiveConfig.widthResponsive
-                            ? buildRowLoginAgain(context)
-                            : buildColumnLoginAgain(context),
                       ),
                       divider40(),
                       Row(
@@ -273,33 +269,35 @@ class _RegistrarNegocio1PageState extends State<RegistrarNegocio1Page> {
                           IconFormButtonWidget(
                             icon: Icon(FontAwesomeIcons.arrowRight),
                             isFormComplete: true,
-                            onPressed: () async{
+                            onPressed: () async {
                               String email = _emailController.text.trim();
                               final formState = _formKey.currentState;
                               if (formState != null && formState.validate()) {
-                                Map<String, dynamic> result = await checkIfEmailExists();
+                                Map<String, dynamic> result =
+                                    await checkIfEmailExists();
                                 bool isEmailDniExists = result["exists"];
                                 String message = result["message"];
-                                if(isEmailDniExists){
+                                if (isEmailDniExists) {
                                   print("Existe? $isEmailDniExists");
                                   print(message);
                                   mostrarSnackBar(message);
-                                }else{
+                                } else {
                                   print("Existe? $isEmailDniExists");
                                   print(message);
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) => RegistrarNegocio2Page(
+                                      builder: (context) =>
+                                          RegistrarNegocio2Page(
                                         nombre: _nombreController.text,
                                         apellidos: _apellidoController.text,
                                         fechaDeNacimiento:
-                                        _fechaDeNacimientoController.text,
+                                            _fechaDeNacimientoController.text,
                                         celular: _celularController.text,
                                         tipoDocumento:
-                                        _tipoDocumentoController.text,
+                                            _tipoDocumentoController.text,
                                         documentoIdentidad:
-                                        _documentoIdentidadController.text,
+                                            _documentoIdentidadController.text,
                                         genero: _generoController.text,
                                         email: _emailController.text,
                                         password: _passwordController.text,
@@ -326,65 +324,65 @@ class _RegistrarNegocio1PageState extends State<RegistrarNegocio1Page> {
     );
   }
 
-  Widget buildRowLoginAgain(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(
-          "¿Ya tienes una cuenta?",
-          style: TextStyle(
-            color: kBrandPrimaryColor1,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        TextButton(
-          onPressed: () {
-            Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => LoginClientePage(),
-                ));
-          },
-          child: Text(
-            "Inicia sesión aquí",
-            style: TextStyle(
-              color: Colors.black,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget buildColumnLoginAgain(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(
-          "¿Ya tienes una cuenta?",
-          style: TextStyle(
-            color: kBrandPrimaryColor1,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        TextButton(
-          onPressed: () {
-            Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => LoginClientePage(),
-                ));
-          },
-          child: Text(
-            "Inicia sesión aquí",
-            style: TextStyle(
-              color: Colors.black,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
-      ],
-    );
-  }
+  // Widget buildRowLoginAgain(BuildContext context) {
+  //   return Row(
+  //     mainAxisAlignment: MainAxisAlignment.center,
+  //     children: [
+  //       Text(
+  //         "¿Ya tienes una cuenta?",
+  //         style: TextStyle(
+  //           color: kBrandPrimaryColor1,
+  //           fontWeight: FontWeight.bold,
+  //         ),
+  //       ),
+  //       TextButton(
+  //         onPressed: () {
+  //           Navigator.pushReplacement(
+  //               context,
+  //               MaterialPageRoute(
+  //                 builder: (context) => LoginClientePage(),
+  //               ));
+  //         },
+  //         child: Text(
+  //           "Inicia sesión aquí",
+  //           style: TextStyle(
+  //             color: Colors.black,
+  //             fontWeight: FontWeight.bold,
+  //           ),
+  //         ),
+  //       ),
+  //     ],
+  //   );
+  // }
+  //
+  // Widget buildColumnLoginAgain(BuildContext context) {
+  //   return Column(
+  //     mainAxisAlignment: MainAxisAlignment.center,
+  //     children: [
+  //       Text(
+  //         "¿Ya tienes una cuenta?",
+  //         style: TextStyle(
+  //           color: kBrandPrimaryColor1,
+  //           fontWeight: FontWeight.bold,
+  //         ),
+  //       ),
+  //       TextButton(
+  //         onPressed: () {
+  //           Navigator.pushReplacement(
+  //               context,
+  //               MaterialPageRoute(
+  //                 builder: (context) => LoginClientePage(),
+  //               ));
+  //         },
+  //         child: Text(
+  //           "Inicia sesión aquí",
+  //           style: TextStyle(
+  //             color: Colors.black,
+  //             fontWeight: FontWeight.bold,
+  //           ),
+  //         ),
+  //       ),
+  //     ],
+  //   );
+  // }
 }

@@ -1,19 +1,21 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import '../models/verificar_email_dni_negocio_model.dart';
+import '../models/verificar_email_dni_celular_negocio_model.dart';
 import '../utils/constants.dart';
 
-class VerficarEmailDniNegocioService {
-  Future<VerificarEmailDniNegocioModel> verificarEmailDniNegocioEnBD(
+class VerificarEmailDniCelNegocioService {
+  Future<VerificarEmailDniCelNegocioModel> verificarEmailDniCelNegocioEnBD(
       String email,
       String documentoIdentidad,
+      String celular,
       ) async {
-    String _path = pathProduction + "/negocio/verificarEmailDniNegocio/";
+    String _path = pathProduction + "/negocio/verificarEmailDniCelNegocio/";
     Uri _uri = Uri.parse(_path);
 
     final Map<String, dynamic> body = {
       "email": email,
       "documentoIdentidad": documentoIdentidad,
+      "celular": celular,
     };
 
     try {
@@ -28,7 +30,7 @@ class VerficarEmailDniNegocioService {
 
       if (response.statusCode == 200 || response.statusCode == 400) {
         Map<String, dynamic> jsonResponse = json.decode(response.body);
-        return VerificarEmailDniNegocioModel.fromJson(jsonResponse);
+        return VerificarEmailDniCelNegocioModel.fromJson(jsonResponse);
       } else {
         throw Exception('Error en la solicitud a la BD: ${response.statusCode}');
       }
