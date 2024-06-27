@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:pidenomas/models/verificar_ruc_negocio_model.dart';
 import 'package:pidenomas/pages/login_negocio_page.dart';
 import 'package:pidenomas/pages/registrar_negocio4_page.dart';
 import 'package:pidenomas/ui/widgets/circular_loading_widget.dart';
@@ -13,6 +14,7 @@ import 'package:pidenomas/ui/widgets/input_textfield_widget.dart';
 import '../models/register_business_model.dart';
 import '../models/response_model.dart';
 import '../services/api_service.dart';
+import '../services/verficar_ruc_negocio_service.dart';
 import '../ui/general/colors.dart';
 import '../ui/general/type_messages.dart';
 import '../ui/widgets/button_widget.dart';
@@ -109,6 +111,8 @@ photoDocIdentidadAnv: ${widget.docAnversoUrl}, photoDocIdentidadRev: ${widget.do
   TextEditingController _rucController = TextEditingController();
   TextEditingController _razSocialNegocioController = TextEditingController();
   TextEditingController _nombreNegocioController = TextEditingController();
+
+  VerificarRucNegocioService verificarRucNegocio = VerificarRucNegocioService();
 
   String agreeError = "";
   bool agreeTerms = false;
@@ -211,7 +215,8 @@ photoDocIdentidadAnv: ${widget.docAnversoUrl}, photoDocIdentidadRev: ${widget.do
       // Filtrar horarios para solo incluir los días seleccionados
       setState(() {
         horariosSeleccionados = horarios
-            .where((horario) => horario.horaInicia != "null" && horario.horaFin != "null")
+            .where((horario) =>
+                horario.horaInicia != "null" && horario.horaFin != "null")
             .toList();
       });
       // Imprimir horarios seleccionados
@@ -219,6 +224,30 @@ photoDocIdentidadAnv: ${widget.docAnversoUrl}, photoDocIdentidadRev: ${widget.do
       horariosSeleccionados.forEach((horario) {
         print("${horario.dia}: ${horario.horaInicia} - ${horario.horaFin}");
       });
+    }
+  }
+
+  Future<Map<String, dynamic>> checkIfEmailExists() async {
+    print("Calling verificarEmailDniNegocioEnBD...");
+    try {
+      final response = await verificarRucNegocio.verificarRucNegocioEnBD(
+        _rucController.text,
+      );
+
+      // Verificar el estado y el mensaje del response
+      return {
+        "exists": response.status != 200,
+        // Si no es 200, email y/o documento ya existen
+        "message": response.message,
+      };
+    } catch (e) {
+      // Manejar errores de red o excepciones aquí
+      print("Error al verificar email y DNI: $e");
+      mostrarSnackBar("Error al verificar el RUC del negocio", 3);
+      return {
+        "exists": false,
+        "message": "Error al verificar el RUC del negocio",
+      };
     }
   }
 
@@ -625,14 +654,19 @@ photoDocIdentidadAnv: ${widget.docAnversoUrl}, photoDocIdentidadRev: ${widget.do
                                         icon: Icon(Icons.edit),
                                         onPressed: () {
                                           _editHoraInicia(context, index);
-                                          horariosSeleccionados = horarios.where((horario) =>
-                                          horario.horaInicia != "null" && horario.horaFin != "null").toList();
+                                          horariosSeleccionados = horarios
+                                              .where((horario) =>
+                                                  horario.horaInicia !=
+                                                      "null" &&
+                                                  horario.horaFin != "null")
+                                              .toList();
 
-                                          horariosSeleccionados.forEach((horario) {
-                                            print("${horario.dia}: ${horario.horaInicia} - ${horario.horaFin}");
+                                          horariosSeleccionados
+                                              .forEach((horario) {
+                                            print(
+                                                "${horario.dia}: ${horario.horaInicia} - ${horario.horaFin}");
                                           });
                                         },
-
                                       )
                                     : Container(
                                         margin: EdgeInsets.only(right: 12.0),
@@ -664,7 +698,18 @@ photoDocIdentidadAnv: ${widget.docAnversoUrl}, photoDocIdentidadRev: ${widget.do
                                     "Debe ingresar al menos un día de atencion",
                                     2);
                               } else {
-                                await _registrarYGuardarDatos();
+                                Map<String, dynamic> result =
+                                    await checkIfEmailExists();
+                                bool isEmailDniExists = result["exists"];
+                                String message = result["message"];
+                                if (isEmailDniExists) {
+                                  print("Existe? $isEmailDniExists");
+                                  print(message);
+                                  mostrarSnackBar(message, 2);
+                                } else {
+                                  print("Existe? $isEmailDniExists");
+                                  await _registrarYGuardarDatos();
+                                }
                               }
                             } else {
                               if (!agreeTerms) {

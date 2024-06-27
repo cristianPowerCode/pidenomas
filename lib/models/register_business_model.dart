@@ -121,7 +121,7 @@ class RegisterBusinessModel {
     "rucNegocio": rucNegocio,
     "razSocNegocio": razSocNegocio,
     "nombreNegocio": nombreNegocio,
-    "fechaDeCreacion": "${fechaDeCreacion.year.toString().padLeft(4, '0')}-${fechaDeCreacion.month.toString().padLeft(2, '0')}-${fechaDeCreacion.day.toString().padLeft(2, '0')}",
+    "fechaDeCreacion": "${fechaDeCreacion.year.toString().padLeft(4, '0')}-${fechaDeCreacion.month.toString().padLeft(2, '0')}-${fechaDeCreacion.day.toString().padLeft(2, '0')} ${fechaDeCreacion.hour.toString().padLeft(2, '0')}:${fechaDeCreacion.minute.toString().padLeft(2, '0')}:${fechaDeCreacion.second.toString().padLeft(2, '0')}",
     "horarios": List<dynamic>.from(horarios.map((x) => x.toJson())),
   };
 }
