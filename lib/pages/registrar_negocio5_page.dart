@@ -105,7 +105,7 @@ photoDocIdentidadAnv: ${widget.docAnversoUrl}, photoDocIdentidadRev: ${widget.do
     Horario(dia: "domingo", horaInicia: "null", horaFin: "null"),
     Horario(dia: "feriado", horaInicia: "null", horaFin: "null")
   ];
-  List<Horario> horariosNuevos = [];
+  List<Horario> horariosSeleccionados = [];
   TextEditingController _rucController = TextEditingController();
   TextEditingController _razSocialNegocioController = TextEditingController();
   TextEditingController _nombreNegocioController = TextEditingController();
@@ -197,25 +197,26 @@ photoDocIdentidadAnv: ${widget.docAnversoUrl}, photoDocIdentidadRev: ${widget.do
     return true;
   }
 
-  // Función para manejar la acción del botón
+// Función para manejar la acción del botón
   void handleGuardarCambios() {
     bool todosCerrados = isAllClosed(horarios);
-
     if (todosCerrados) {
       // Mostrar SnackBar si todos los días están cerrados
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Debe ingresar al menos un día de atencion'),
+          content: Text('Debe ingresar al menos un día de atención'),
         ),
       );
     } else {
       // Filtrar horarios para solo incluir los días seleccionados
-      horariosNuevos = horarios.where((horario) =>
-      horario.horaInicia != "null" && horario.horaFin != "null").toList();
-
+      setState(() {
+        horariosSeleccionados = horarios
+            .where((horario) => horario.horaInicia != "null" && horario.horaFin != "null")
+            .toList();
+      });
       // Imprimir horarios seleccionados
       print("Horarios actuales:");
-      horariosNuevos.forEach((horario) {
+      horariosSeleccionados.forEach((horario) {
         print("${horario.dia}: ${horario.horaInicia} - ${horario.horaFin}");
       });
     }
@@ -251,7 +252,7 @@ photoDocIdentidadAnv: ${widget.docAnversoUrl}, photoDocIdentidadRev: ${widget.do
       razSocNegocio: _razSocialNegocioController.text,
       nombreNegocio: _nombreNegocioController.text,
       fechaDeCreacion: DateTime.now(),
-      horarios: horariosNuevos,
+      horarios: horariosSeleccionados,
     );
   }
 
@@ -622,8 +623,16 @@ photoDocIdentidadAnv: ${widget.docAnversoUrl}, photoDocIdentidadRev: ${widget.do
                                 trailing: _checkboxSelected[index]
                                     ? IconButton(
                                         icon: Icon(Icons.edit),
-                                        onPressed: () =>
-                                            _editHoraInicia(context, index),
+                                        onPressed: () {
+                                          _editHoraInicia(context, index);
+                                          horariosSeleccionados = horarios.where((horario) =>
+                                          horario.horaInicia != "null" && horario.horaFin != "null").toList();
+
+                                          horariosSeleccionados.forEach((horario) {
+                                            print("${horario.dia}: ${horario.horaInicia} - ${horario.horaFin}");
+                                          });
+                                        },
+
                                       )
                                     : Container(
                                         margin: EdgeInsets.only(right: 12.0),
@@ -648,6 +657,7 @@ photoDocIdentidadAnv: ${widget.docAnversoUrl}, photoDocIdentidadRev: ${widget.do
                             if (formState != null &&
                                 formState.validate() &&
                                 agreeTerms) {
+                              handleGuardarCambios(); // horariosSeleccionados actualizados
                               bool todosCerrados = isAllClosed(horarios);
                               if (todosCerrados) {
                                 mostrarSnackBar(
