@@ -14,7 +14,7 @@ class RegisterBusinessModel {
   bool agreeNotifications;
   double lat;
   double lng;
-  String direccion;
+  String direccionPointer;
   String detalleDireccion;
   String referenciaDireccion;
   int tipoDeInmueble;
@@ -45,7 +45,7 @@ class RegisterBusinessModel {
     required this.agreeNotifications,
     required this.lat,
     required this.lng,
-    required this.direccion,
+    required this.direccionPointer,
     required this.detalleDireccion,
     required this.referenciaDireccion,
     required this.tipoDeInmueble,
@@ -77,7 +77,7 @@ class RegisterBusinessModel {
     agreeNotifications: json["agreeNotifications"],
     lat: json["lat"]?.toDouble(),
     lng: json["lng"]?.toDouble(),
-    direccion: json["direccion"],
+    direccionPointer: json["direccionPointer"],
     detalleDireccion: json["detalleDireccion"],
     referenciaDireccion: json["referenciaDireccion"],
     tipoDeInmueble: json["tipoDeInmueble"],
@@ -109,7 +109,7 @@ class RegisterBusinessModel {
     "agreeNotifications": agreeNotifications,
     "lat": lat,
     "lng": lng,
-    "direccion": direccion,
+    "direccionPointer": direccionPointer,
     "detalleDireccion": detalleDireccion,
     "referenciaDireccion": referenciaDireccion,
     "tipoDeInmueble": tipoDeInmueble,

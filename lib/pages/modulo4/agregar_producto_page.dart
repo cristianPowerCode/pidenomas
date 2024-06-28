@@ -29,6 +29,14 @@ class _AgregarProductoPageState extends State<AgregarProductoPage> {
   TextEditingController descuentoController = TextEditingController();
   TextEditingController precioController = TextEditingController();
 
+  Future<void> _agregarProductosEnBD() async{
+    try{
+
+    }catch(e){
+
+    }
+  }
+
   @override
   void dispose() {
     // Limpiar los controladores al finalizar
@@ -63,11 +71,7 @@ class _AgregarProductoPageState extends State<AgregarProductoPage> {
               Icons.arrow_back_ios,
             ),
             onPressed: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ProductosNegocioPage(),
-                  ));
+              Navigator.pop(context);
             },
           ),
         ),

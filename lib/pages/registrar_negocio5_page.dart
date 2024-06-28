@@ -268,7 +268,7 @@ photoDocIdentidadAnv: ${widget.docAnversoUrl}, photoDocIdentidadRev: ${widget.do
       agreeNotifications: false,
       lat: double.parse(widget.lat),
       lng: double.parse(widget.lng),
-      direccion: widget.direccion,
+      direccionPointer: widget.direccion,
       detalleDireccion: widget.detalleDireccion,
       referenciaDireccion: widget.referenciaUbicacion,
       tipoDeInmueble: int.parse(widget.typeOfHousing),
