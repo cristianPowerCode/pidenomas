@@ -13,6 +13,7 @@ import 'package:pidenomas/pages/registrar_negocio3_page.dart';
 import 'package:pidenomas/ui/general/colors.dart';
 import 'package:pidenomas/ui/widgets/circular_loading_widget.dart';
 import 'package:pidenomas/ui/widgets/general_widgets.dart';
+import 'package:pidenomas/ui/widgets/place_prediction_widget.dart';
 
 import '../ui/widgets/grid_type_of_house_widget.dart';
 import '../ui/widgets/icon_form_button_widget.dart';
@@ -337,17 +338,16 @@ genero: ${widget.genero}, email: ${widget.email}, password: ${widget.password}''
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 20),
                                     // Espaciado horizontal
-                                    child: GooglePlaceAutoCompleteTextField(
+                                    child: PlacePredictionWidget(
                                       textEditingController: _searchController,
                                       googleAPIKey: kPlaceApiKey,
+                                      initialPosition: initialPosition,
                                       inputDecoration: InputDecoration(
                                         hintText: "Buscar...",
                                         border: InputBorder.none,
                                         enabledBorder: InputBorder.none,
                                       ),
-                                      debounceTime: 400,
                                       countries: ["pe"],
-                                      isLatLngRequired: true,
                                       getPlaceDetailWithLatLng:
                                           (Prediction prediction) {
                                         double lat = double.parse(
@@ -365,44 +365,6 @@ genero: ${widget.genero}, email: ${widget.email}, password: ${widget.password}''
                                           ),
                                         );
                                       },
-
-                                      itemClick: (Prediction prediction) {
-                                        _searchController.text = prediction
-                                                .description ??
-                                            "intente con otra direccion cercana";
-                                        _searchController.selection =
-                                            TextSelection.fromPosition(
-                                                TextPosition(
-                                                    offset: prediction
-                                                            .description
-                                                            ?.length ??
-                                                        0));
-                                      },
-                                      seperatedBuilder: Divider(),
-                                      containerHorizontalPadding: 10,
-
-                                      // OPTIONAL// If you want to customize list view item builder
-                                      itemBuilder: (context, index,
-                                          Prediction prediction) {
-                                        return Container(
-                                          padding: EdgeInsets.all(10),
-                                          child: Row(
-                                            children: [
-                                              Icon(Icons.location_on),
-                                              SizedBox(
-                                                width: 7,
-                                              ),
-                                              Expanded(
-                                                  child: Text(
-                                                      "${prediction.description ?? "..."}"))
-                                            ],
-                                          ),
-                                        );
-                                      },
-
-                                      isCrossBtnShown: true,
-
-                                      // default 600 ms ,
                                     ),
                                   ),
                                   GestureDetector(
