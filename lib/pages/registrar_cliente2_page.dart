@@ -7,8 +7,8 @@ import 'package:flutter/services.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:google_places_flutter/google_places_flutter.dart';
 import 'package:google_places_flutter/model/prediction.dart';
+import 'package:pidenomas/ui/widgets/place_prediction_widget.dart';
 import '../models/register_client_model.dart';
 import '../models/response_model.dart';
 import '../services/api_service.dart';
@@ -57,7 +57,7 @@ class _RegistrarCliente2PageState extends State<RegistrarCliente2Page> {
   TextEditingController _direccionController = TextEditingController();
   TextEditingController _detalleDireccionController = TextEditingController();
   TextEditingController _referenciaUbicacionController =
-  TextEditingController();
+      TextEditingController();
 
   String agreeError = "";
   bool agreeTerms = false;
@@ -68,7 +68,7 @@ class _RegistrarCliente2PageState extends State<RegistrarCliente2Page> {
   final APIService _apiService = APIService();
 
   final CollectionReference _clientsCollection =
-  FirebaseFirestore.instance.collection('client');
+      FirebaseFirestore.instance.collection('client');
 
   final _formKey = GlobalKey<FormState>();
   int typeOfHousing = 0;
@@ -81,11 +81,11 @@ class _RegistrarCliente2PageState extends State<RegistrarCliente2Page> {
 
   late GoogleMapController mapController;
   static const LatLng initialPosition =
-  LatLng(-12.0630149, -77.0296179); // Lima
+      LatLng(-12.0630149, -77.0296179); // Lima
   LatLng currentPosition = initialPosition;
   String address = ''; // Variable para almacenar la dirección
   TextEditingController _searchController =
-  TextEditingController(); // Controlador para el campo de búsqueda
+      TextEditingController(); // Controlador para el campo de búsqueda
 
   @override
   void initState() {
@@ -229,7 +229,8 @@ genero: ${widget.genero}, email: ${widget.email}, password: ${widget.password}''
               .toString(); // Asignar la latitud al controlador de texto
           _lngController.text = currentPosition.longitude
               .toString(); // Asignar la longitud al controlador de texto
-          print("Latitud y Longitud: ${_latController.text}, ${_lngController.text}");
+          print(
+              "Latitud y Longitud: ${_latController.text}, ${_lngController.text}");
         });
       }
     } catch (e) {
@@ -267,9 +268,7 @@ genero: ${widget.genero}, email: ${widget.email}, password: ${widget.password}''
     RegisterClientModel clientModel = _createClientModel();
 
     try {
-      await _clientsCollection
-          .doc(uidForFirebase)
-          .set(clientModel.toJson());
+      await _clientsCollection.doc(uidForFirebase).set(clientModel.toJson());
       print("RESULTADO DE REGISTRO");
       print(jsonEncode(clientModel.toJson()));
       print("Datos guardados en Firestore para UID: $uidForFirebase");
@@ -303,7 +302,7 @@ genero: ${widget.genero}, email: ${widget.email}, password: ${widget.password}''
       try {
         print("Calling registerClienteToDB...");
         final ResponseModel response =
-        await _apiService.registrarClienteToDB(_createClientModel());
+            await _apiService.registrarClienteToDB(_createClientModel());
 
         if (response.status == 200) {
           print("Cliente registrado exitosamente: ${response.message}");
@@ -350,7 +349,7 @@ genero: ${widget.genero}, email: ${widget.email}, password: ${widget.password}''
     if (_formKey.currentState!.validate()) {
       try {
         UserCredential userCredential =
-        await _auth.createUserWithEmailAndPassword(
+            await _auth.createUserWithEmailAndPassword(
           email: widget.email,
           password: widget.password,
         );
@@ -400,7 +399,7 @@ genero: ${widget.genero}, email: ${widget.email}, password: ${widget.password}''
       } catch (e) {
         setState(() {
           isLoading =
-          false; // Establece isLoading en false si ocurre un error durante el proceso
+              false; // Establece isLoading en false si ocurre un error durante el proceso
         });
         print('Error al registrar el negocio: $e');
         mostrarSnackBar("Error al registrar el negocio: $e", 3);
@@ -469,201 +468,162 @@ genero: ${widget.genero}, email: ${widget.email}, password: ${widget.password}''
                 flex: 5,
                 child: !isLoading
                     ? SizedBox(
-                  width: double.infinity,
-                  height: size.height * 0.5,
-                  child: Stack(
-                    children: [
-                      // Fondo gris
-                      GoogleMap(
-                        mapType: MapType.terrain,
-                        zoomControlsEnabled: true,
-                        onMapCreated: _onMapCreated,
-                        initialCameraPosition: _kGooglePlex,
-                        onCameraMove: _onCameraMove,
-                        onCameraIdle: _onCameraIdle,
-                      ),
-                      Center(
-                        child: Transform.translate(
-                          offset: Offset(0, -32),
-                          //El offset eleva 32 pixeles para que el icono de location esté al centro
-                          child: _direccionController.text == ''
-                              ? Icon(
-                            Icons.location_pin,
-                            color: kBrandPrimaryColor1,
-                            size: 40,
-                          )
-                              : Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Container(
-                                decoration: BoxDecoration(
-                                  color: kBrandPrimaryColor1,
-                                  borderRadius:
-                                  BorderRadius.circular(10),
-                                ),
-                                child: Padding(
-                                  padding:
-                                  const EdgeInsets.symmetric(
-                                      vertical: 1.0,
-                                      horizontal: 8.0),
-                                  child: Text(
-                                    _direccionController
-                                        .text.length >
-                                        25
-                                        ? _direccionController.text
-                                        .substring(0, 25) +
-                                        '...'
-                                        : _direccionController.text,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
-                                        color: Colors.white),
-                                  ),
-                                ),
-                              ),
-                              divider12(),
-                              Icon(
-                                Icons.location_pin,
-                                color: kBrandPrimaryColor1,
-                                size: 40,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          mainAxisAlignment:
-                          MainAxisAlignment.spaceBetween,
+                        width: double.infinity,
+                        height: size.height * 0.5,
+                        child: Stack(
                           children: [
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.of(context)
-                                    .pop(); // Esto hace que vuelvas a la pantalla anterior
-                              },
-                              child: Container(
-                                width: 36.0,
-                                height: 36.0,
-                                decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: Colors.grey[300],
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.black26,
-                                        blurRadius: 5,
-                                        offset: Offset(2, 2),
+                            // Fondo gris
+                            GoogleMap(
+                              mapType: MapType.terrain,
+                              zoomControlsEnabled: true,
+                              onMapCreated: _onMapCreated,
+                              initialCameraPosition: _kGooglePlex,
+                              onCameraMove: _onCameraMove,
+                              onCameraIdle: _onCameraIdle,
+                            ),
+                            Center(
+                              child: Transform.translate(
+                                offset: Offset(0, -32),
+                                //El offset eleva 32 pixeles para que el icono de location esté al centro
+                                child: _direccionController.text == ''
+                                    ? Icon(
+                                        Icons.location_pin,
+                                        color: kBrandPrimaryColor1,
+                                        size: 40,
+                                      )
+                                    : Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Container(
+                                            decoration: BoxDecoration(
+                                              color: kBrandPrimaryColor1,
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                            ),
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      vertical: 1.0,
+                                                      horizontal: 8.0),
+                                              child: Text(
+                                                _direccionController
+                                                            .text.length >
+                                                        25
+                                                    ? _direccionController.text
+                                                            .substring(0, 25) +
+                                                        '...'
+                                                    : _direccionController.text,
+                                                overflow: TextOverflow.ellipsis,
+                                                style: TextStyle(
+                                                    color: Colors.white),
+                                              ),
+                                            ),
+                                          ),
+                                          divider12(),
+                                          Icon(
+                                            Icons.location_pin,
+                                            color: kBrandPrimaryColor1,
+                                            size: 40,
+                                          ),
+                                        ],
                                       ),
-                                    ]),
-                                child: Icon(
-                                  Icons.arrow_back,
-                                  size: 20,
-                                  color: Colors.black,
-                                ),
                               ),
                             ),
-                            Container(
-                              width: size.width - 2 * (36 + 10),
-                              height: 40,
-                              // Ancho del contenedor menos
-                              // el ancho de los 2 iconos: 36 y el margin: 10
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 20),
-                              // Espaciado horizontal
-                              child: GooglePlaceAutoCompleteTextField(
-                                textEditingController: _searchController,
-                                googleAPIKey: kPlaceApiKey,
-                                inputDecoration: InputDecoration(
-                                  hintText: "Buscar...",
-                                  border: InputBorder.none,
-                                  enabledBorder: InputBorder.none,
-                                ),
-                                debounceTime: 400,
-                                countries: ["pe"],
-                                isLatLngRequired: true,
-                                getPlaceDetailWithLatLng:
-                                    (Prediction prediction) {
-                                  double lat = double.parse(
-                                      prediction.lat.toString());
-                                  double lng = double.parse(
-                                      prediction.lng.toString());
-                                  setState(() {
-                                    currentPosition = LatLng(lat, lng);
-                                  });
-                                  mapController.animateCamera(
-                                    CameraUpdate.newCameraPosition(
-                                      CameraPosition(
-                                          target: currentPosition,
-                                          zoom: 16.0),
-                                    ),
-                                  );
-                                },
-
-                                itemClick: (Prediction prediction) {
-                                  _searchController.text = prediction
-                                      .description ??
-                                      "intente con otra direccion cercana";
-                                  _searchController.selection =
-                                      TextSelection.fromPosition(
-                                          TextPosition(
-                                              offset: prediction
-                                                  .description
-                                                  ?.length ??
-                                                  0));
-                                },
-                                seperatedBuilder: Divider(),
-                                containerHorizontalPadding: 10,
-
-                                // OPTIONAL// If you want to customize list view item builder
-                                itemBuilder: (context, index,
-                                    Prediction prediction) {
-                                  return Container(
-                                    padding: EdgeInsets.all(10),
-                                    child: Row(
-                                      children: [
-                                        Icon(Icons.location_on),
-                                        SizedBox(
-                                          width: 7,
-                                        ),
-                                        Expanded(
-                                            child: Text(
-                                                "${prediction.description ?? "..."}"))
-                                      ],
-                                    ),
-                                  );
-                                },
-
-                                isCrossBtnShown: true,
-
-                                // default 600 ms ,
-                              ),
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                // Acción al presionar el botón
-                                _getCurrentLocation();
-                              },
-                              child: Container(
-                                width: 36.0,
-                                height: 36.0,
-                                decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: Colors.grey[300],
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.black26,
-                                        blurRadius: 5,
-                                        offset: Offset(2, 2),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  GestureDetector(
+                                    onTap: () {
+                                      Navigator.of(context)
+                                          .pop(); // Esto hace que vuelvas a la pantalla anterior
+                                    },
+                                    child: Container(
+                                      width: 36.0,
+                                      height: 36.0,
+                                      decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: Colors.grey[300],
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.black26,
+                                              blurRadius: 5,
+                                              offset: Offset(2, 2),
+                                            ),
+                                          ]),
+                                      child: Icon(
+                                        Icons.arrow_back,
+                                        size: 20,
+                                        color: Colors.black,
                                       ),
-                                    ]),
-                                child: Icon(Icons.location_searching),
+                                    ),
+                                  ),
+                                  Container(
+                                    width: size.width - 2 * (36 + 10),
+                                    height: 40,
+                                    // Ancho del contenedor menos
+                                    // el ancho de los 2 iconos: 36 y el margin: 10
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 20),
+                                    // Espaciado horizontal
+                                    child: PlacePredictionWidget(
+                                      textEditingController: _searchController,
+                                      googleAPIKey: kPlaceApiKey,
+                                      initialPosition: initialPosition,
+                                      inputDecoration: InputDecoration(
+                                        hintText: "Buscar...",
+                                        border: InputBorder.none,
+                                        enabledBorder: InputBorder.none,
+                                      ),
+                                      countries: ["pe"],
+                                      getPlaceDetailWithLatLng:
+                                          (Prediction prediction) {
+                                        double lat = double.parse(
+                                            prediction.lat.toString());
+                                        double lng = double.parse(
+                                            prediction.lng.toString());
+                                        setState(() {
+                                          currentPosition = LatLng(lat, lng);
+                                        });
+                                        mapController.animateCamera(
+                                          CameraUpdate.newCameraPosition(
+                                            CameraPosition(
+                                                target: currentPosition,
+                                                zoom: 16.0),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                  GestureDetector(
+                                    onTap: () {
+                                      // Acción al presionar el botón
+                                      _getCurrentLocation();
+                                    },
+                                    child: Container(
+                                      width: 36.0,
+                                      height: 36.0,
+                                      decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: Colors.grey[300],
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.black26,
+                                              blurRadius: 5,
+                                              offset: Offset(2, 2),
+                                            ),
+                                          ]),
+                                      child: Icon(Icons.location_searching),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                           ],
                         ),
-                      ),
-                    ],
-                  ),
-                )
+                      )
                     : CircularLoadingWidget()),
             Expanded(
               flex: 5,
@@ -682,38 +642,69 @@ genero: ${widget.genero}, email: ${widget.email}, password: ${widget.password}''
                         const Text(
                           "Dirección",
                           style:
-                          TextStyle(fontSize: 12, color: Color(0xffB1B1B1)),
-                        ),
-                        const Text(
-                          "   Edite su dirección si no es precisa",
-                          style:
-                          TextStyle(fontSize: 12, color: Color(0xffB1B1B1)),
+                              TextStyle(fontSize: 12, color: Color(0xffB1B1B1)),
                         ),
                         divider12(),
-                        ConstrainedBox(
-                          constraints: BoxConstraints(
-                            maxHeight: 500.0,
-                          ),
-                          child: InputTextFieldWidget(
-                            hintText: "Dirección del Negocio o Punto de Venta",
-                            icon: Icons.location_on,
-                            textInputType: TextInputType.text,
-                            controller: _direccionController,
-                            maxLength: 250,
-                            minLines: 1,
-                            maxLines: null,
-                            count: 250,
+                        IgnorePointer(
+                          ignoring: true,
+                        child: ConstrainedBox(
+                            constraints: BoxConstraints(
+                              maxHeight: 500.0,
+                            ),
+                            child: TextFormField(
+                              controller: _direccionController,
+                              maxLength: 250,
+                              minLines: 1,
+                              maxLines: null,
+                              style: TextStyle(color: Color(0xffB1B1B1), fontWeight: FontWeight.w500),
+                              decoration: InputDecoration(
+                                prefixIcon: Icon(Icons.location_on, color: Color(0xffB1B1B1)),
+                                fillColor: Colors.white,
+                                filled: true,
+                                hintStyle: TextStyle(
+                                  fontSize: 14.0,
+                                ),
+                                counterText: "${_direccionController.text.length}/250",
+                                hintText: "Dirección del Negocio o Punto de Venta",
+
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(18.0),
+                                  borderSide: const BorderSide(color: Color(0xffB1B1B1)),
+                                ),
+                                errorBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(18.0),
+                                  borderSide: const BorderSide(
+                                    color: kErrorColor,
+                                  ),
+                                ),
+                                focusedErrorBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(18.0),
+                                  borderSide: BorderSide(
+                                    color: kErrorColor,
+                                  ),
+                                ),
+                                errorStyle: TextStyle(color: kErrorColor),
+                              ),
+                            ),
                           ),
                         ),
-                        divider30(),
+                        divider12(),
                         const Text(
-                          "Detalle si es puerta calle o Interior",
+                          "Indica tu dirección con el siguiente formato",
                           style:
-                          TextStyle(fontSize: 12, color: Color(0xffB1B1B1)),
+                              TextStyle(fontSize: 12, color: Color(0xffB1B1B1)),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 8.0),
+                          child: const Text(
+                            "Nombre Avenida / #Número / Ciudad",
+                            style:
+                            TextStyle(fontSize: 12, color: Color(0xffB1B1B1)),
+                          ),
                         ),
                         InputTextFieldWidget(
                           hintText:
-                          "Puerta Calle/ Block B - Dpto 405/ Interior A",
+                              "Puerta Calle/ Block B - Dpto 405/ Interior A",
                           icon: (Icons.map_sharp),
                           controller: _detalleDireccionController,
                           textInputType: TextInputType.text,
@@ -722,15 +713,23 @@ genero: ${widget.genero}, email: ${widget.email}, password: ${widget.password}''
                           maxLines: null,
                           count: 250,
                         ),
-                        divider30(),
+                        divider12(),
                         const Text(
                           "Referencia de su ubicación",
                           style:
-                          TextStyle(fontSize: 12, color: Color(0xffB1B1B1)),
+                              TextStyle(fontSize: 12, color: Color(0xffB1B1B1)),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 8.0),
+                          child: const Text(
+                            "Tu información detallada nos ayuda a encontrarte más rápido. ¡Cada detalle cuenta!",
+                            style:
+                            TextStyle(fontSize: 12, color: Color(0xffB1B1B1)),
+                          ),
                         ),
                         InputTextFieldWidget(
                           hintText:
-                          "Ejm: A una cuadra de la Municipalidad de Lince",
+                              "Ejm: A una cuadra de la Municipalidad de Lince",
                           icon: Icons.maps_ugc,
                           controller: _referenciaUbicacionController,
                           textInputType: TextInputType.text,
@@ -743,7 +742,7 @@ genero: ${widget.genero}, email: ${widget.email}, password: ${widget.password}''
                         const Text(
                           "Tipo de Inmueble",
                           style:
-                          TextStyle(fontSize: 12, color: Color(0xffB1B1B1)),
+                              TextStyle(fontSize: 12, color: Color(0xffB1B1B1)),
                         ),
                         GridTypeOfHousingWidget(
                           options: {

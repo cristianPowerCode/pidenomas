@@ -6,7 +6,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:google_places_flutter/google_places_flutter.dart';
 import 'package:google_places_flutter/model/prediction.dart';
 import 'package:pidenomas/pages/registrar_negocio1_page.dart';
 import 'package:pidenomas/pages/registrar_negocio3_page.dart';
@@ -414,32 +413,63 @@ genero: ${widget.genero}, email: ${widget.email}, password: ${widget.password}''
                           style:
                               TextStyle(fontSize: 12, color: Color(0xffB1B1B1)),
                         ),
-                        const Text(
-                          "   Edite su dirección si no es precisa",
-                          style:
-                              TextStyle(fontSize: 12, color: Color(0xffB1B1B1)),
+                        divider12(),
+                        IgnorePointer(
+                          ignoring: true,
+                          child: ConstrainedBox(
+                            constraints: BoxConstraints(
+                              maxHeight: 500.0,
+                            ),
+                            child: TextFormField(
+                              controller: _direccionController,
+                              maxLength: 250,
+                              minLines: 1,
+                              maxLines: null,
+                              style: TextStyle(color: Color(0xffB1B1B1), fontWeight: FontWeight.w500),
+                              decoration: InputDecoration(
+                                prefixIcon: Icon(Icons.location_on, color: Color(0xffB1B1B1)),
+                                fillColor: Colors.white,
+                                filled: true,
+                                hintStyle: TextStyle(
+                                  fontSize: 14.0,
+                                ),
+                                counterText: "${_direccionController.text.length}/250",
+                                hintText: "Dirección del Negocio o Punto de Venta",
+
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(18.0),
+                                  borderSide: const BorderSide(color: Color(0xffB1B1B1)),
+                                ),
+                                errorBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(18.0),
+                                  borderSide: const BorderSide(
+                                    color: kErrorColor,
+                                  ),
+                                ),
+                                focusedErrorBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(18.0),
+                                  borderSide: BorderSide(
+                                    color: kErrorColor,
+                                  ),
+                                ),
+                                errorStyle: TextStyle(color: kErrorColor),
+                              ),
+                            ),
+                          ),
                         ),
                         divider12(),
-                        ConstrainedBox(
-                          constraints: BoxConstraints(
-                            maxHeight: 500.0,
-                          ),
-                          child: InputTextFieldWidget(
-                            hintText: "Dirección del Negocio o Punto de Venta",
-                            icon: Icons.location_on,
-                            textInputType: TextInputType.text,
-                            controller: _direccionController,
-                            maxLength: 250,
-                            minLines: 1,
-                            maxLines: null,
-                            count: 250,
-                          ),
-                        ),
-                        divider30(),
                         const Text(
-                          "Detalle si es puerta calle o Interior",
+                          "Indica tu dirección con el siguiente formato",
                           style:
                               TextStyle(fontSize: 12, color: Color(0xffB1B1B1)),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 8.0),
+                          child: const Text(
+                            "Nombre Avenida / #Número / Ciudad",
+                            style:
+                            TextStyle(fontSize: 12, color: Color(0xffB1B1B1)),
+                          ),
                         ),
                         InputTextFieldWidget(
                           hintText:
@@ -452,11 +482,19 @@ genero: ${widget.genero}, email: ${widget.email}, password: ${widget.password}''
                           maxLines: null,
                           count: 250,
                         ),
-                        divider30(),
+                        divider12(),
                         const Text(
                           "Referencia de su ubicación",
                           style:
                               TextStyle(fontSize: 12, color: Color(0xffB1B1B1)),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 8.0),
+                          child: const Text(
+                            "Tu información detallada nos ayuda a encontrarte más rápido. ¡Cada detalle cuenta!",
+                            style:
+                            TextStyle(fontSize: 12, color: Color(0xffB1B1B1)),
+                          ),
                         ),
                         InputTextFieldWidget(
                           hintText:
