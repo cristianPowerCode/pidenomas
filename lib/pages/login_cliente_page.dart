@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:pidenomas/pages/modulo4/clientes/inicio_clientes_page.dart';
 import '../services/login_negocio_service.dart';
 import '../ui/general/type_messages.dart';
 import 'principal_page.dart';
@@ -25,7 +26,6 @@ class LoginClientePage extends StatefulWidget {
 class _LoginClientePageState extends State<LoginClientePage> {
   final TextEditingController _emailClientController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final LoginClienteService _loginClienteService = LoginClienteService();
 
   FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -40,49 +40,22 @@ class _LoginClientePageState extends State<LoginClientePage> {
       });
 
       try {
-        // Intentar login en el negocio
-        print("Llamando a loginClienteToDB...");
-        final ApiResponse response = await _loginClienteService.loginCliente(
-          _emailClientController.text.trim(),
-          _passwordController.text.trim(),
+        final UserCredential userCredential =
+        await _auth.signInWithEmailAndPassword(
+          email: _emailClientController.text.trim(),
+          password: _passwordController.text.trim(),
         );
-        print(response.data["message"]);
-        final int statusCode = response.statusCode;
 
-        // Verificar el statusCode
-        if (statusCode == 200) {
-          final UserCredential userCredential =
-          await _auth.signInWithEmailAndPassword(
-            email: _emailClientController.text.trim(),
-            password: _passwordController.text.trim(),
-          );
-          // Verificar si el correo electrónico está verificado
-          if (!userCredential.user!.emailVerified) {
-            mostrarSnackBar("Por favor, verifica tu correo electrónico antes de iniciar sesión.");
-            await _auth.signOut(); // Cerrar sesión del usuario no verificado
-            setState(() {
-              isLoading = false;
-            });
-            return;
-          }
-
-          // Logueo con Éxito
-          snackBarMessage(context, Typemessage.loginSuccess);
-          Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(builder: (context) => PrincipalPage()),
-                (route) => false,
-          );
-        } else {
-          // Mostrar AlertDialog si el login al negocio falla
-          print("STATUS NO 200");
-          mostrarSnackBar(response.data["message"]);
-          await _auth.signOut(); // Cerrar sesión del usuario no registrado
+        // Verificar si el correo electrónico está verificado
+        if (!userCredential.user!.emailVerified) {
+          mostrarSnackBar("Por favor, verifica tu correo electrónico antes de iniciar sesión.");
+          await _auth.signOut(); // Cerrar sesión del usuario no verificado
           setState(() {
             isLoading = false;
           });
-          return; // Salir de la función
+          return;
         }
+
         // Logueo con Éxito
         snackBarMessage(context, Typemessage.loginSuccess);
         Navigator.pushAndRemoveUntil(
@@ -142,7 +115,7 @@ class _LoginClientePageState extends State<LoginClientePage> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-      resizeToAvoidBottomInset: true,
+      resizeToAvoidBottomInset: false,
       body: SingleChildScrollView(
         child: Stack(
           children: [
