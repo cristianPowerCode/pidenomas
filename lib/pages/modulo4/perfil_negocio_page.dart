@@ -19,7 +19,11 @@ class PerfilNegocioPage extends StatelessWidget {
 
     spglobal.isLogin = false;
     spglobal.userType = "";
+    spglobal.token = ""; // Limpiar el token también
 
+    print("spglobal.isLogin: ${spglobal.isLogin}");
+    print("spglobal.userType: ${spglobal.userType}");
+    print("spglobal.token: ${spglobal.token}");
     mostrarSnackBar(context, "Sesión cerrada");
 
     Navigator.pushAndRemoveUntil(

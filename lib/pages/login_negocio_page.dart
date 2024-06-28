@@ -65,15 +65,23 @@ class _LoginNegocioPageState extends State<LoginNegocioPage> {
         }
 
         // Intentar login en el negocio
-        final int statusCode = await _loginNegocioToDB();
+        final Map<String, dynamic> responseBody  = await _loginNegocioToDB();
+        final int statusCode  = responseBody['status'];
 
         // Verificar el statusCode
         if (statusCode == 200) {
-          // Configurar isLogin y userType en SPGlobal
+          final int negocioId = responseBody['id'];
+
+          // Configurar isLogin, userType y token en SPGlobal
           SPGlobal spglobal = SPGlobal();
           await spglobal.initSharedPreferences();
           spglobal.isLogin = true;
           spglobal.userType = "negocio";
+          spglobal.token = negocioId.toString();
+          print("SPGLOBALES:::::::::::::::::::::");
+          print("spglobal.isLogin: ${spglobal.isLogin}");
+          print("spglobal.userType: ${spglobal.userType}");
+          print("spglobal.token: ${spglobal.token}");
 
           // Logueo con Éxito
           snackBarMessage(context, Typemessage.loginSuccess);
@@ -164,7 +172,7 @@ class _LoginNegocioPageState extends State<LoginNegocioPage> {
     );
   }
 
-  Future<int> _loginNegocioToDB() async {
+  Future<Map<String, dynamic>> _loginNegocioToDB() async {
     if (_formKey.currentState!.validate()) {
       print("El formulario no tiene campos vacíos");
       setState(() {
@@ -178,22 +186,23 @@ class _LoginNegocioPageState extends State<LoginNegocioPage> {
         );
 
         final int statusCode = response.statusCode;
+        final Map<String, dynamic> responseBody = response.data;
+
 
         if (statusCode == 200) {
           print("Registro exitoso en la BD");
           // Puedes manejar la lógica adicional aquí si es necesario
-
         } else {
           print("Error: Código de Estado no es 200");
           // Puedes manejar otros códigos de estado aquí si es necesario
           // mostrarSnackBar("Error en el inicio de sesión: Código $statusCode");
         }
 
-        return statusCode; // Retornar el statusCode para su uso externo
+        return responseBody; // Retornar el statusCode para su uso externo
       } catch (error) {
         print("Error en catch: $error");
         mostrarSnackBar("Error en el inicio de sesión: $error");
-        return 0; // Retornar un valor predeterminado o código de error
+        return {}; // Retornar un valor predeterminado o código de error
       } finally {
         setState(() {
           isLoading = false;
@@ -204,7 +213,7 @@ class _LoginNegocioPageState extends State<LoginNegocioPage> {
       setState(() {
         isLoading = false;
       });
-      return 0; // Retornar un valor predeterminado o código de error
+      return {}; // Retornar un valor predeterminado o código de error
     }
   }
 
