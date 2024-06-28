@@ -1,8 +1,9 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:pidenomas/pages/modulo4/clientes/inicio_clientes_page.dart';
 import '../helps/sp.global.dart';
 import 'home_page.dart';
-import 'principal_page.dart';
+import 'modulo4/inicio_negocio_page.dart';
 import '../ui/widgets/background_widget.dart';
 
 class SplashPage extends StatefulWidget {
@@ -13,7 +14,11 @@ class SplashPage extends StatefulWidget {
 class _SplashPageState extends State<SplashPage> {
   startTimer() {
     Timer(const Duration(seconds: 3), () {
-      Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => PreInit(),), (route) => false,);
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => PreInit()),
+        (route) => false,
+      );
     });
   }
 
@@ -36,11 +41,21 @@ class _SplashPageState extends State<SplashPage> {
 }
 
 class PreInit extends StatelessWidget {
-
-  SPGlobal spglobal  = SPGlobal();
+  SPGlobal spglobal = SPGlobal();
 
   @override
   Widget build(BuildContext context) {
-    return spglobal.isLogin ? PrincipalPage() : HomePage();
+    if (!spglobal.isLogin) {
+      return HomePage();
+    } else {
+      if (spglobal.userType == "negocio") {
+        return InicioNegocioPage();
+      } else if (spglobal.userType == "cliente") {
+        return InicioClientesPage();
+      } else {
+        // En caso de que userType no esté configurado o sea inválido, volver a HomePage
+        return HomePage();
+      }
+    }
   }
 }

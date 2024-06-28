@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:pidenomas/pages/modulo4/inicio_negocio_page.dart';
+import '../helps/sp.global.dart';
 import '../services/login_negocio_service.dart';
 import '../ui/general/type_messages.dart';
 import 'principal_page.dart';
@@ -68,6 +69,12 @@ class _LoginNegocioPageState extends State<LoginNegocioPage> {
 
         // Verificar el statusCode
         if (statusCode == 200) {
+          // Configurar isLogin y userType en SPGlobal
+          SPGlobal spglobal = SPGlobal();
+          await spglobal.initSharedPreferences();
+          spglobal.isLogin = true;
+          spglobal.userType = "negocio";
+
           // Logueo con Éxito
           snackBarMessage(context, Typemessage.loginSuccess);
           Navigator.pushAndRemoveUntil(

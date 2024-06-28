@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:pidenomas/pages/modulo4/clientes/inicio_clientes_page.dart';
+import '../helps/sp.global.dart';
 import '../services/login_negocio_service.dart';
 import '../ui/general/type_messages.dart';
 import 'principal_page.dart';
@@ -56,11 +57,17 @@ class _LoginClientePageState extends State<LoginClientePage> {
           return;
         }
 
+        // Configurar isLogin y userType en SPGlobal
+        SPGlobal spglobal = SPGlobal();
+        await spglobal.initSharedPreferences();
+        spglobal.isLogin = true;
+        spglobal.userType = "cliente";
+
         // Logueo con Éxito
         snackBarMessage(context, Typemessage.loginSuccess);
         Navigator.pushAndRemoveUntil(
           context,
-          MaterialPageRoute(builder: (context) => PrincipalPage()),
+          MaterialPageRoute(builder: (context) => InicioClientesPage()),
               (route) => false,
         );
       } on FirebaseAuthException catch (e) {
