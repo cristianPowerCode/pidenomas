@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:pidenomas/pages/modulo4/clientes/inicio_clientes_page.dart';
 import 'package:pidenomas/ui/general/constant_responsive.dart';
 import '../ui/general/type_messages.dart';
 import 'principal_page.dart';
@@ -59,7 +60,7 @@ class _LoginClientePageState extends State<LoginClientePage> {
         snackBarMessage(context, Typemessage.loginSuccess);
         Navigator.pushAndRemoveUntil(
           context,
-          MaterialPageRoute(builder: (context) => PrincipalPage()),
+          MaterialPageRoute(builder: (context) => InicioClientesPage()),
               (route) => false,
         );
       } on FirebaseAuthException catch (e) {

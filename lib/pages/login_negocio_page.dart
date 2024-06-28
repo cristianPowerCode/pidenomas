@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:pidenomas/pages/modulo4/inicio_negocio_page.dart';
 import '../services/login_negocio_service.dart';
 import '../ui/general/type_messages.dart';
 import 'principal_page.dart';
@@ -71,7 +72,7 @@ class _LoginNegocioPageState extends State<LoginNegocioPage> {
           snackBarMessage(context, Typemessage.loginSuccess);
           Navigator.pushAndRemoveUntil(
             context,
-            MaterialPageRoute(builder: (context) => PrincipalPage()),
+            MaterialPageRoute(builder: (context) => InicioNegocioPage()),
                 (route) => false,
           );
         } else {
