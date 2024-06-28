@@ -15,21 +15,25 @@ class HomePage extends StatelessWidget {
         child: BackGroundWidget(
           child: Column(
             children: [
-              Image.asset("assets/images/logo.png",),
               divider40(),
+              divider30(),
               Center(
                 child: Column(
                   children: [
                     const Text("Bienvenido a",
                         style: TextStyle(
-                          fontSize: 24.0,
+                          fontSize: 28.0,
+                          color: kBrandSecundaryColor2,
+                          fontWeight: FontWeight.w500,
                         )),
                     divider12(),
-                    const Text("Pide Nomás",
-                        style: TextStyle(
-                          fontSize: 24.0,
-                          fontWeight: FontWeight.bold,
-                        )),
+                    Image.asset("assets/images/logo.png",),
+                    divider12(),
+                    // const Text("Pide Nomás",
+                    //     style: TextStyle(
+                    //       fontSize: 24.0,
+                    //       fontWeight: FontWeight.bold,
+                    //     )),
                     divider40(),
                     SizedBox(
                       width: double.infinity,
@@ -40,7 +44,7 @@ class HomePage extends StatelessWidget {
                           borderRadius: BorderRadius.circular(18.0),
                           border: Border.all(
                             width: 1,
-                            color: kBrandSecundaryColor1,
+                            color: kBrandPrimaryColor1,
                           ),
                           boxShadow: [
                             BoxShadow(
@@ -63,7 +67,7 @@ class HomePage extends StatelessWidget {
                           child: Text(
                             "Soy Negocio",
                             style: TextStyle(
-                                fontSize: 20.0, color: kBrandSecundaryColor1),
+                                fontSize: 20.0, color: kBrandPrimaryColor1),
                           ),
                         ),
                       ),
