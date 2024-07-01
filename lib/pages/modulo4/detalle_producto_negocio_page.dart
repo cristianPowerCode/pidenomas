@@ -1,11 +1,66 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:pidenomas/models/obtener_detalle_productos_model.dart';
 import 'package:pidenomas/pages/modulo4/pedidos_negocio_page.dart';
+import 'package:pidenomas/services/get/obtener_detalle_producto_service.dart';
 import '../../ui/general/colors.dart';
 import '../../ui/widgets/general_widgets.dart';
+import '../../utils/functions/mostrar_snack_bar.dart';
 
-class ProductoNegocioPage extends StatelessWidget {
-  const ProductoNegocioPage({super.key});
+class ProductoNegocioPage extends StatefulWidget {
+  final int idProducto;
+
+  ProductoNegocioPage({required this.idProducto});
+
+  @override
+  State<ProductoNegocioPage> createState() => _ProductoNegocioPageState();
+}
+
+class _ProductoNegocioPageState extends State<ProductoNegocioPage> {
+  @override
+  void initState() {
+    super.initState();
+    detalleProducto();
+  }
+
+  String nombreProducto = "?????";
+  String imagenProducto = "";
+  bool isStock = false;
+  double precioRegular = 0;
+  double precioDescuento = 0;
+  String marcaProducto = "";
+  String subCategoria = "?????";
+  String descripcion = "?????";
+
+  TextEditingController precioController = TextEditingController();
+
+  Future<void> detalleProducto() async {
+    try {
+      print("Calling obtenerProductos...");
+      final ObtenerDetalleProductoService service =
+          ObtenerDetalleProductoService();
+      final ObtenerDetalleProductoModel detalleProducto =
+          await service.obtenerDetalleProducto(widget.idProducto);
+      setState(() {
+        nombreProducto = detalleProducto.nombre;
+        imagenProducto = detalleProducto.imagen;
+        isStock = detalleProducto.stock;
+        precioRegular = detalleProducto.precioRegular;
+        precioDescuento = detalleProducto.precioDescuento;
+        marcaProducto = detalleProducto.marca;
+        subCategoria = detalleProducto.subCategoria;
+        descripcion = detalleProducto.descripcion;
+        // isLoading = false;
+      });
+      // isLoading = false;
+    } catch (e) {
+      String errorMessage = e.toString();
+      print("Error en _obtenerProductos(): $errorMessage");
+      mostrarSnackBar(context,
+          "Hubo un problema al obtener los productos: $errorMessage", 3);
+      // isLoading = false;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +70,8 @@ class ProductoNegocioPage extends StatelessWidget {
         title: Text(
             style: TextStyle(
                 color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold),
-            "Productos"),
+            // "Productos"),
+            ""),
         centerTitle: true,
         leading: IconButton(
           style: ButtonStyle(
@@ -38,40 +94,50 @@ class ProductoNegocioPage extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                divider40(),
                 divider20(),
+                Align(
+                    alignment: Alignment.center,
+                    child: Text(
+                      nombreProducto,
+                      style:
+                          TextStyle(fontWeight: FontWeight.w500, fontSize: 18),
+                    )),
+                divider40(),
                 Center(
                   child: Container(
+                    color: kBrandWhiteColor,
                       width: MediaQuery.of(context).size.width / 2,
-                      child: Image.asset("assets/images/img_product.png")),
-                ),
+                      height: MediaQuery.of(context).size.width / 2,
+                      child: Image.network(imagenProducto),
+                ),),
                 divider40(),
-                divider20(),
                 Container(
                   child: Row(
                     children: [
-                      Text(
-                          style: TextStyle(
-                            fontSize: 20,
-                            color: Colors.redAccent,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          "Descuento"),
-                      SizedBox(width: 30),
                       Container(
                         alignment: Alignment.center,
-                        width: 165,
-                        height: 25,
-                        decoration: BoxDecoration(
-                          color: Colors.blue[50],
-                          borderRadius: BorderRadius.circular(18.0),
-                        ),
+                        width: 100,
+                        height: 60,
                         child: Text(
+                            textAlign: TextAlign.center,
                             style: TextStyle(
+                              fontSize: 15,
                               color: Colors.lightBlue[400],
                               fontWeight: FontWeight.bold,
                             ),
-                            "52% OFF ends in 3 days"),
+                            "Precio Regular"),
+                      ),
+                      SizedBox(width: 30),
+                      Container(
+                        alignment: Alignment.center,
+                        width: 175,
+                        height: 50,
+                        child: Text(
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            "Bell Pepper Nutella karmen lopu Karmen mon"),
                       ),
                     ],
                   ),
