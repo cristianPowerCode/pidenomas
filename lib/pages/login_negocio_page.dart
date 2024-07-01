@@ -47,16 +47,14 @@ class _LoginNegocioPageState extends State<LoginNegocioPage> {
         isLoading = true;
       });
       try {
-        final UserCredential userCredential =
-        await _auth.signInWithEmailAndPassword(
+        final UserCredential userCredential = await _auth.signInWithEmailAndPassword(
           email: _emailBusinessOwnerController.text.trim(),
           password: _passwordBusinessOwnerController.text.trim(),
         );
 
         // Verificar si el correo electrónico está verificado
         if (!userCredential.user!.emailVerified) {
-          mostrarSnackBar(
-              "Por favor, verifica si tiene el correo de confirmacion del registro de su negocio");
+          mostrarSnackBar("Por favor, verifica si tiene el correo de confirmacion del registro de su negocio");
           await _auth.signOut(); // Cerrar sesión del usuario no verificado
           setState(() {
             isLoading = false;
@@ -65,12 +63,20 @@ class _LoginNegocioPageState extends State<LoginNegocioPage> {
         }
 
         // Intentar login en el negocio
-        final Map<String, dynamic> responseBody  = await _loginNegocioToDB();
-        final int statusCode  = responseBody['status'];
+        final Map<String, dynamic> responseBody = await _loginNegocioToDB();
+        final int? statusCode = responseBody['status'];
+
+        if (statusCode == null) {
+          mostrarSnackBar("Error al iniciar sesión: respuesta inválida del servidor");
+          setState(() {
+            isLoading = false;
+          });
+          return;
+        }
 
         // Verificar el statusCode
         if (statusCode == 200) {
-          final int negocioId = responseBody['id'];
+          final int negocioId = responseBody['id'] ?? 0; // Proporcionar un valor predeterminado
 
           // Configurar isLogin, userType y token en SPGlobal
           SPGlobal spglobal = SPGlobal();
@@ -97,9 +103,7 @@ class _LoginNegocioPageState extends State<LoginNegocioPage> {
             builder: (BuildContext context) {
               return AlertDialog(
                 title: Center(
-                  child: PrincipalText(
-                    string: "Bienvenido a Pide Nomás",
-                  ),
+                  child: PrincipalText(string: "Bienvenido a Pide Nomás"),
                 ),
                 content: Text(
                     textAlign: TextAlign.center,
@@ -127,8 +131,7 @@ class _LoginNegocioPageState extends State<LoginNegocioPage> {
             errorMessage = "La contraseña es incorrecta.";
             break;
           case 'user-not-found':
-            errorMessage =
-            "No se encontró un usuario con ese correo electrónico.";
+            errorMessage = "No se encontró un usuario con ese correo electrónico.";
             break;
           case 'user-disabled':
             errorMessage = "El usuario con este correo ha sido deshabilitado.";
@@ -137,8 +140,7 @@ class _LoginNegocioPageState extends State<LoginNegocioPage> {
             errorMessage = "Demasiados intentos. Inténtalo más tarde.";
             break;
           case 'operation-not-allowed':
-            errorMessage =
-            "El inicio de sesión con contraseña está deshabilitado.";
+            errorMessage = "El inicio de sesión con contraseña está deshabilitado.";
             break;
           default:
             errorMessage = "Error de autenticación: ${e.message}";
@@ -186,8 +188,7 @@ class _LoginNegocioPageState extends State<LoginNegocioPage> {
         );
 
         final int statusCode = response.statusCode;
-        final Map<String, dynamic> responseBody = response.data;
-
+        final Map<String, dynamic> responseBody = response.data ?? {};
 
         if (statusCode == 200) {
           print("Registro exitoso en la BD");
@@ -195,10 +196,9 @@ class _LoginNegocioPageState extends State<LoginNegocioPage> {
         } else {
           print("Error: Código de Estado no es 200");
           // Puedes manejar otros códigos de estado aquí si es necesario
-          // mostrarSnackBar("Error en el inicio de sesión: Código $statusCode");
         }
 
-        return responseBody; // Retornar el statusCode para su uso externo
+        return responseBody; // Retornar el responseBody para su uso externo
       } catch (error) {
         print("Error en catch: $error");
         mostrarSnackBar("Error en el inicio de sesión: $error");

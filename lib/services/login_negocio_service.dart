@@ -7,7 +7,8 @@ import '../models/login_negocio_model.dart';
 
 class ApiResponse {
   final int statusCode;
-  final Map<String, dynamic> data; // Puedes agregar más campos según lo que necesites
+  final Map<String, dynamic>
+      data; // Puedes agregar más campos según lo que necesites
 
   ApiResponse({
     required this.statusCode,
@@ -37,8 +38,7 @@ class LoginNegocioService {
 
       return ApiResponse(
         statusCode: response.statusCode,
-        data:
-            responseBody, // Puedes ajustar esto según la estructura de tu respuesta
+        data: responseBody,
       );
     } catch (e) {
       print("Error de Red/Excepción: $e");
@@ -72,7 +72,8 @@ class LoginClienteService {
 
       return ApiResponse(
         statusCode: response.statusCode,
-        data: responseBody, // Puedes ajustar esto según la estructura de tu respuesta
+        data:
+            responseBody, // Puedes ajustar esto según la estructura de tu respuesta
       );
     } catch (e) {
       print("Error de Red/Excepción: $e");
