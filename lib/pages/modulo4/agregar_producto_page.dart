@@ -10,7 +10,6 @@ import 'package:pidenomas/ui/widgets/photo_widget.dart';
 
 import '../../models/response_model.dart';
 import '../../services/agregar_productos_service.dart';
-import '../../utils/functions/mostrar_snack_bar.dart';
 
 const List<String> list = <String>['Lácteos'];
 
@@ -34,13 +33,13 @@ class _AgregarProductoPageState extends State<AgregarProductoPage> {
   TextEditingController descuentoController = TextEditingController();
   TextEditingController precioController = TextEditingController();
 
-  AgregarProductosModel _addProducts() {
+  AgregarProductosModel addProducts() {
     return AgregarProductosModel(
       nombre: nombreController.text,
       precioRegular: double.parse(precioController.text),
-      categoria: 1,
+      subCategoria: 1,
       imagen:
-      "https://d20f60vzbd93dl.cloudfront.net/uploads/tienda_010816/tienda_010816_e6b8b7d7936401e3dd55db5a01aaf1b49386710d_producto_large_90.png",
+      "https://tofuu.getjusto.com/orioneat-local/resized2/Dcjzb8PSxBEbSTkyB-1200-1200.webp",
       stock: _selectedValue,
       precioDescuento: double.parse(descuentoController.text),
       marca: marcaController.text,
@@ -48,23 +47,38 @@ class _AgregarProductoPageState extends State<AgregarProductoPage> {
     );
   }
 
-  Future<void> _agregarProductosEnBD() async {
+  Future<void> agregarProductosEnBD() async {
     try {
+      print(addProducts().toJson());
       print("Calling agregarProductosEnBD...");
       final AgregarProductosService service = AgregarProductosService();
-      final ResponseModel response = await service.agregarProductosEnBD(_addProducts());
+      final ResponseModel response = await service.agregarProductosEnBD(addProducts());
       if (response.status == 200) {
         print("Producto registrado exitosamente: ${response.message}");
-        mostrarSnackBar(context, response.message, 3);
+        mostrarSnackBar(response.message);
       } else {
         print("Error al registrar el producto: ${response.message}");
-        mostrarSnackBar(context, "Hubo un problema al registrar en la BD: ${response.message}", 3);
+        mostrarSnackBar(response.message);
       }
     } catch (e) {
       String errorMessage = e.toString();
-      print("Error en _agregarProductosEnBD(): $errorMessage");
-      mostrarSnackBar(context, "Hubo un problema al registrar en la BD: $errorMessage", 3);
+      print("Error en agregarProductosEnBD(): $errorMessage");
+      mostrarSnackBar("Hubo un problema al agregar el producto");
     }
+  }
+
+  void mostrarSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Container(height: 120,child: Text(message)),
+        duration: Duration(seconds: 3),
+        backgroundColor: kBrandErrorColor,
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12.0),
+        ),
+      ),
+    );
   }
 
   @override
@@ -397,7 +411,7 @@ class _AgregarProductoPageState extends State<AgregarProductoPage> {
                   divider30(),
                   ButtonWidget(
                     onPressed: () {
-                      _agregarProductosEnBD();
+                      agregarProductosEnBD();
                     },
                     text: "Aceptar",
                     width: size.width,

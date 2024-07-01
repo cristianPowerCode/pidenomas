@@ -1,39 +1,39 @@
 class AgregarProductosModel {
   String nombre;
   double precioRegular;
-  int categoria;
+  int subCategoria;
   String imagen;
   bool stock;
   double precioDescuento;
-  String marca;
+  String? marca;
   String descripcion;
 
   AgregarProductosModel({
     required this.nombre,
     required this.precioRegular,
-    required this.categoria,
+    required this.subCategoria,
     required this.imagen,
     required this.stock,
     required this.precioDescuento,
-    required this.marca,
+    this.marca,
     required this.descripcion,
   });
 
   factory AgregarProductosModel.fromJson(Map<String, dynamic> json) => AgregarProductosModel(
     nombre: json["nombre"],
     precioRegular: json["precioRegular"]?.toDouble(),
-    categoria: json["categoria"],
+    subCategoria: json["subCategoria"],
     imagen: json["imagen"],
     stock: json["stock"],
     precioDescuento: json["precioDescuento"]?.toDouble(),
-    marca: json["marca"],
+    marca: json["marca"] ?? "",
     descripcion: json["descripcion"],
   );
 
   Map<String, dynamic> toJson() => {
     "nombre": nombre,
     "precioRegular": precioRegular,
-    "categoria": categoria,
+    "subCategoria": subCategoria,
     "imagen": imagen,
     "stock": stock,
     "precioDescuento": precioDescuento,
