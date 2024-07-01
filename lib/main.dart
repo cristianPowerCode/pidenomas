@@ -39,7 +39,6 @@ class MyApp extends StatelessWidget {
         ),
       ),
       title: 'Guardar en Firestore',
-      // home: SplashPage(),
       home: SplashPage(),
     );
   }
