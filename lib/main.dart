@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-// import 'package:intl/date_symbol_data_local.dart';
-import 'package:pidenomas/ui/general/colors.dart';
+import 'package:pidenomas/pages/modulo4/agregar_producto_page.dart';
+import 'package:pidenomas/pages/modulo4/clientes/inicio_clientes_page.dart';
+import 'package:pidenomas/pages/modulo4/clientes/lista_negocios_clientes_page.dart';
+import 'package:pidenomas/pages/modulo4/inicio_negocio_page.dart';
 import 'package:pidenomas/pages/splash_page.dart';
+import 'package:pidenomas/ui/general/colors.dart';
 import 'helps/sp.global.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
+
 
 void main() async {
 
@@ -34,6 +37,7 @@ class MyApp extends StatelessWidget {
         ),
       ),
       title: 'Guardar en Firestore',
+      // home: SplashPage(),
       home: SplashPage(),
     );
   }
