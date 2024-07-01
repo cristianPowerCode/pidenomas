@@ -175,7 +175,7 @@ tipo de inmueble: ${widget.typeOfHousing}''');
                   IconFormButtonWidget(
                     icon: Icon(FontAwesomeIcons.arrowLeft),
                     onPressed: () {
-                      Navigator.push(
+                      Navigator.pop(
                           context,
                           MaterialPageRoute(
                             builder: (context) => RegistrarNegocio2Page(

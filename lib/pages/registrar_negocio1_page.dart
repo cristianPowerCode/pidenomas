@@ -62,7 +62,8 @@ class _RegistrarNegocio1PageState extends State<RegistrarNegocio1Page> {
   Future<Map<String, dynamic>> checkIfEmailExists() async {
     print("Calling verificarEmailDniCelNegocioEnBD...");
     try {
-      final response = await verificarEmailDniCelNegocio.verificarEmailDniCelNegocioEnBD(
+      final response =
+          await verificarEmailDniCelNegocio.verificarEmailDniCelNegocioEnBD(
         _emailController.text,
         _documentoIdentidadController.text,
         _celularController.text,
@@ -257,7 +258,7 @@ class _RegistrarNegocio1PageState extends State<RegistrarNegocio1Page> {
                           IconFormButtonWidget(
                             icon: Icon(FontAwesomeIcons.arrowLeft),
                             onPressed: () {
-                              Navigator.push(
+                              Navigator.pop(
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => LoginNegocioPage(),
@@ -324,65 +325,65 @@ class _RegistrarNegocio1PageState extends State<RegistrarNegocio1Page> {
     );
   }
 
-  // Widget buildRowLoginAgain(BuildContext context) {
-  //   return Row(
-  //     mainAxisAlignment: MainAxisAlignment.center,
-  //     children: [
-  //       Text(
-  //         "¿Ya tienes una cuenta?",
-  //         style: TextStyle(
-  //           color: kBrandPrimaryColor1,
-  //           fontWeight: FontWeight.bold,
-  //         ),
-  //       ),
-  //       TextButton(
-  //         onPressed: () {
-  //           Navigator.pushReplacement(
-  //               context,
-  //               MaterialPageRoute(
-  //                 builder: (context) => LoginClientePage(),
-  //               ));
-  //         },
-  //         child: Text(
-  //           "Inicia sesión aquí",
-  //           style: TextStyle(
-  //             color: Colors.black,
-  //             fontWeight: FontWeight.bold,
-  //           ),
-  //         ),
-  //       ),
-  //     ],
-  //   );
-  // }
-  //
-  // Widget buildColumnLoginAgain(BuildContext context) {
-  //   return Column(
-  //     mainAxisAlignment: MainAxisAlignment.center,
-  //     children: [
-  //       Text(
-  //         "¿Ya tienes una cuenta?",
-  //         style: TextStyle(
-  //           color: kBrandPrimaryColor1,
-  //           fontWeight: FontWeight.bold,
-  //         ),
-  //       ),
-  //       TextButton(
-  //         onPressed: () {
-  //           Navigator.pushReplacement(
-  //               context,
-  //               MaterialPageRoute(
-  //                 builder: (context) => LoginClientePage(),
-  //               ));
-  //         },
-  //         child: Text(
-  //           "Inicia sesión aquí",
-  //           style: TextStyle(
-  //             color: Colors.black,
-  //             fontWeight: FontWeight.bold,
-  //           ),
-  //         ),
-  //       ),
-  //     ],
-  //   );
-  // }
+// Widget buildRowLoginAgain(BuildContext context) {
+//   return Row(
+//     mainAxisAlignment: MainAxisAlignment.center,
+//     children: [
+//       Text(
+//         "¿Ya tienes una cuenta?",
+//         style: TextStyle(
+//           color: kBrandPrimaryColor1,
+//           fontWeight: FontWeight.bold,
+//         ),
+//       ),
+//       TextButton(
+//         onPressed: () {
+//           Navigator.pushReplacement(
+//               context,
+//               MaterialPageRoute(
+//                 builder: (context) => LoginClientePage(),
+//               ));
+//         },
+//         child: Text(
+//           "Inicia sesión aquí",
+//           style: TextStyle(
+//             color: Colors.black,
+//             fontWeight: FontWeight.bold,
+//           ),
+//         ),
+//       ),
+//     ],
+//   );
+// }
+//
+// Widget buildColumnLoginAgain(BuildContext context) {
+//   return Column(
+//     mainAxisAlignment: MainAxisAlignment.center,
+//     children: [
+//       Text(
+//         "¿Ya tienes una cuenta?",
+//         style: TextStyle(
+//           color: kBrandPrimaryColor1,
+//           fontWeight: FontWeight.bold,
+//         ),
+//       ),
+//       TextButton(
+//         onPressed: () {
+//           Navigator.pushReplacement(
+//               context,
+//               MaterialPageRoute(
+//                 builder: (context) => LoginClientePage(),
+//               ));
+//         },
+//         child: Text(
+//           "Inicia sesión aquí",
+//           style: TextStyle(
+//             color: Colors.black,
+//             fontWeight: FontWeight.bold,
+//           ),
+//         ),
+//       ),
+//     ],
+//   );
+// }
 }

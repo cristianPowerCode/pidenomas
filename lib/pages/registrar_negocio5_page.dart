@@ -510,7 +510,7 @@ photoDocIdentidadAnv: ${widget.docAnversoUrl}, photoDocIdentidadRev: ${widget.do
                             color: Colors.white,
                           ),
                           onPressed: () {
-                            Navigator.push(
+                            Navigator.pop(
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => RegistrarNegocio4Page(

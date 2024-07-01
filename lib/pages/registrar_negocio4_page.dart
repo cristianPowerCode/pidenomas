@@ -285,10 +285,10 @@ tipo de inmueble: ${widget.typeOfHousing}, category: ${widget.categoria}''');
                         assetDefault: "assets/images/docIdentidadAnverso.jpg",
                         loading: loading,
                         onPressedUploadPhoto: () => _uploadPhoto(
-                                (url) => docAnversoUrl = url,
+                            (url) => docAnversoUrl = url,
                             "negocio/${widget.documentoIdentidad}/negocio-${widget.documentoIdentidad}-docIdentidadAnverso.jpg"),
                         onPressedTakePhoto: () => takePhoto(
-                                (url) => docAnversoUrl = url,
+                            (url) => docAnversoUrl = url,
                             "negocio/${widget.documentoIdentidad}/negocio-${widget.documentoIdentidad}-docIdentidadAnverso.jpg"),
                         imageUrl: docAnversoUrl,
                       ),
@@ -306,10 +306,10 @@ tipo de inmueble: ${widget.typeOfHousing}, category: ${widget.categoria}''');
                         assetDefault: "assets/images/docIdentidadReverso.jpg",
                         loading: loading,
                         onPressedUploadPhoto: () => _uploadPhoto(
-                                (url) => docReversoUrl = url,
+                            (url) => docReversoUrl = url,
                             "negocio/${widget.documentoIdentidad}/negocio-${widget.documentoIdentidad}-docIdentidadReverso.jpg"),
                         onPressedTakePhoto: () => takePhoto(
-                                (url) => docReversoUrl = url,
+                            (url) => docReversoUrl = url,
                             "negocio/${widget.documentoIdentidad}/negocio-${widget.documentoIdentidad}-docIdentidadReverso.jpg"),
                         imageUrl: docReversoUrl,
                       ),
@@ -329,7 +329,7 @@ tipo de inmueble: ${widget.typeOfHousing}, category: ${widget.categoria}''');
                   IconFormButtonWidget(
                     icon: Icon(FontAwesomeIcons.arrowLeft),
                     onPressed: () {
-                      Navigator.push(
+                      Navigator.pop(
                           context,
                           MaterialPageRoute(
                             builder: (context) => RegistrarNegocio3Page(

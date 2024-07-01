@@ -59,12 +59,14 @@ class _RegistrarCliente1PageState extends State<RegistrarCliente1Page> {
   bool agreeTerms = false;
   bool isChanged = false;
   bool agreeNotifications = false;
-  VerificarEmailDniCelNegocioService verificarEmailDniCelNegocio = VerificarEmailDniCelNegocioService();
+  VerificarEmailDniCelNegocioService verificarEmailDniCelNegocio =
+      VerificarEmailDniCelNegocioService();
 
   Future<Map<String, dynamic>> checkIfEmailExists() async {
     print("Calling verificarEmailDniNegocioEnBD...");
     try {
-      final response = await verificarEmailDniCelNegocio.verificarEmailDniCelNegocioEnBD(
+      final response =
+          await verificarEmailDniCelNegocio.verificarEmailDniCelNegocioEnBD(
         _emailController.text,
         _documentoIdentidadController.text,
         _celularController.text,
@@ -72,7 +74,8 @@ class _RegistrarCliente1PageState extends State<RegistrarCliente1Page> {
 
       // Verificar el estado y el mensaje del response
       return {
-        "exists": response.status != 200, // Si no es 200, email y/o documento ya existen
+        "exists": response.status != 200,
+        // Si no es 200, email y/o documento ya existen
         "message": response.message,
       };
     } catch (e) {
@@ -122,8 +125,8 @@ class _RegistrarCliente1PageState extends State<RegistrarCliente1Page> {
                       divider20(),
                       const Text(
                         "Nombres",
-                        style: TextStyle(
-                            fontSize: 12, color: Color(0xffB1B1B1)),
+                        style:
+                            TextStyle(fontSize: 12, color: Color(0xffB1B1B1)),
                       ),
                       InputTextFieldWidget(
                         controller: _nombreController,
@@ -142,8 +145,8 @@ class _RegistrarCliente1PageState extends State<RegistrarCliente1Page> {
                       divider20(),
                       const Text(
                         "Apellidos Completos",
-                        style: TextStyle(
-                            fontSize: 12, color: Color(0xffB1B1B1)),
+                        style:
+                            TextStyle(fontSize: 12, color: Color(0xffB1B1B1)),
                       ),
                       InputTextFieldWidget(
                         controller: _apellidoController,
@@ -162,8 +165,8 @@ class _RegistrarCliente1PageState extends State<RegistrarCliente1Page> {
                       divider20(),
                       const Text(
                         "Fecha de Nacimiento",
-                        style: TextStyle(
-                            fontSize: 12, color: Color(0xffB1B1B1)),
+                        style:
+                            TextStyle(fontSize: 12, color: Color(0xffB1B1B1)),
                       ),
                       DataBirthWidget(
                         controller: _fechaDeNacimientoController,
@@ -171,8 +174,8 @@ class _RegistrarCliente1PageState extends State<RegistrarCliente1Page> {
                       divider20(),
                       const Text(
                         "Nro de Celular",
-                        style: TextStyle(
-                            fontSize: 12, color: Color(0xffB1B1B1)),
+                        style:
+                            TextStyle(fontSize: 12, color: Color(0xffB1B1B1)),
                       ),
                       InputTextFieldWidget(
                         icon: Icons.phone,
@@ -190,8 +193,7 @@ class _RegistrarCliente1PageState extends State<RegistrarCliente1Page> {
                             } else {
                               return 'Ingrese 9 dígitos';
                             }
-                          } else if (value.length == 9 &&
-                              value[0] != '9') {
+                          } else if (value.length == 9 && value[0] != '9') {
                             return 'El primer dígito debe ser 9';
                           }
                           return null;
@@ -200,23 +202,22 @@ class _RegistrarCliente1PageState extends State<RegistrarCliente1Page> {
                       divider30(),
                       const Text(
                         "Seleccione su documento de identidad",
-                        style: TextStyle(
-                            fontSize: 12, color: Color(0xffB1B1B1)),
+                        style:
+                            TextStyle(fontSize: 12, color: Color(0xffB1B1B1)),
                       ),
                       RadioButtonWidget(
                         controller: _documentoIdentidadController,
                         onOptionChanged: (option) {
                           setState(() {
-                            _tipoDocumentoController.text =
-                                option.toString();
+                            _tipoDocumentoController.text = option.toString();
                           });
                         },
                       ),
                       divider30(),
                       const Text(
                         "Género",
-                        style: TextStyle(
-                            fontSize: 12, color: Color(0xffB1B1B1)),
+                        style:
+                            TextStyle(fontSize: 12, color: Color(0xffB1B1B1)),
                       ),
                       GenderDropdownWidget(
                         controller: _generoController,
@@ -224,8 +225,8 @@ class _RegistrarCliente1PageState extends State<RegistrarCliente1Page> {
                       divider30(),
                       const Text(
                         "Correo electrónico",
-                        style: TextStyle(
-                            fontSize: 12, color: Color(0xffB1B1B1)),
+                        style:
+                            TextStyle(fontSize: 12, color: Color(0xffB1B1B1)),
                       ),
                       InputTextFieldWidget(
                         controller: _emailController,
@@ -246,8 +247,8 @@ class _RegistrarCliente1PageState extends State<RegistrarCliente1Page> {
                       divider30(),
                       const Text(
                         "Contraseña",
-                        style: TextStyle(
-                            fontSize: 12, color: Color(0xffB1B1B1)),
+                        style:
+                            TextStyle(fontSize: 12, color: Color(0xffB1B1B1)),
                       ),
                       InputTextFieldPasswordWidget(
                         controller: _passwordController,
@@ -259,7 +260,7 @@ class _RegistrarCliente1PageState extends State<RegistrarCliente1Page> {
                           IconFormButtonWidget(
                             icon: Icon(FontAwesomeIcons.arrowLeft),
                             onPressed: () {
-                              Navigator.push(
+                              Navigator.pop(
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => LoginClientePage(),
@@ -271,32 +272,34 @@ class _RegistrarCliente1PageState extends State<RegistrarCliente1Page> {
                           IconFormButtonWidget(
                             icon: Icon(FontAwesomeIcons.arrowRight),
                             isFormComplete: true,
-                            onPressed: () async{
+                            onPressed: () async {
                               final formState = _formKey.currentState;
                               if (formState != null && formState.validate()) {
-                                Map<String, dynamic> result = await checkIfEmailExists();
+                                Map<String, dynamic> result =
+                                    await checkIfEmailExists();
                                 bool isEmailDniExists = result["exists"];
                                 String message = result["message"];
-                                if(isEmailDniExists){
+                                if (isEmailDniExists) {
                                   print("Existe? $isEmailDniExists");
                                   print(message);
                                   mostrarSnackBar(message);
-                                }else{
+                                } else {
                                   print("Existe? $isEmailDniExists");
                                   print(message);
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) => RegistrarCliente2Page(
+                                      builder: (context) =>
+                                          RegistrarCliente2Page(
                                         nombre: _nombreController.text,
                                         apellidos: _apellidoController.text,
                                         fechaDeNacimiento:
-                                        _fechaDeNacimientoController.text,
+                                            _fechaDeNacimientoController.text,
                                         celular: _celularController.text,
                                         tipoDocumento:
-                                        _tipoDocumentoController.text,
+                                            _tipoDocumentoController.text,
                                         documentoIdentidad:
-                                        _documentoIdentidadController.text,
+                                            _documentoIdentidadController.text,
                                         genero: _generoController.text,
                                         email: _emailController.text,
                                         password: _passwordController.text,
@@ -339,8 +342,7 @@ class _RegistrarCliente1PageState extends State<RegistrarCliente1Page> {
             Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                  builder: (context) =>
-                      LoginClientePage(),
+                  builder: (context) => LoginClientePage(),
                 ));
           },
           child: Text(
@@ -354,6 +356,7 @@ class _RegistrarCliente1PageState extends State<RegistrarCliente1Page> {
       ],
     );
   }
+
   Widget buildColumnLoginAgain(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -370,8 +373,7 @@ class _RegistrarCliente1PageState extends State<RegistrarCliente1Page> {
             Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                  builder: (context) =>
-                      LoginClientePage(),
+                  builder: (context) => LoginClientePage(),
                 ));
           },
           child: Text(
