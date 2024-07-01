@@ -425,20 +425,25 @@ genero: ${widget.genero}, email: ${widget.email}, password: ${widget.password}''
                               maxLength: 250,
                               minLines: 1,
                               maxLines: null,
-                              style: TextStyle(color: Color(0xffB1B1B1), fontWeight: FontWeight.w500),
+                              style: TextStyle(
+                                  color: Color(0xffB1B1B1),
+                                  fontWeight: FontWeight.w500),
                               decoration: InputDecoration(
-                                prefixIcon: Icon(Icons.location_on, color: Color(0xffB1B1B1)),
+                                prefixIcon: Icon(Icons.location_on,
+                                    color: Color(0xffB1B1B1)),
                                 fillColor: Colors.white,
                                 filled: true,
                                 hintStyle: TextStyle(
                                   fontSize: 14.0,
                                 ),
-                                counterText: "${_direccionController.text.length}/250",
-                                hintText: "Dirección del Negocio o Punto de Venta",
-
+                                counterText:
+                                    "${_direccionController.text.length}/250",
+                                hintText:
+                                    "Dirección del Negocio o Punto de Venta",
                                 enabledBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(18.0),
-                                  borderSide: const BorderSide(color: Color(0xffB1B1B1)),
+                                  borderSide: const BorderSide(
+                                      color: Color(0xffB1B1B1)),
                                 ),
                                 errorBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(18.0),
@@ -467,8 +472,8 @@ genero: ${widget.genero}, email: ${widget.email}, password: ${widget.password}''
                           padding: const EdgeInsets.only(left: 8.0),
                           child: const Text(
                             "Nombre Avenida / #Número / Ciudad",
-                            style:
-                            TextStyle(fontSize: 12, color: Color(0xffB1B1B1)),
+                            style: TextStyle(
+                                fontSize: 12, color: Color(0xffB1B1B1)),
                           ),
                         ),
                         InputTextFieldWidget(
@@ -492,8 +497,8 @@ genero: ${widget.genero}, email: ${widget.email}, password: ${widget.password}''
                           padding: const EdgeInsets.only(left: 8.0),
                           child: const Text(
                             "Tu información detallada nos ayuda a encontrarte más rápido. ¡Cada detalle cuenta!",
-                            style:
-                            TextStyle(fontSize: 12, color: Color(0xffB1B1B1)),
+                            style: TextStyle(
+                                fontSize: 12, color: Color(0xffB1B1B1)),
                           ),
                         ),
                         InputTextFieldWidget(
@@ -529,7 +534,7 @@ genero: ${widget.genero}, email: ${widget.email}, password: ${widget.password}''
                             IconFormButtonWidget(
                               icon: Icon(FontAwesomeIcons.arrowLeft),
                               onPressed: () {
-                                Navigator.push(
+                                Navigator.pop(
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) =>
