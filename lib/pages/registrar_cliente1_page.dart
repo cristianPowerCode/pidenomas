@@ -94,7 +94,7 @@ class _RegistrarCliente1PageState extends State<RegistrarCliente1Page> {
       SnackBar(
         content: Text(message),
         duration: Duration(seconds: 3),
-        backgroundColor: kErrorColor,
+        backgroundColor: kBrandErrorColor,
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12.0),

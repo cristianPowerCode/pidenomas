@@ -89,16 +89,16 @@ class _InputTextFieldWidgetState extends State<InputTextFieldWidget> {
           errorBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(18.0),
             borderSide: const BorderSide(
-              color: kErrorColor,
+              color: kBrandErrorColor,
             ),
           ),
           focusedErrorBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(18.0),
             borderSide: BorderSide(
-              color: kErrorColor,
+              color: kBrandErrorColor,
             ),
           ),
-          errorStyle: TextStyle(color: kErrorColor),
+          errorStyle: TextStyle(color: kBrandErrorColor),
         ),
         onTap: widget.onTap,
         onChanged: (text) {

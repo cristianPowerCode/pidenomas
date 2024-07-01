@@ -66,14 +66,14 @@ class _InputTextFieldPasswordWidgetState extends State<InputTextFieldPasswordWid
           errorBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(18.0),
             borderSide: const BorderSide(
-              color: kErrorColor,
+              color: kBrandErrorColor,
             ),
           ),
           focusedErrorBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(18.0),
             borderSide: BorderSide.none,
           ),
-          errorStyle: TextStyle(color: kErrorColor),
+          errorStyle: TextStyle(color: kBrandErrorColor),
         ),
         validator: (String? value){
           if(value!.isEmpty) return "El campo es obligatorio";

@@ -186,7 +186,7 @@ tipo de inmueble: ${widget.typeOfHousing}, category: ${widget.categoria}''');
       SnackBar(
         content: Text(message),
         duration: Duration(seconds: duration),
-        backgroundColor: kErrorColor,
+        backgroundColor: kBrandErrorColor,
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12.0),

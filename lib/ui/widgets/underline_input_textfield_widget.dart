@@ -27,13 +27,13 @@ class UnderLineInputTextFieldWidget extends StatelessWidget {
         ),
         errorBorder: UnderlineInputBorder(
           borderSide: const BorderSide(
-            color: kErrorColor,
+            color: kBrandErrorColor,
           ),
         ),
         focusedErrorBorder: const OutlineInputBorder(
           borderSide: BorderSide.none,
         ),
-        errorStyle: const TextStyle(color: kErrorColor),
+        errorStyle: const TextStyle(color: kBrandErrorColor),
       ),
     );
   }

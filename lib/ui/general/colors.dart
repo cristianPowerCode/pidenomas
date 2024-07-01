@@ -5,7 +5,9 @@ const Color kBrandPrimaryColor2 = Color(0xff00B53E);
 const Color kBrandPrimaryColor1 = Color(0xff40D891);
 const Color kBrandSecundaryColor1 = Color(0xffFECC34);
 const Color kBrandSecundaryColor2 = Color(0xffFFA800);
-const Color kErrorColor = Colors.redAccent;
+const Color kBrandErrorColor = Color(0xffff5252);
+const Color kBrandGreyColor = Color(0xff9E9E9E);
+const Color kBrandWhiteColor = Color(0xffffffff);
 
 const Gradient degradado1 = LinearGradient(
 begin: Alignment.topCenter,

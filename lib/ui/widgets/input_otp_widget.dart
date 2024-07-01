@@ -48,13 +48,13 @@ class InputOtpWidget extends StatelessWidget {
           errorBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(18.0),
             borderSide: BorderSide(
-              color: kErrorColor,
+              color: kBrandErrorColor,
             ),
           ),
           focusedErrorBorder: OutlineInputBorder(
             borderSide: BorderSide.none,
           ),
-          errorStyle: TextStyle(color: kErrorColor),
+          errorStyle: TextStyle(color: kBrandErrorColor),
         ),
         style: Theme.of(context).textTheme.headlineSmall,
         keyboardType: TextInputType.number,

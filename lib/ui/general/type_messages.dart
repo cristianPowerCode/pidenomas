@@ -21,8 +21,8 @@ Map<Typemessage, String> message = {
 Map<Typemessage, Color> messageColor = {
   Typemessage.loginSuccess : kBrandPrimaryColor1,
   Typemessage.success : kBrandPrimaryColor1,
-  Typemessage.error : kErrorColor,
-  Typemessage.networkError : kErrorColor,
+  Typemessage.error : kBrandErrorColor,
+  Typemessage.networkError : kBrandErrorColor,
   Typemessage.incomplete : kBrandSecundaryColor1,
 };
 
