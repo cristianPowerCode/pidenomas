@@ -2,7 +2,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:pidenomas/models/agregar_productos_model.dart';
 import 'package:pidenomas/pages/modulo4/agregar_producto_page.dart';
-import 'package:pidenomas/pages/modulo4/producto_negocio_page.dart';
+import 'package:pidenomas/pages/modulo4/detalle_producto_negocio_page.dart';
 import 'package:pidenomas/ui/general/colors.dart';
 import 'package:pidenomas/ui/widgets/general_widgets.dart';
 import 'package:flutter/services.dart';
@@ -21,10 +21,11 @@ class PedidosNegocioPage extends StatefulWidget {
 class _PedidosNegocioPageState extends State<PedidosNegocioPage> {
   List<ObtenerProductosModel> productos = [];
   int productosCount = 0;
-
+  bool isLoading = false;
   @override
   void initState() {
     super.initState();
+    bool isLoading = true;
     obtenerProductos();
   }
 
@@ -165,106 +166,108 @@ class _PedidosNegocioPageState extends State<PedidosNegocioPage> {
                   child: Text("GET"),
                 ),
                 divider20(),
-                productosCount == 0
-                    ? Center(child: CircularProgressIndicator())
+                isLoading == true
+                    ?CircularProgressIndicator(color: kBrandPrimaryColor1)
+                    : (productosCount == 0
+                    ? Center(child: Text("No tiene ningún producto registrado"),)
                     : ListView.builder(
-                        shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                        itemCount: productosCount,
-                        itemBuilder: (context, index) {
-                          final item = productos[index];
-                          return Container(
-                            margin: EdgeInsets.all(10),
-                            padding: EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: Colors.white,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.4),
-                                  offset: const Offset(4, 4),
-                                  blurRadius: 7.0,
-                                ),
-                              ],
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  itemCount: productosCount,
+                  itemBuilder: (context, index) {
+                    final item = productos[index];
+                    return Container(
+                      margin: EdgeInsets.all(10),
+                      padding: EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Colors.white,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.4),
+                            offset: const Offset(4, 4),
+                            blurRadius: 7.0,
+                          ),
+                        ],
+                      ),
+                      child: Row(
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(10.0),
+                            child: Container(
+                              child: Image.network(
+                                item.imagen,
+                                width: 100,
+                                height: 100,
+                                fit: BoxFit.contain,
+                              ),
                             ),
-                            child: Row(
+                          ),
+                          SizedBox(width: 10),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment:
+                              CrossAxisAlignment.start,
                               children: [
-                                ClipRRect(
-                                  borderRadius: BorderRadius.circular(10.0),
+                                Row(
+                                  children: [
+                                    Text(
+                                      "S/${item.precioRegular.toString()}",
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        color: kBrandPrimaryColor2,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    SizedBox(width: 10.0),
+                                    Text(
+                                      "S/${item.precioDescuento.toString()}",
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        color: Colors.grey,
+                                        fontWeight: FontWeight.w500,
+                                        decoration:
+                                        TextDecoration.lineThrough,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(height: 10),
+                                Text(
+                                  item.nombre,
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Align(
+                                  alignment: Alignment.centerRight,
                                   child: Container(
-                                    child: Image.network(
-                                      item.imagen,
-                                      width: 100,
-                                      height: 100,
-                                      fit: BoxFit.contain,
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 8.0),
+                                    decoration: BoxDecoration(
+                                      borderRadius:
+                                      BorderRadius.circular(8.0),
+                                      color: kBrandPrimaryColor2,
+                                    ),
+                                    child: Text(
+                                      item.subCategoria,
+                                      style: TextStyle(
+                                        color: kBrandWhiteColor,
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w500,
+                                      ),
                                     ),
                                   ),
                                 ),
-                                SizedBox(width: 10),
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Row(
-                                        children: [
-                                          Text(
-                                            "S/${item.precioRegular.toString()}",
-                                            style: TextStyle(
-                                              fontSize: 16,
-                                              color: kBrandPrimaryColor2,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                          SizedBox(width: 10.0),
-                                          Text(
-                                            "S/${item.precioDescuento.toString()}",
-                                            style: TextStyle(
-                                              fontSize: 16,
-                                              color: Colors.grey,
-                                              fontWeight: FontWeight.w500,
-                                              decoration:
-                                                  TextDecoration.lineThrough,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      SizedBox(height: 10),
-                                      Text(
-                                        item.nombre,
-                                        style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      Align(
-                                        alignment: Alignment.centerRight,
-                                        child: Container(
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal: 8.0),
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(8.0),
-                                            color: kBrandPrimaryColor2,
-                                          ),
-                                          child: Text(
-                                            item.subCategoria,
-                                            style: TextStyle(
-                                              color: kBrandWhiteColor,
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.w500,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
                               ],
                             ),
-                          );
-                        },
+                          ),
+                        ],
                       ),
+                    );
+                  },
+                )),
                 divider30(),
                 divider20(),
               ],

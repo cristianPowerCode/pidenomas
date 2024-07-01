@@ -3,6 +3,7 @@ import 'package:pidenomas/pages/modulo4/productos_negocio_page.dart';
 import 'package:pidenomas/ui/general/colors.dart';
 import 'package:pidenomas/ui/widgets/button_widget.dart';
 import 'package:pidenomas/ui/widgets/general_widgets.dart';
+import 'package:pidenomas/utils/functions/mostrar_snack_bar.dart';
 
 class InventarioNegocioPage extends StatefulWidget {
   @override
@@ -151,6 +152,7 @@ class _InventarioNegocioPageState extends State<InventarioNegocioPage> {
                                 );
                               } else {
                                 print('primer contenedor');
+                                mostrarSnackBar(context, "Muy pronto podrá usar nuestra plantilla", 2);
                               }
                             },
                             child: Text(

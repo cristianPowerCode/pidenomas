@@ -27,11 +27,7 @@ class ProductoNegocioPage extends StatelessWidget {
             Icons.arrow_back_ios,
           ),
           onPressed: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => PedidosNegocioPage(),
-                ));
+            Navigator.pop(context);
           },
         ),
       ),
