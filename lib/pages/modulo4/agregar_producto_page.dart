@@ -247,53 +247,37 @@ class _AgregarProductoPageState extends State<AgregarProductoPage> {
                     child: Text("Precio Regular"),
                   ),
                   divider12(),
-                  Container(
-                    width: size.width,
-                    decoration: BoxDecoration(
-                      border: Border(
-                        top: BorderSide(
+                  TextField(
+                    cursorColor: kBrandPrimaryColor1,
+                    controller: precioController,
+                    keyboardType: TextInputType.numberWithOptions(decimal: true),
+                    decoration: InputDecoration(
+                      labelStyle: TextStyle(color: Colors.grey),
+                      hintStyle: TextStyle(color: kBrandPrimaryColor1),
+                      labelText: 'Precio regular',
+                      prefixText: 'S/. ',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(18.0),
+                        borderSide: BorderSide(
                           color: kBrandPrimaryColor1,
-                          width: 1.0,
-                        ),
-                        bottom: BorderSide(
-                          color: kBrandPrimaryColor1,
-                          width: 1.0,
                         ),
                       ),
-                      borderRadius: BorderRadius.circular(18.0),
-                    ),
-                    child: TextField(
-                      cursorColor: kBrandPrimaryColor1,
-                      controller: precioController,
-                      keyboardType: TextInputType.numberWithOptions(decimal: true),
-                      decoration: InputDecoration(
-                        labelStyle: TextStyle(color: Colors.grey),
-                        hintStyle: TextStyle(color: kBrandPrimaryColor1),
-                        labelText: 'Precio',
-                        prefixText: 'S/. ',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(18.0),
-                          borderSide: BorderSide(
-                            color: kBrandPrimaryColor1,
-                          ),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(18.0),
-                          borderSide: BorderSide(
-                            color: kBrandPrimaryColor1,
-                          ),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(18.0),
-                          borderSide: BorderSide(
-                            color: kBrandPrimaryColor1,
-                          ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(18.0),
+                        borderSide: BorderSide(
+                          color: kBrandPrimaryColor1,
                         ),
                       ),
-                      inputFormatters: <TextInputFormatter>[
-                        FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}')),
-                      ],
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(18.0),
+                        borderSide: BorderSide(
+                          color: kBrandPrimaryColor1,
+                        ),
+                      ),
                     ),
+                    inputFormatters: <TextInputFormatter>[
+                      FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}')),
+                    ],
                   ),
                   divider20(),
                   Padding(
@@ -328,7 +312,7 @@ class _AgregarProductoPageState extends State<AgregarProductoPage> {
                             cursorColor: kBrandPrimaryColor1,
                             controller: descuentoController,
                             enabled: _selectedValue2 == 3,
-                            keyboardType: TextInputType.number,
+                            keyboardType: TextInputType.numberWithOptions(decimal: true),
                             decoration: InputDecoration(
                               labelStyle: TextStyle(color: Colors.grey),
                               labelText: 'Precio con dscto',
@@ -351,6 +335,9 @@ class _AgregarProductoPageState extends State<AgregarProductoPage> {
                                 ),
                               ),
                             ),
+                            inputFormatters: <TextInputFormatter>[
+                              FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}')),
+                            ],
                           ),
                         ),
                       ],
