@@ -167,7 +167,7 @@ class _ProductosNegocioPageState extends State<ProductosNegocioPage> {
                             itemBuilder: (context, index) {
                               final item = productos[index];
                               return GestureDetector(
-                                onTap: () {Navigator.push(context, MaterialPageRoute(builder: (context) => ProductoNegocioPage(),));},
+                                onTap: () {Navigator.push(context, MaterialPageRoute(builder: (context) => ProductoNegocioPage(idProducto: item.id,),));},
                                 child: Container(
                                   margin: EdgeInsets.all(10),
                                   padding: EdgeInsets.all(10),
