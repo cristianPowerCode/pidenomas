@@ -5,6 +5,7 @@ import 'package:pidenomas/pages/modulo4/clientes/inicio_clientes_page.dart';
 import 'package:pidenomas/pages/modulo4/clientes/lista_negocios_clientes_page.dart';
 import 'package:pidenomas/pages/modulo4/inicio_negocio_page.dart';
 import 'package:pidenomas/pages/splash_page.dart';
+import 'package:pidenomas/ui/general/colors.dart';
 import 'helps/sp.global.dart';
 
 
