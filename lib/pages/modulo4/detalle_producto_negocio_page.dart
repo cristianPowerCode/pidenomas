@@ -31,8 +31,10 @@ class _ProductoNegocioPageState extends State<ProductoNegocioPage> {
   String marcaProducto = "";
   String subCategoria = "?????";
   String descripcion = "?????";
+  bool isEnable = false;
 
-  TextEditingController precioController = TextEditingController();
+  TextEditingController precioRegularController = TextEditingController();
+  TextEditingController precioDescuentoController = TextEditingController();
 
   Future<void> detalleProducto() async {
     try {
@@ -50,6 +52,8 @@ class _ProductoNegocioPageState extends State<ProductoNegocioPage> {
         marcaProducto = detalleProducto.marca;
         subCategoria = detalleProducto.subCategoria;
         descripcion = detalleProducto.descripcion;
+        precioRegularController.text = precioRegular.toStringAsFixed(2);
+        precioDescuentoController.text = precioDescuento.toStringAsFixed(2);
         // isLoading = false;
       });
       // isLoading = false;
@@ -67,11 +71,7 @@ class _ProductoNegocioPageState extends State<ProductoNegocioPage> {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-            style: TextStyle(
-                color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold),
-            // "Productos"),
-            ""),
+        title: Text(""),
         centerTitle: true,
         leading: IconButton(
           style: ButtonStyle(
@@ -106,174 +106,199 @@ class _ProductoNegocioPageState extends State<ProductoNegocioPage> {
                 Center(
                   child: Container(
                     color: kBrandWhiteColor,
-                      width: MediaQuery.of(context).size.width / 2,
-                      height: MediaQuery.of(context).size.width / 2,
-                      child: Image.network(imagenProducto),
-                ),),
+                    width: MediaQuery.of(context).size.width / 2,
+                    height: MediaQuery.of(context).size.width / 2,
+                    child: Image.network(imagenProducto),
+                  ),
+                ),
                 divider40(),
-                Container(
-                  child: Row(
-                    children: [
-                      Container(
-                        alignment: Alignment.center,
-                        width: 100,
-                        height: 60,
-                        child: Text(
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize: 15,
-                              color: Colors.lightBlue[400],
-                              fontWeight: FontWeight.bold,
-                            ),
-                            "Precio Regular"),
-                      ),
-                      SizedBox(width: 30),
-                      Container(
-                        alignment: Alignment.center,
-                        width: 175,
-                        height: 50,
-                        child: Text(
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            "Bell Pepper Nutella karmen lopu Karmen mon"),
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  child: Row(
-                    children: [
-                      Container(
-                        alignment: Alignment.center,
-                        width: 100,
-                        height: 60,
-                        child: Text(
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize: 15,
-                              color: Colors.lightBlue[400],
-                              fontWeight: FontWeight.bold,
-                            ),
-                            "Nombre del producto"),
-                      ),
-                      SizedBox(width: 30),
-                      Container(
-                        alignment: Alignment.center,
-                        width: 175,
-                        height: 50,
-                        child: Text(
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            "Bell Pepper Nutella karmen lopu Karmen mon"),
-                      ),
-                    ],
-                  ),
+                PriceRow(
+                  label: "Precio Regular",
+                  labelText: "Precio Regular",
+                  controller: precioRegularController,
+                  labelColor: kBrandGreyColor,
+                  enable: isEnable,
                 ),
                 divider12(),
+                PriceRow(
+                  label: "Precio con Descuento",
+                  labelText: "Precio con Descuento",
+                  controller: precioRegularController,
+                  labelColor: kBrandPrimaryColor1,
+                  enable: isEnable,
+                ),
+                divider20(),
                 Text(
-                    style: TextStyle(
-                      fontSize: 15,
-                      color: Colors.lightBlue[400],
-                    ),
-                    "Presentacion: 1kg"),
-                Text(
-                    style: TextStyle(
-                      color: Colors.grey,
-                    ),
-                    "Categories : solip , kolimatrio , hellop , mafirat , mop lopiranto"),
-                divider12(),
-                Container(
-                  width: size.width,
-                  child: TextField(
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      labelStyle: TextStyle(color: Colors.lightBlue),
-                      hintStyle: TextStyle(color: Colors.lightBlue),
-                      labelText: 'Precio:',
-                      prefixText: 'S/. ',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(18.0),
-                        borderSide: BorderSide(
-                          color: Colors.lightBlue,
-                        ),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(18.0),
-                        borderSide: BorderSide(
-                          color: Colors.lightBlue,
-                        ),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(18.0),
-                        borderSide: BorderSide(
-                          color: Colors.lightBlue,
-                        ),
-                      ),
-                    ),
-                    inputFormatters: <TextInputFormatter>[
-                      FilteringTextInputFormatter.digitsOnly,
-                    ],
+                  "Descripcion:",
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
+                Text(
+                  descripcion,
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.lightBlue[400],
+                  ),
+                ),
+                divider20(),
+                Row(
+                  children: [
+                    Text(
+                      "Categoria: ",
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.grey,
+                      ),
+                    ),
+                    divider12(),
+                    Text(
+                      subCategoria,
+                      style: TextStyle(
+                        fontSize: 16,
+                      ),
+                    ),
+                  ],
+                ),
                 divider12(),
-                Container(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Container(
-                        padding: EdgeInsets.symmetric(horizontal: 10.0),
-                        width: 180,
-                        height: 60,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(18.0),
-                          border:
-                              Border.all(color: Colors.lightBlue, width: 1.0),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      padding: EdgeInsets.symmetric(horizontal: 10.0),
+                      width: 180,
+                      height: 60,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(18.0),
+                        border: Border.all(
+                          color: isStock
+                              ? kBrandPrimaryColor1
+                              : kBrandGreyColor,
+                          width: 1.0,
                         ),
-                        child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            "Stock",
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.lightBlue, // Color del texto
-                            ),
+                      ),
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          "En Stock",
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: isStock
+                            ? kBrandPrimaryColor1
+                            : kBrandGreyColor,
                           ),
                         ),
                       ),
-                      Container(
-                        padding: EdgeInsets.symmetric(horizontal: 10.0),
-                        width: 180,
-                        height: 60,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(18.0),
-                          border:
-                              Border.all(color: Colors.lightBlue, width: 1.0),
+                    ),
+                    Container(
+                      padding: EdgeInsets.symmetric(horizontal: 10.0),
+                      width: 180,
+                      height: 60,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(18.0),
+                        border: Border.all(
+                          color: isStock
+                              ? kBrandGreyColor
+                              : kBrandErrorColor,
+                          width: 1.0,
                         ),
-                        child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            "Fuera de Stock",
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.lightBlue, // Color del texto
-                            ),
+                      ),
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          "Sin Stock",
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: isStock
+                                ? kBrandGreyColor
+                                : kBrandErrorColor,
                           ),
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ],
             ),
           ),
         ),
       ),
+    );
+  }
+}
+
+class PriceRow extends StatelessWidget {
+  final String label;
+  final TextEditingController controller;
+  final Color labelColor;
+  final String labelText;
+  final bool enable;
+
+  PriceRow({
+    required this.label,
+    required this.controller,
+    required this.labelColor,
+    required this.labelText,
+    required this.enable,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Container(
+          width: 120,
+          child: Text(
+            label,
+            style: TextStyle(
+              fontSize: 16,
+              color: labelColor,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+        SizedBox(width: 20.0),
+        Expanded(
+          child: TextField(
+            controller: controller,
+            enabled: enable,
+            keyboardType: TextInputType.numberWithOptions(decimal: true),
+            decoration: InputDecoration(
+              labelStyle: TextStyle(color: Colors.grey),
+              hintStyle: TextStyle(color: kBrandPrimaryColor1),
+              labelText: labelText,
+              prefixText: 'S/. ',
+              prefixStyle: TextStyle(
+                color: enable == true ? kBrandPrimaryColor1 : kBrandGreyColor,
+              ),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(18.0),
+                borderSide: BorderSide(
+                  color: kBrandPrimaryColor1,
+                ),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(18.0),
+                borderSide: BorderSide(
+                  color: kBrandPrimaryColor1,
+                ),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(18.0),
+                borderSide: BorderSide(
+                  color: kBrandPrimaryColor1,
+                ),
+              ),
+            ),
+            inputFormatters: <TextInputFormatter>[
+              FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}')),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }
